@@ -1,0 +1,30 @@
+ 
+
+.for-mbl {
+  display: none !important;
+}
+
+@media (max-width: 1024px) {
+  .for-mbl {
+    display: flex !important;
+  }
+  .for-desk {
+    display: none !important;
+  }
+}
+.active.nui-focus {
+    --tw-text-opacity: 1 !important;
+    color: #8b5cf6 !important;
+    color: rgb(139 92 246 / var(--tw-text-opacity)) !important;
+}
+.active.nui-focus {
+    background-color: #8b5cf61a !important;
+}
+.active.nui-focus {
+    --tw-text-opacity: 1!important;
+    color: #8b5cf6!important;
+    color: rgb(139 92 246/var(--tw-text-opacity))!important;
+}
+.active.nui-focus {
+    background-color: #8b5cf61a!important;
+}
