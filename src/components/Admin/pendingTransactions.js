@@ -12,6 +12,7 @@ import Log from "../../assets/img/log.jpg";
 import { useAuthUser } from "react-auth-kit";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import Truncate from "react-truncate-inside/es";
 
 const PendingTransactions = () => {
   const [modal, setModal] = useState(false);
@@ -534,9 +535,14 @@ const PendingTransactions = () => {
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
                           <a
                             href="#"
-                            className="font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400 text-xs"
+                            className="font-medium inline-flex text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400 text-xs"
                           >
-                            {singleTransaction.txId}
+                            {" "}
+                            <Truncate
+                              text={singleTransaction.txId}
+                              offset={6}
+                              width="100"
+                            />
                             <svg
                               data-v-cd102a71
                               xmlns="http://www.w3.org/2000/svg"
@@ -576,9 +582,14 @@ const PendingTransactions = () => {
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
                           <a
                             href="#"
-                            className="font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400 text-xs"
+                            className="font-medium text-gray-900 inline-flex dark:text-white hover:text-gray-600 dark:hover:text-gray-400 text-xs"
                           >
-                            {singleTransaction.txId}
+                            {" "}
+                            <Truncate
+                              text={singleTransaction.txId}
+                              offset={6}
+                              width="100"
+                            />
                             <svg
                               data-v-cd102a71
                               xmlns="http://www.w3.org/2000/svg"
@@ -616,7 +627,11 @@ const PendingTransactions = () => {
                           Block
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
-                          {singleTransaction.txId}
+                          <Truncate
+                            text={singleTransaction.txId}
+                            offset={6}
+                            width="100"
+                          />
                         </dd>
                       </div>
                       <div className="sm:col-span-1">
@@ -634,9 +649,13 @@ const PendingTransactions = () => {
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
                           <a
                             href="#"
-                            className="font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
+                            className="font-medium inline-flex text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
                           >
-                            {singleTransaction.fromAddress}
+                            <Truncate
+                              text={singleTransaction.fromAddress}
+                              offset={6}
+                              width="100"
+                            />
                             <svg
                               data-v-cd102a71
                               xmlns="http://www.w3.org/2000/svg"
@@ -676,9 +695,13 @@ const PendingTransactions = () => {
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
                           <a
                             href="#"
-                            className="font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
+                            className="font-medium text-gray-900 inline-flex dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
                           >
-                            {singleTransaction.txId}
+                            <Truncate
+                              text={singleTransaction.txId}
+                              offset={6}
+                              width="100"
+                            />
                             <svg
                               data-v-cd102a71
                               xmlns="http://www.w3.org/2000/svg"
