@@ -21,7 +21,7 @@ export default function Router() {
       <BrowserRouter>
         <Routes>
           <Route index path="/" element={<Login />} />
-          {/* <Route index path="/auth/login" element={<Login />} /> */}
+          <Route index path="/auth/login" element={<Login />} />
           <Route path="/auth/signup" element={<SignUp />} />
           <Route
             path="/assets"
