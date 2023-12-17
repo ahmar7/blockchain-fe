@@ -1,14 +1,35 @@
-import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import Log from "../../assets/img/log.jpg";
+import { useAuthUser, useSignOut } from "react-auth-kit";
 const SideBar = (props) => {
-  //   const [Active, setActive] = useState(false);
-  //   let toggleBar=()=>{
-  // if(Active===true){
-  //   setActive(false)
-  // }else{
-  //   setActive(true)
-  // }
-  // }
+  let signOut = useSignOut();
+
+  let authUser = useAuthUser();
+  const [Admin, setAdmin] = useState("");
+  const [noPop, setnoPop] = useState(false);
+  useEffect(() => {
+    if (authUser().user.role === "user") {
+      setAdmin(authUser().user);
+      return;
+    } else if (authUser().user.role === "admin") {
+      setAdmin(authUser().user);
+      return;
+    }
+  }, []);
+  let togglePop = () => {
+    if (noPop === false) {
+      setnoPop(true);
+    } else {
+      setnoPop(false);
+    }
+  };
+  let Navigate = useNavigate();
+  const isLoginOrLogout = () => {
+    signOut();
+    Navigate("/auth/login");
+    return;
+  };
   return (
     <div
       id="sidebar"
@@ -134,7 +155,7 @@ const SideBar = (props) => {
           onClick={props.toggle}
           className="nui-mask nui-mask-blob hover:bg-muted-200 dark:hover:bg-muted-800 text-muted-700 dark:text-muted-400 flex h-10 w-10 cursor-pointer items-center justify-center transition-colors duration-300 lg:hidden"
         >
-          <svg
+          <svggeneral
             data-v-cd102a71
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -153,7 +174,7 @@ const SideBar = (props) => {
               strokeWidth={2}
               d="m12 19l-7-7l7-7m7 7H5"
             />
-          </svg>
+          </svggeneral>
         </button>
       </div>
       <div className="slimscroll relative w-full grow overflow-y-auto py-6 px-6">
@@ -274,6 +295,60 @@ const SideBar = (props) => {
               </span>
             </NavLink>
           </li>
+          <li>
+            <NavLink
+              to="/admin/profile"
+              className=" router-link-active nui-focus text-muted-500 dark:text-muted-400/80 hover:bg-muted-100 dark:hover:bg-muted-700/60 hover:text-muted-600 dark:hover:text-muted-200 flex cursor-pointer items-center gap-4 rounded-lg py-3 transition-colors duration-300 px-4"
+            >
+              <svg
+                data-v-cd102a71="true"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlnsXlink="http://www.w3.org/1999/xlink"
+                aria-hidden="true"
+                role="img"
+                className="icon h-4 w-4"
+                width="1em"
+                height="1em"
+                viewBox="0 0 256 256"
+              >
+                <g fill="currentColor">
+                  <path
+                    d="M192 96a64 64 0 1 1-64-64a64 64 0 0 1 64 64"
+                    opacity=".2"
+                  />
+                  <path d="M230.92 212c-15.23-26.33-38.7-45.21-66.09-54.16a72 72 0 1 0-73.66 0c-27.39 8.94-50.86 27.82-66.09 54.16a8 8 0 1 0 13.85 8c18.84-32.56 52.14-52 89.07-52s70.23 19.44 89.07 52a8 8 0 1 0 13.85-8M72 96a56 56 0 1 1 56 56a56.06 56.06 0 0 1-56-56" />
+                </g>
+              </svg>
+
+              <span className="whitespace-nowrap font-sans text-sm block">
+                Update Profile
+              </span>
+            </NavLink>
+          </li>
+          <li onClick={() => isLoginOrLogout()}>
+            <a
+              href="javascript:void(0)"
+              className=" router-link-active nui-focus text-muted-500 dark:text-muted-400/80 hover:bg-muted-100 dark:hover:bg-muted-700/60 hover:text-muted-600 dark:hover:text-muted-200 flex cursor-pointer items-center gap-4 rounded-lg py-3 transition-colors duration-300 px-4"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                id="logout"
+                width="1rem"
+                height="1rem"
+              >
+                <g data-name="Layer 2" fill="currentColor">
+                  <path
+                    d="M7 6a1 1 0 0 0 0-2H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h2a1 1 0 0 0 0-2H6V6zm13.82 5.42-2.82-4a1 1 0 0 0-1.39-.24 1 1 0 0 0-.24 1.4L18.09 11H10a1 1 0 0 0 0 2h8l-1.8 2.4a1 1 0 0 0 .2 1.4 1 1 0 0 0 .6.2 1 1 0 0 0 .8-.4l3-4a1 1 0 0 0 .02-1.18z"
+                    data-name="log-out"
+                  ></path>
+                </g>
+              </svg>
+              <span className="whitespace-nowrap font-sans text-sm block">
+                Logout
+              </span>
+            </a>
+          </li>
           {/**/}
         </ul>
       </div>
@@ -281,6 +356,7 @@ const SideBar = (props) => {
         <div className="group inline-flex items-center justify-center text-right">
           <div data-headlessui-state className="relative h-10 w-10 text-left">
             <button
+              onClick={togglePop}
               className="group-hover:ring-primary-500 dark:ring-offset-muted-800 inline-flex h-10 w-10 items-center justify-center rounded-full ring-1 ring-transparent transition-all duration-300 group-hover:ring-offset-4"
               id="headlessui-menu-button-34"
               aria-haspopup="menu"
@@ -289,12 +365,75 @@ const SideBar = (props) => {
             >
               <div className="relative inline-flex h-10 w-10 items-center justify-center rounded-full">
                 <img
-                  src="https://api.dicebear.com/6.x/pixel-art/svg?seed=ahmarjb&options[mood][]=happy"
+                  src={Log}
                   className="max-w-full rounded-full object-cover shadow-sm dark:border-transparent"
                   alt=""
                 />
               </div>
             </button>
+            {noPop && (
+              <div
+                aria-labelledby="headlessui-menu-button-31"
+                id="headlessui-menu-items-32"
+                role="menu"
+                tabIndex={0}
+                data-headlessui-state="open"
+                className="border-muted-200 dark:border-muted-700 dark:bg-muted-800 absolute mt-2 w-60 origin-bottom-right rounded-md border bg-white text-left shadow-lg focus:outline-none bottom-0 -end-64"
+              >
+                <div
+                  className="bg-muted-50 dark:bg-muted-700/40 p-6"
+                  role="none"
+                >
+                  <div className="flex items-center" role="none">
+                    <div
+                      className="relative inline-flex h-14 w-14 items-center justify-center rounded-full"
+                      role="none"
+                    >
+                      <img
+                        src={Log}
+                        className="max-w-full rounded-full object-cover shadow-sm dark:border-transparent"
+                        alt=""
+                        role="none"
+                      />
+                    </div>
+                    <div className="ms-3" role="none">
+                      <h6
+                        className="font-heading text-muted-800 text-sm font-medium dark:text-white"
+                        role="none"
+                      >
+                        {Admin.firstName}
+                      </h6>
+                      <p
+                        className="text-muted-400 font-sans text-xs"
+                        role="none"
+                      >
+                        {Admin.email}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-2" role="none">
+                  <div
+                    id="headlessui-menu-item-44"
+                    role="menuitem"
+                    tabIndex={-1}
+                    data-headlessui-state
+                  >
+                    <a
+                      onClick={() => isLoginOrLogout()}
+                      href="javascript:void(0)"
+                      className="group flex w-full items-center rounded-md p-3 text-sm transition-colors duration-300 text-muted-400"
+                    >
+                      <div className="ms-3">
+                        <h6 className="font-heading text-muted-800 text-xs font-medium leading-none dark:text-white">
+                          Logout
+                        </h6>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            )}
             {/**/}
           </div>
         </div>

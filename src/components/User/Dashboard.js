@@ -1,16 +1,102 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SideBar from "../../layout/UserSidebar/SideBar";
-
+import { useAuthUser } from "react-auth-kit";
+import { useNavigate } from "react-router-dom";
+import Log from "../../assets/img/log.jpg";
+import { getCoinsApi, getCoinsUserApi } from "../../Api/Service";
+import { toast } from "react-toastify";
 const Dashboard = () => {
+  const authUser = useAuthUser();
+  const Navigate = useNavigate();
+
+  const [isUser, setIsUser] = useState(true);
+
   const [Active, setActive] = useState(false);
   let toggleBar = () => {
-    console.log("ad");
     if (Active === true) {
       setActive(false);
     } else {
       setActive(true);
     }
   };
+  const getCoins = async () => {
+    let data = "isUser._id";
+    try {
+      const userCoins = await getCoinsUserApi(data);
+
+      if (userCoins.success) {
+        console.log("userCoins: ", userCoins);
+        toast.info("userCoins: ", userCoins);
+        // setisLoading(false);
+        // setUserData(userCoins.getCoin);
+        // // tx
+        // const btc = userCoins.getCoin.transactions.filter((transaction) =>
+        //   transaction.trxName.includes("bitcoin")
+        // );
+        // const btccomplete = btc.filter((transaction) =>
+        //   transaction.status.includes("completed")
+        // );
+        // let btcCount = 0;
+        // let btcValueAdded = 0;
+        // for (let i = 0; i < btccomplete.length; i++) {
+        //   const element = btccomplete[i];
+        //   btcCount = parseInt(element.amount);
+        //   btcValueAdded += btcCount;
+        // }
+        // setbtcBalance(btcValueAdded);
+        // // tx
+        // // tx
+        // const eth = userCoins.getCoin.transactions.filter((transaction) =>
+        //   transaction.trxName.includes("ethereum")
+        // );
+        // const ethcomplete = eth.filter((transaction) =>
+        //   transaction.status.includes("completed")
+        // );
+        // let ethCount = 0;
+        // let ethValueAdded = 0;
+        // for (let i = 0; i < ethcomplete.length; i++) {
+        //   const element = ethcomplete[i];
+        //   ethCount = parseInt(element.amount);
+        //   ethValueAdded += ethCount;
+        // }
+        // setethBalance(ethValueAdded);
+        // // tx
+        // // tx
+        // const usdt = userCoins.getCoin.transactions.filter((transaction) =>
+        //   transaction.trxName.includes("tether")
+        // );
+        // const usdtcomplete = usdt.filter((transaction) =>
+        //   transaction.status.includes("completed")
+        // );
+        // let usdtCount = 0;
+        // let usdtValueAdded = 0;
+        // for (let i = 0; i < usdtcomplete.length; i++) {
+        //   const element = usdtcomplete[i];
+        //   usdtCount = parseInt(element.amount);
+        //   usdtValueAdded += usdtCount;
+        // }
+        // setusdtBalance(usdtValueAdded);
+        // // tx
+
+        return;
+      } else {
+        toast.error(userCoins.msg);
+      }
+    } catch (error) {
+      toast.error(error);
+    } finally {
+    }
+  };
+  useEffect(() => {
+    if (authUser().user.role === "user") {
+      setIsUser(authUser().user);
+      getCoins();
+      return;
+    } else if (authUser().user.role === "admin") {
+      Navigate("/admin/dashboard");
+      return;
+    }
+  }, []);
   return (
     <div>
       <div>
@@ -144,7 +230,7 @@ const Dashboard = () => {
                     >
                       <div className="relative inline-flex h-9 w-9 items-center justify-center rounded-full">
                         <img
-                          src="https://api.dicebear.com/6.x/pixel-art/svg?seed=ahmarjb&options[mood][]=happy"
+                          src={Log}
                           className="max-w-full rounded-full object-cover shadow-sm dark:border-transparent"
                           alt=""
                         />
@@ -192,7 +278,6 @@ const Dashboard = () => {
                   {/**/}
                   <div className="ltablet:col-span-4 col-span-12 lg:col-span-4">
                     <div className="flex flex-col gap-4">
-                       
                       <div className="relative">
                         <div className="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-md p-6">
                           <div className="mb-8 flex items-center justify-between">

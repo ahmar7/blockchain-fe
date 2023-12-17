@@ -47,3 +47,11 @@
                       </p>
                     </div>
                   </div>
+
+
+
+
+
+                  <div>
+                                <div className="nui-placeload animate-nui-placeload h-4 w-8 rounded mx-auto"></div>
+                              </div>

@@ -1,16 +1,97 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SideBar from "../../../layout/AdminSidebar/Sidebar";
 import UserSideBar from "./UserSideBar";
+import Log from "../../../assets/img/log.jpg";
+import { useNavigate, useParams } from "react-router-dom";
+import { signleUsersApi, updateSignleUsersApi } from "../../../Api/Service";
+import { toast } from "react-toastify";
+import { useAuthUser } from "react-auth-kit";
 
 const General = () => {
+  //
+
+  let authUser = useAuthUser();
+  let Navigate = useNavigate();
+  const [isDisable, setisDisable] = useState(false);
+  const [userData, setUserData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    phone: "",
+    note: "",
+    address: "",
+    city: "",
+    country: "",
+    postalCode: "",
+  });
+  let handleInput = (e) => {
+    let name = e.target.name;
+    let value = e.target.value;
+    setUserData({ ...userData, [name]: value });
+  };
+  //
+  let { id } = useParams();
+
   const [Active, setActive] = useState(false);
-  let toggleBar = () => { 
+  let toggleBar = () => {
     if (Active === true) {
       setActive(false);
     } else {
       setActive(true);
     }
   };
+
+  const getSignleUser = async () => {
+    try {
+      const signleUser = await signleUsersApi(id);
+
+      if (signleUser.success) {
+        setUserData(signleUser.signleUser);
+      } else {
+        toast.error(signleUser.msg);
+      }
+    } catch (error) {
+      toast.error(error);
+    } finally {
+    }
+  };
+  const updateSignleUser = async (e) => {
+    e.preventDefault();
+    try {
+      setisDisable(true);
+      let body = {
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        email: userData.email,
+        password: userData.password,
+        phone: userData.phone,
+        note: userData.note,
+        address: userData.address,
+        city: userData.city,
+        country: userData.country,
+        postalCode: userData.postalCode,
+      };
+      const signleUser = await updateSignleUsersApi(id, body);
+
+      if (signleUser.success) {
+        toast.success(signleUser.msg);
+      } else {
+        toast.error(signleUser.msg);
+      }
+    } catch (error) {
+      toast.error(error);
+    } finally {
+      setisDisable(false);
+    }
+  };
+  useEffect(() => {
+    if (authUser().user.role === "user") {
+      Navigate("/dashboard");
+      return;
+    }
+    getSignleUser();
+  }, []);
   return (
     <div>
       <div>
@@ -133,7 +214,7 @@ const General = () => {
                     >
                       <div className="relative inline-flex h-9 w-9 items-center justify-center rounded-full">
                         <img
-                          src="https://api.dicebear.com/6.x/pixel-art/svg?seed=tom tom&options[mood][]=happy"
+                          src={Log}
                           className="max-w-full rounded-full object-cover shadow-sm dark:border-transparent"
                           alt=""
                         />
@@ -165,7 +246,7 @@ const General = () => {
               <seokit />
               <div className="min-h-screen overflow-hidden">
                 <div className="grid gap-8 sm:grid-cols-12">
-                 <UserSideBar/>
+                  <UserSideBar userid={id} />
                   <div className="col-span-12 sm:col-span-8">
                     <form method="POST" action className="w-full pb-16">
                       <div className="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-md">
@@ -185,11 +266,19 @@ const General = () => {
                           </div>
                           <div className="flex items-center gap-2">
                             <button
+                              disabled={isDisable}
+                              onClick={updateSignleUser}
                               data-v-71bb21a6
                               type="submit"
                               className="is-button rounded bg-primary-500 dark:bg-primary-500 hover:enabled:bg-primary-400 dark:hover:enabled:bg-primary-400 text-white hover:enabled:shadow-lg hover:enabled:shadow-primary-500/50 dark:hover:enabled:shadow-primary-800/20 focus-visible:outline-primary-400/70 focus-within:outline-primary-400/70 focus-visible:bg-primary-500 active:enabled:bg-primary-500 dark:focus-visible:outline-primary-400 dark:focus-within:outline-primary-400 dark:focus-visible:bg-primary-500 dark:active:enabled:bg-primary-500 w-24"
                             >
-                              Save
+                              {isDisable ? (
+                                <div>
+                                  <div className="nui-placeload animate-nui-placeload h-4 w-8 rounded mx-auto"></div>
+                                </div>
+                              ) : (
+                                "Save"
+                              )}
                             </button>
                           </div>
                         </div>
@@ -217,8 +306,51 @@ const General = () => {
                                       <input
                                         id="ninja-input-11"
                                         type="text"
+                                        onChange={handleInput}
+                                        value={userData.email}
+                                        name="email"
                                         className="nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 pe-4 ps-9 rounded"
                                         placeholder="Email"
+                                      />
+                                      {/**/}
+                                      {/**/}
+                                      <div className="text-muted-400 group-focus-within/nui-input:text-primary-500 absolute start-0 top-0 flex items-center justify-center transition-colors duration-300 peer-disabled:cursor-not-allowed peer-disabled:opacity-75 h-10 w-10">
+                                        <svg
+                                          data-v-cd102a71
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          xmlnsXlink="http://www.w3.org/1999/xlink"
+                                          aria-hidden="true"
+                                          role="img"
+                                          className="icon h-[1.15rem] w-[1.15rem]"
+                                          width="1em"
+                                          height="1em"
+                                          viewBox="0 0 256 256"
+                                        >
+                                          <g fill="currentColor">
+                                            <path
+                                              d="M216 96v112a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V96a8 8 0 0 1 8-8h160a8 8 0 0 1 8 8"
+                                              opacity=".2"
+                                            />
+                                            <path d="M208 80h-32V56a48 48 0 0 0-96 0v24H48a16 16 0 0 0-16 16v112a16 16 0 0 0 16 16h160a16 16 0 0 0 16-16V96a16 16 0 0 0-16-16M96 56a32 32 0 0 1 64 0v24H96Zm112 152H48V96h160zm-68-56a12 12 0 1 1-12-12a12 12 0 0 1 12 12" />
+                                          </g>
+                                        </svg>
+                                      </div>
+                                      {/**/}
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="col-span-12">
+                                  <div className="relative">
+                                    {/**/}
+                                    <div className="group/nui-input relative">
+                                      <input
+                                        id="ninja-input-11"
+                                        type="text"
+                                        onChange={handleInput}
+                                        value={userData.password}
+                                        name="password"
+                                        className="nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 pe-4 ps-9 rounded"
+                                        placeholder="Password"
                                       />
                                       {/**/}
                                       {/**/}
@@ -254,6 +386,9 @@ const General = () => {
                                       <input
                                         id="ninja-input-12"
                                         type="text"
+                                        onChange={handleInput}
+                                        value={userData.firstName}
+                                        name="firstName"
                                         className="nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 pe-4 ps-9 rounded"
                                         placeholder="First Name"
                                       />
@@ -291,6 +426,9 @@ const General = () => {
                                       <input
                                         id="ninja-input-13"
                                         type="text"
+                                        onChange={handleInput}
+                                        value={userData.lastName}
+                                        name="lastName"
                                         className="nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 pe-4 ps-9 rounded"
                                         placeholder="Last Name"
                                       />
@@ -327,7 +465,23 @@ const General = () => {
                                     <div className="group/nui-input relative">
                                       <input
                                         id="ninja-input-14"
-                                        type="text"
+                                        type="number"
+                                        onKeyDown={(e) =>
+                                          [
+                                            "ArrowUp",
+                                            "ArrowDown",
+                                            "e",
+                                            "E",
+                                            "+",
+                                            "-",
+                                            "*",
+                                            "",
+                                          ].includes(e.key) &&
+                                          e.preventDefault()
+                                        }
+                                        onChange={handleInput}
+                                        value={userData.phone}
+                                        name="phone"
                                         className="nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 pe-4 ps-9 rounded"
                                         placeholder="Phone Number"
                                       />
@@ -365,6 +519,9 @@ const General = () => {
                                       <input
                                         id="ninja-input-15"
                                         type="text"
+                                        onChange={handleInput}
+                                        value={userData.address}
+                                        name="address"
                                         className="nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 pe-4 ps-9 rounded"
                                         placeholder="Address"
                                       />
@@ -402,6 +559,9 @@ const General = () => {
                                       <input
                                         id="ninja-input-16"
                                         type="text"
+                                        onChange={handleInput}
+                                        value={userData.city}
+                                        name="city"
                                         className="nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 pe-4 ps-9 rounded"
                                         placeholder="City"
                                       />
@@ -439,6 +599,9 @@ const General = () => {
                                       <input
                                         id="ninja-input-17"
                                         type="text"
+                                        onChange={handleInput}
+                                        value={userData.country}
+                                        name="country"
                                         className="nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 pe-4 ps-9 rounded"
                                         placeholder="Country"
                                       />
@@ -475,7 +638,23 @@ const General = () => {
                                     <div className="group/nui-input relative">
                                       <input
                                         id="ninja-input-18"
-                                        type="text"
+                                        type="number"
+                                        onKeyDown={(e) =>
+                                          [
+                                            "ArrowUp",
+                                            "ArrowDown",
+                                            "e",
+                                            "E",
+                                            "+",
+                                            "-",
+                                            "*",
+                                            "",
+                                          ].includes(e.key) &&
+                                          e.preventDefault()
+                                        }
+                                        onChange={handleInput}
+                                        value={userData.postalCode}
+                                        name="postalCode"
                                         className="nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 pe-4 ps-9 rounded"
                                         placeholder="Postal Code"
                                       />
@@ -521,18 +700,15 @@ const General = () => {
                                         className="nui-focus border-muted-300 placeholder:text-muted-300 focus:border-muted-300 focus:shadow-muted-300/50 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 dark:focus:shadow-muted-800/50 peer w-full border bg-white font-sans transition-all duration-300 focus:shadow-lg disabled:cursor-not-allowed disabled:opacity-75 min-h-[2.5rem] text-sm leading-[1.6] rounded resize-none p-2"
                                         placeholder="This will be shown to the user on the dashboard..."
                                         rows={4}
-                                        defaultValue={""}
+                                        onChange={handleInput}
+                                        value={userData.note}
+                                        name="note"
                                       />
-                                      {/**/}
-                                      {/**/}
-                                      {/**/}
-                                      {/**/}
                                     </div>
                                   </div>
                                 </div>
                               </div>
                             </fieldset>
-                            
                           </div>
                         </div>
                       </div>

@@ -1,16 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SideBar from "../../layout/AdminSidebar/Sidebar";
-
+import Log from "../../assets/img/log.jpg";
+import { useAuthUser } from "react-auth-kit";
+import { useNavigate } from "react-router-dom";
 const AdminTickets = () => {
   const [Active, setActive] = useState(false);
+
+  let authUser = useAuthUser();
+  let Navigate = useNavigate();
   let toggleBar = () => {
-    console.log("ad");
     if (Active === true) {
       setActive(false);
     } else {
       setActive(true);
     }
   };
+  useEffect(() => {
+    if (authUser().user.role === "user") {
+      Navigate("/dashboard");
+      return;
+    }
+  }, []);
   return (
     <div>
       <div>
@@ -21,12 +31,23 @@ const AdminTickets = () => {
               <div className="relative z-50 mb-5 flex h-16 items-center gap-2">
                 <button
                   type="button"
-                  className="flex h-10 w-10 items-center justify-center -ms-3"
+                  className="flex h-10 for-desk w-10 items-center justify-center -ms-3"
                 >
-                  <div className="relative h-5 w-5 scale-90">
+                  <div className="relative  h-5 w-5 scale-90">
                     <span className="bg-primary-500 absolute block h-0.5 w-full transition-all duration-300 top-1 max-w-[75%] -rotate-45 top-0.5" />
                     <span className="bg-primary-500 absolute top-1/2 block h-0.5 w-full max-w-[50%] transition-all duration-300 translate-x-4 opacity-0" />
                     <span className="bg-primary-500 absolute block h-0.5 w-full transition-all duration-300 bottom-1 max-w-[75%] rotate-45 bottom-0" />
+                  </div>
+                </button>
+                <button
+                  onClick={toggleBar}
+                  type="button"
+                  className="flex for-mbl h-10 w-10 items-center justify-center -ms-3"
+                >
+                  <div className="relative h-5 w-5">
+                    <span className="bg-primary-500 absolute block h-0.5 w-full transition-all duration-300 top-0.5 top-0.5" />
+                    <span className="bg-primary-500 absolute top-1/2 block h-0.5 w-full max-w-[50%] transition-all duration-300" />
+                    <span className="bg-primary-500 absolute block h-0.5 w-full transition-all duration-300 bottom-0 bottom-0" />
                   </div>
                 </button>
                 <h1 className="font-heading text-2xl font-light leading-normal leading-normal text-muted-800 hidden dark:text-white md:block">
@@ -133,7 +154,7 @@ const AdminTickets = () => {
                     >
                       <div className="relative inline-flex h-9 w-9 items-center justify-center rounded-full">
                         <img
-                          src="https://api.dicebear.com/6.x/pixel-art/svg?seed=tom tom&options[mood][]=happy"
+                          src={Log}
                           className="max-w-full rounded-full object-cover shadow-sm dark:border-transparent"
                           alt=""
                         />

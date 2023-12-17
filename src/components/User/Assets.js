@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import SideBar from "../../layout/UserSidebar/SideBar";
-
+import Log from "../../assets/img/log.jpg";
 const Assets = () => {
   const [Active, setActive] = useState(false);
   let toggleBar = () => {
@@ -144,7 +144,7 @@ const Assets = () => {
                     >
                       <div className="relative inline-flex h-9 w-9 items-center justify-center rounded-full">
                         <img
-                          src="https://api.dicebear.com/6.x/pixel-art/svg?seed=ahmarjb&options[mood][]=happy"
+                          src={Log}
                           className="max-w-full rounded-full object-cover shadow-sm dark:border-transparent"
                           alt=""
                         />

@@ -1,17 +1,136 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SideBar from "../../../layout/AdminSidebar/Sidebar";
 import UserSideBar from "./UserSideBar";
-
+import Log from "../../../assets/img/log.jpg";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useAuthUser } from "react-auth-kit";
+import {
+  getCoinsApi,
+  signleUsersApi,
+  updateTransactionApi,
+} from "../../../Api/Service";
 const UserTransactions = () => {
-  const [Active, setActive] = useState(false);
   const [modal, setModal] = useState(false);
-  let toggleBar = () => { 
+  const [isLoading, setisLoading] = useState(true);
+  const [UserTransactions, setUserTransactions] = useState([]);
+  const [isDisbaled, setisDisbaled] = useState(false);
+  const [singleTransaction, setsingleTransaction] = useState();
+  const [userDetail, setuserDetail] = useState();
+
+  let { id } = useParams();
+
+  let authUser = useAuthUser();
+  let Navigate = useNavigate();
+  const [Active, setActive] = useState(false);
+  let toggleBar = () => {
     if (Active === true) {
       setActive(false);
     } else {
       setActive(true);
     }
   };
+  const [newNote, setnewNote] = useState({
+    note: "",
+    txId: "",
+  });
+  let handleInput = (e) => {
+    let name = e.target.name;
+    let value = e.target.value;
+    setnewNote({ ...newNote, [name]: value });
+  };
+  const getSignleUser = async () => {
+    try {
+      const signleUser = await signleUsersApi(id);
+
+      if (signleUser.success) {
+        setuserDetail(signleUser.signleUser);
+      } else {
+        toast.error(signleUser.msg);
+      }
+    } catch (error) {
+      toast.error(error);
+    } finally {
+    }
+  };
+  const getCoins = async () => {
+    try {
+      const userCoins = await getCoinsApi(id);
+
+      if (userCoins.success) {
+        setUserTransactions(userCoins.getCoin.transactions.reverse());
+        setisLoading(false);
+
+        return;
+      } else {
+        toast.error(userCoins.msg);
+      }
+    } catch (error) {
+      toast.error(error);
+    } finally {
+    }
+  };
+  let toggleModal = (data) => {
+    setnewNote({
+      note: data.note,
+      txId: data.txId,
+    });
+    setsingleTransaction(data);
+    setModal(true);
+  };
+  let toggleModalClose = () => {
+    setnewNote({
+      note: "",
+      txId: "",
+    });
+    setsingleTransaction("");
+    setModal(false);
+  };
+  const approveTransaction = async (txid, status) => {
+    if (status === "completed" && !newNote.txId) {
+      toast.error("Transaction id cannot be empty");
+      return;
+    }
+    let amount = txid.amount;
+    let _id = txid._id;
+    let txId = newNote.txId;
+    let trxName = txid.trxName;
+    let note = newNote.note;
+    let fromAddress = txid.fromAddress;
+
+    let body = { amount, txId, trxName, _id, note, fromAddress, status };
+
+    try {
+      setisDisbaled(true);
+      const userCoins = await updateTransactionApi(id, body);
+
+      if (userCoins.success) {
+        toast.success(userCoins.msg);
+        toggleModalClose();
+        getCoins();
+        return;
+      } else {
+        toast.error(userCoins.msg);
+      }
+    } catch (error) {
+      toast.error(error);
+    } finally {
+      setisDisbaled(false);
+    }
+  };
+  //
+
+  //
+  useEffect(() => {
+    if (authUser().user.role === "user") {
+      Navigate("/dashboard");
+      return;
+    }
+    getCoins();
+
+    getSignleUser();
+    console.log(newNote);
+  }, []);
   return (
     <div>
       <div>
@@ -134,7 +253,7 @@ const UserTransactions = () => {
                     >
                       <div className="relative inline-flex h-9 w-9 items-center justify-center rounded-full">
                         <img
-                          src="https://api.dicebear.com/6.x/pixel-art/svg?seed=tom tom&options[mood][]=happy"
+                          src={Log}
                           className="max-w-full rounded-full object-cover shadow-sm dark:border-transparent"
                           alt=""
                         />
@@ -166,7 +285,7 @@ const UserTransactions = () => {
               <seokit />
               <div className="min-h-screen overflow-hidden">
                 <div className="grid gap-8 sm:grid-cols-12">
-                  <UserSideBar />
+                  <UserSideBar userid={id} />
                   <div className="col-span-12 sm:col-span-8">
                     <div className="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white duration-300 rounded-md">
                       <div className="flex items-center justify-between p-4">
@@ -180,92 +299,109 @@ const UserTransactions = () => {
                           </p>
                         </div>
                       </div>
-                      <div className="pt-6">
-                        <div>
-                          <div className="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-xl p-3">
-                            <div className="flex w-full items-center gap-2">
-                              <div className="relative inline-flex shrink-0 items-center justify-center outline-none h-12 w-12 nui-mask nui-mask-blob bg-success-100 text-success-400">
-                                <div className="flex h-full w-full items-center justify-center overflow-hidden text-center transition-all duration-300">
-                                  <svg
-                                    data-v-cd102a71
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    xmlnsXlink="http://www.w3.org/1999/xlink"
-                                    aria-hidden="true"
-                                    role="img"
-                                    className="icon"
-                                    width="1em"
-                                    height="1em"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <path
-                                      fill="currentColor"
-                                      d="M11 20V7.825l-5.6 5.6L4 12l8-8l8 8l-1.4 1.425l-5.6-5.6V20z"
-                                    />
-                                  </svg>
-                                </div>
-                                {/**/}
-                                {/**/}
-                              </div>
-                              <div>
-                                <p
-                                  className="font-heading text-sm font-medium leading-normal leading-normal"
-                                  tag="h3"
-                                >
-                                  Bitcoin{" "}
-                                  <span className="text-muted-400">
-                                    (Pending)
-                                  </span>
-                                </p>
-                                <p className="font-alt text-xs font-normal leading-normal leading-normal text-muted-400 mt-1">
-                                  0.50534877{" "}
-                                  <span className="text-muted-500">
-                                    ($20944.58)
-                                  </span>
-                                </p>
-                                <p className="font-alt text-xs font-normal leading-normal leading-normal text-muted-400 md:hidden mt-1">
-                                  BTC At: 2023-12-13 15:32:46
-                                </p>
-                              </div>
-                              <div className="ms-auto flex items-center gap-2">
-                                <p
-                                  className="font-heading text-sm font-medium leading-normal leading-normal me-2 text-gray-500 hidden md:block"
-                                  tag="h3"
-                                >
-                                  At: 2023-12-13 15:32:46
-                                </p>
-                                <button
-                                  type="button"
-                                  className="disabled:opacity-60 disabled:cursor-not-allowed hover:shadow-none false false text-muted-700 bg-white border border-muted-300 dark:text-white dark:bg-muted-700 dark:hover:bg-muted-600 dark:border-muted-600 hover:bg-muted-50 rounded-md h-8 w-8 p-1 nui-focus relative inline-flex items-center justify-center space-x-1 font-sans text-sm font-normal leading-5 no-underline outline-none transition-all duration-300"
-                                >
-                                  <svg
-                                    data-v-cd102a71
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    xmlnsXlink="http://www.w3.org/1999/xlink"
-                                    aria-hidden="true"
-                                    role="img"
-                                    className="icon h-5 w-5"
-                                    width="1em"
-                                    height="1em"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <g
-                                      fill="none"
-                                      stroke="currentColor"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
+                      {!isLoading && (
+                        <div className="pt-6">
+                          {UserTransactions.map((transaction, index) => (
+                            <div key={index}>
+                              <div className="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-xl p-3">
+                                <div className="flex w-full items-center gap-2">
+                                  <div className="relative inline-flex shrink-0 items-center justify-center outline-none h-12 w-12 nui-mask nui-mask-blob bg-success-100 text-success-400">
+                                    <div className="flex h-full w-full items-center justify-center overflow-hidden text-center transition-all duration-300">
+                                      <svg
+                                        data-v-cd102a71
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        xmlnsXlink="http://www.w3.org/1999/xlink"
+                                        aria-hidden="true"
+                                        role="img"
+                                        className="icon"
+                                        width="1em"
+                                        height="1em"
+                                        viewBox="0 0 24 24"
+                                      >
+                                        <path
+                                          fill="currentColor"
+                                          d="M11 20V7.825l-5.6 5.6L4 12l8-8l8 8l-1.4 1.425l-5.6-5.6V20z"
+                                        />
+                                      </svg>
+                                    </div>
+                                    {/**/}
+                                    {/**/}
+                                  </div>
+                                  <div>
+                                    <p
+                                      className="font-heading capitalize text-sm font-medium leading-normal leading-normal"
+                                      tag="h3"
                                     >
-                                      <path d="M1 12s4-8 11-8s11 8 11 8s-4 8-11 8s-11-8-11-8" />
-                                      <circle cx={12} cy={12} r={3} />
-                                    </g>
-                                  </svg>
-                                </button>
+                                      {transaction.trxName}{" "}
+                                      <span className="text-muted-400 capitalize">
+                                        ({transaction.status})
+                                      </span>
+                                    </p>
+                                    <p className="font-alt text-xs font-normal leading-normal leading-normal text-muted-400 mt-1">
+                                      {transaction.amount.toFixed(8)}{" "}
+                                      <span className="text-muted-500">
+                                        {`($${
+                                          transaction.trxName === "bitcoin"
+                                            ? (
+                                                transaction.amount * 42087.57
+                                              ).toFixed(2)
+                                            : transaction.trxName === "ethereum"
+                                            ? (
+                                                transaction.amount * 2241.86
+                                              ).toFixed(2)
+                                            : transaction.trxName === "tether"
+                                            ? transaction.amount.toFixed(2)
+                                            : (0).toFixed(2)
+                                        })`}
+                                      </span>
+                                    </p>
+                                    <p className="font-alt text-xs font-normal leading-normal leading-normal text-muted-400 md:hidden mt-1">
+                                      At: {transaction.createdAt}
+                                    </p>
+                                  </div>
+                                  <div className="ms-auto flex items-center gap-2">
+                                    <p
+                                      className="font-heading text-sm font-medium leading-normal leading-normal me-2 text-gray-500 hidden md:block"
+                                      tag="h3"
+                                    >
+                                      At: {transaction.createdAt}
+                                    </p>
+                                    <button
+                                      onClick={() => toggleModal(transaction)}
+                                      type="button"
+                                      className="disabled:opacity-60 disabled:cursor-not-allowed hover:shadow-none false false text-muted-700 bg-white border border-muted-300 dark:text-white dark:bg-muted-700 dark:hover:bg-muted-600 dark:border-muted-600 hover:bg-muted-50 rounded-md h-8 w-8 p-1 nui-focus relative inline-flex items-center justify-center space-x-1 font-sans text-sm font-normal leading-5 no-underline outline-none transition-all duration-300"
+                                    >
+                                      <svg
+                                        data-v-cd102a71
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        xmlnsXlink="http://www.w3.org/1999/xlink"
+                                        aria-hidden="true"
+                                        role="img"
+                                        className="icon h-5 w-5"
+                                        width="1em"
+                                        height="1em"
+                                        viewBox="0 0 24 24"
+                                      >
+                                        <g
+                                          fill="none"
+                                          stroke="currentColor"
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          strokeWidth={2}
+                                        >
+                                          <path d="M1 12s4-8 11-8s11 8 11 8s-4 8-11 8s-11-8-11-8" />
+                                          <circle cx={12} cy={12} r={3} />
+                                        </g>
+                                      </svg>
+                                    </button>
+                                  </div>
+                                </div>
                               </div>
+                              {/**/}
                             </div>
-                          </div>
-                          {/**/}
+                          ))}
                         </div>
-                      </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -402,7 +538,7 @@ const UserTransactions = () => {
         <div>
           <div
             className="relative z-[9999]"
-            id="headlessui-dialog-40"
+            id="headlessui-dialog-55"
             role="dialog"
             aria-modal="true"
             data-headlessui-state="open"
@@ -411,7 +547,7 @@ const UserTransactions = () => {
             <div className="fixed inset-0 overflow-x-auto">
               <div className="flex min-h-full items-center justify-center p-4 text-center">
                 <div
-                  id="headlessui-dialog-panel-43"
+                  id="headlessui-dialog-panel-58"
                   data-headlessui-state="open"
                   className="dark:bg-muted-800 w-full bg-white text-left align-middle shadow-xl transition-all rounded-lg max-w-2xl"
                 >
@@ -436,14 +572,14 @@ const UserTransactions = () => {
                               />
                               <path d="M3 15.055v-.684c.126.053.255.1.39.142 2.092.642 4.313.987 6.61.987 2.297 0 4.518-.345 6.61-.987.135-.041.264-.089.39-.142v.684c0 1.347-.985 2.53-2.363 2.686a41.454 41.454 0 01-9.274 0C3.985 17.585 3 16.402 3 15.055z" />
                             </svg>{" "}
-                            User: hmilmine@gmail.com
+                            User: {userDetail.email}
                           </div>
                         </div>
                       </div>
                       <div className="mt-5 flex lg:ml-4 lg:mt-0">
                         <span className="block">
-                          <a
-                            href="/admin/users/9ad6fbc9-5550-4600-870a-17c9bd7d0eee"
+                          <Link
+                            to={`/admin/users/${userDetail._id}/general`}
                             className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 dark:hover:text-gray-200 dark:ring-gray-600 dark:ring-inset"
                           >
                             <svg
@@ -456,11 +592,12 @@ const UserTransactions = () => {
                               <path d="M11.603 7.963a.75.75 0 00-.977 1.138 2.5 2.5 0 01.142 3.667l-3 3a2.5 2.5 0 01-3.536-3.536l1.225-1.224a.75.75 0 00-1.061-1.06l-1.224 1.224a4 4 0 105.656 5.656l3-3a4 4 0 00-.225-5.865z" />
                             </svg>{" "}
                             User Profile{" "}
-                          </a>
+                          </Link>
                         </span>
                       </div>
                     </div>
                     <button
+                      onClick={toggleModalClose}
                       type="button"
                       className="flex h-9 w-9 items-center justify-center transition-colors duration-300 disabled:opacity-30 hover:bg-muted-100 dark:hover:bg-muted-700 text-muted-700 dark:text-muted-50 rounded-full"
                     >
@@ -491,7 +628,7 @@ const UserTransactions = () => {
                             href="#"
                             className="font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400 text-xs"
                           >
-                            9ad6ffc9-084a-4a...0a52d4{" "}
+                            {singleTransaction.txId}
                             <svg
                               data-v-cd102a71
                               xmlns="http://www.w3.org/2000/svg"
@@ -533,7 +670,7 @@ const UserTransactions = () => {
                             href="#"
                             className="font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400 text-xs"
                           >
-                            0b43a0f1aa1c41db...fbc33c{" "}
+                            {singleTransaction.txId}
                             <svg
                               data-v-cd102a71
                               xmlns="http://www.w3.org/2000/svg"
@@ -571,7 +708,7 @@ const UserTransactions = () => {
                           Block
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
-                          0b43a0f1aa1c41db...fbc33c
+                          {singleTransaction.txId}
                         </dd>
                       </div>
                       <div className="sm:col-span-1">
@@ -579,7 +716,7 @@ const UserTransactions = () => {
                           Timestamp
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
-                          2023-12-13 15:32:46
+                          {singleTransaction.createdAt}
                         </dd>
                       </div>
                       <div className="sm:col-span-1">
@@ -591,7 +728,7 @@ const UserTransactions = () => {
                             href="#"
                             className="font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
                           >
-                            bc1qrt7rkpswpgmc...hqdx6d{" "}
+                            {singleTransaction.fromAddress}
                             <svg
                               data-v-cd102a71
                               xmlns="http://www.w3.org/2000/svg"
@@ -633,7 +770,7 @@ const UserTransactions = () => {
                             href="#"
                             className="font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
                           >
-                            bc1quw62j6h8t83g...nj48zl{" "}
+                            {singleTransaction.txId}
                             <svg
                               data-v-cd102a71
                               xmlns="http://www.w3.org/2000/svg"
@@ -675,8 +812,30 @@ const UserTransactions = () => {
                             href="#"
                             className="font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
                           >
-                            0.50534877 BTC{" "}
-                            <span className="text-gray-400">($20944.58)</span>
+                            {singleTransaction.amount.toFixed(8)}{" "}
+                            {`${
+                              singleTransaction.trxName === "bitcoin"
+                                ? "BTC"
+                                : singleTransaction.trxName === "ethereum"
+                                ? "ETH"
+                                : singleTransaction.trxName === "tether"
+                                ? "USDT"
+                                : ""
+                            }`}
+                            {"   "}
+                            <span className="text-gray-400">{`($${
+                              singleTransaction.trxName === "bitcoin"
+                                ? (singleTransaction.amount * 42087.57).toFixed(
+                                    2
+                                  )
+                                : singleTransaction.trxName === "ethereum"
+                                ? (singleTransaction.amount * 2241.86).toFixed(
+                                    2
+                                  )
+                                : singleTransaction.trxName === "tether"
+                                ? singleTransaction.amount.toFixed(2)
+                                : (0).toFixed(2)
+                            })`}</span>
                             <svg
                               data-v-cd102a71
                               xmlns="http://www.w3.org/2000/svg"
@@ -714,95 +873,151 @@ const UserTransactions = () => {
                           Status
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
-                          <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100">
-                            Pending
-                          </span>
+                          {singleTransaction.status === "pending" ? (
+                            <>
+                              <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100">
+                                Pending
+                              </span>
+                            </>
+                          ) : singleTransaction.status === "completed" ? (
+                            <>
+                              <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
+                                Completed
+                              </span>
+                            </>
+                          ) : singleTransaction.status === "failed" ? (
+                            <>
+                              <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100">
+                                Failed
+                              </span>
+                            </>
+                          ) : (
+                            <>
+                              <span className="border-muted-300 dark:border-muted-700 pointer-events-none absolute inset-y-0 end-0 flex items-center justify-center border-l w-10">
+                                <svg
+                                  data-v-cd102a71
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  xmlnsXlink="http://www.w3.org/1999/xlink"
+                                  aria-hidden="true"
+                                  role="img"
+                                  className="icon text-muted-400 transition-transform duration-300 h-4 w-4"
+                                  width="1em"
+                                  height="1em"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="m6 9l6 6l6-6"
+                                  />
+                                </svg>
+                              </span>
+                            </>
+                          )}
                           <span className="text-gray-400 dark:text-gray-500 ml-2">
-                            Authorization missing
+                            {singleTransaction.note}
                           </span>
+
+                          {/**/}
                         </dd>
                       </div>
                     </dl>
-                    <div className="mt-4 border-t border-gray-200 dark:border-gray-700 pt-2">
-                      <p
-                        className="font-heading text-sm font-medium leading-normal leading-normal"
-                        tag="h3"
-                      >
-                        {" "}
-                        Actions{" "}
-                      </p>
-                      <p className="font-alt text-xs font-normal leading-normal leading-normal text-muted-400 mt-1">
-                        {" "}
-                        You can approve or reject this transaction.{" "}
-                      </p>
-                      <div className="mt-4">
-                        <span
-                          htmlFor="txid"
-                          className="text-sm font-medium text-gray-500"
+                    {singleTransaction.status === "pending" ? (
+                      <div className="mt-4 border-t border-gray-200 dark:border-gray-700 pt-2">
+                        <p
+                          className="font-heading text-sm font-medium leading-normal leading-normal"
+                          tag="h3"
                         >
-                          Transaction ID
-                        </span>
-                        <div className="relative">
-                          {/**/}
-                          <div className="group/nui-input relative">
-                            <input
-                              id="txid"
-                              type="text"
-                              className="mt-1 nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 px-3 rounded"
-                              placeholder="Enter transaction ID"
-                            />
+                          {" "}
+                          Actions{" "}
+                        </p>
+                        <p className="font-alt text-xs font-normal leading-normal leading-normal text-muted-400 mt-1">
+                          {" "}
+                          You can approve or reject this transaction.{" "}
+                        </p>
+                        <div className="mt-4">
+                          <span
+                            htmlFor="txid"
+                            className="text-sm font-medium text-gray-500"
+                          >
+                            Transaction ID
+                          </span>
+                          <div className="relative">
                             {/**/}
-                            {/**/}
-                            {/**/}
-                            {/**/}
+                            <div className="group/nui-input relative">
+                              <input
+                                id="txId"
+                                type="text"
+                                onChange={handleInput}
+                                value={newNote.txId}
+                                name="txId"
+                                className="mt-1 nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 px-3 rounded"
+                                placeholder="Enter transaction ID"
+                              />
+                              {/**/}
+                              {/**/}
+                              {/**/}
+                              {/**/}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="mt-1">
-                        <span
-                          htmlFor="note"
-                          className="text-sm font-medium text-gray-500"
-                        >
-                          Note
-                        </span>
-                        <div className="relative">
-                          {/**/}
-                          <div className="group/nui-input relative">
-                            <input
-                              id="note"
-                              type="text"
-                              className="mt-1 nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 px-3 rounded"
-                              placeholder="Enter note"
-                            />
-                            {/**/}
-                            {/**/}
-                            {/**/}
-                            {/**/}
+                        <div className="mt-1">
+                          <span
+                            htmlFor="note"
+                            className="text-sm font-medium text-gray-500"
+                          >
+                            Note
+                          </span>
+                          <div className="relative">
+                            <div className="group/nui-input relative">
+                              <input
+                                id="note"
+                                onChange={handleInput}
+                                value={newNote.note}
+                                name="note"
+                                type="text"
+                                className="mt-1 nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 px-3 rounded"
+                                placeholder="Enter note"
+                              />
+                            </div>
                           </div>
                         </div>
+                        <div className="flex gap-x-2 mt-2">
+                          <button
+                            data-v-71bb21a6
+                            type="button"
+                            disabled={isDisbaled}
+                            onClick={() =>
+                              approveTransaction(singleTransaction, "failed")
+                            }
+                            className="is-button rounded is-button-default bg-primary-500 hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700"
+                          >
+                            Decline
+                          </button>
+                          <button
+                            data-v-71bb21a6
+                            type="button"
+                            onClick={() =>
+                              approveTransaction(singleTransaction, "completed")
+                            }
+                            className="is-button rounded is-button-default bg-primary-500 hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700"
+                          >
+                            Approve
+                          </button>
+                        </div>
                       </div>
-                      <div className="flex gap-x-2 mt-2">
-                        <button
-                          data-v-71bb21a6
-                          type="button"
-                          className="is-button rounded is-button-default bg-primary-500 hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700"
-                        >
-                          Decline
-                        </button>
-                        <button
-                          data-v-71bb21a6
-                          type="button"
-                          className="is-button rounded is-button-default bg-primary-500 hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700"
-                        >
-                          Approve
-                        </button>
-                      </div>
-                    </div>
+                    ) : (
+                      ""
+                    )}
                   </div>
                   <div className="flex w-full items-center gap-x-2 justify-end">
                     <div className="p-4 md:p-6">
                       <div className="flex gap-x-2">
                         <button
+                          onClick={toggleModalClose}
                           data-v-71bb21a6
                           type="button"
                           className="is-button rounded is-button-default"

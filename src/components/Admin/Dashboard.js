@@ -1,16 +1,54 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SideBar from "../../layout/AdminSidebar/Sidebar";
-
+import { useAuthUser } from "react-auth-kit";
+import { useNavigate } from "react-router-dom";
+import Log from "../../assets/img/log.jpg";
+import { allUsersApi } from "../../Api/Service";
+import { toast } from "react-toastify";
 const Dashboard = () => {
+  let Navigate = useNavigate();
+  let authUser = useAuthUser();
   const [Active, setActive] = useState(false);
+  const [isLoading, setisLoading] = useState(true);
+  const [Users, setUsers] = useState("");
   let toggleBar = () => {
-    console.log("ad");
     if (Active === true) {
       setActive(false);
     } else {
       setActive(true);
     }
   };
+  const [isUser, setIsUser] = useState(true);
+  const getAllUsers = async () => {
+    try {
+      const allUsers = await allUsersApi();
+
+      if (allUsers.success) {
+        const filtered = allUsers.allUsers.filter((user) =>
+          user.role.includes("user")
+        );
+        setUsers(filtered);
+      } else {
+        toast.error(allUsers.msg);
+      }
+    } catch (error) {
+      console.log("error: ", error);
+      toast.error(error);
+    } finally {
+      setisLoading(false);
+    }
+  };
+  useEffect(() => {
+    getAllUsers();
+    if (authUser().user.role === "user") {
+      Navigate("/dashboard");
+      return;
+    } else if (authUser().user.role === "admin") {
+      setIsUser(authUser.user);
+      return;
+    }
+  }, []);
+
   return (
     <div>
       <div>
@@ -145,7 +183,7 @@ const Dashboard = () => {
                     >
                       <div className="relative inline-flex h-9 w-9 items-center justify-center rounded-full">
                         <img
-                          src="https://api.dicebear.com/6.x/pixel-art/svg?seed=tom tom&options[mood][]=happy"
+                          src={Log}
                           className="max-w-full rounded-full object-cover shadow-sm dark:border-transparent"
                           alt=""
                         />
@@ -201,11 +239,14 @@ const Dashboard = () => {
                             </g>
                           </svg>
                           <h4 className="text-muted-800 dark:text-muted-100 font-sans text-xl font-semibold">
-                            {/* <div>50</div> */} 
+                            {/* <div>50</div> */}
+                            {isLoading ? (
                               <div>
                                 <div className="nui-placeload animate-nui-placeload h-4 w-8 rounded mx-auto"></div>
                               </div>
-                          
+                            ) : (
+                              Users.length
+                            )}
                           </h4>
                           <p className="text-muted-400 font-sans text-sm">
                             Agency Users
