@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import SideBar from "../../layout/UserSidebar/SideBar";
 import { useAuthUser } from "react-auth-kit";
-import { useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import Log from "../../assets/img/log.jpg";
 import { getCoinsApi, getCoinsUserApi } from "../../Api/Service";
 import { toast } from "react-toastify";
@@ -10,7 +10,12 @@ const Dashboard = () => {
   const Navigate = useNavigate();
 
   const [isUser, setIsUser] = useState(true);
+  const [isLoading, setisLoading] = useState(true);
+  const [UserData, setUserData] = useState(true);
 
+  const [btcBalance, setbtcBalance] = useState(0);
+  const [ethBalance, setethBalance] = useState(0);
+  const [usdtBalance, setusdtBalance] = useState(0);
   const [Active, setActive] = useState(false);
   let toggleBar = () => {
     if (Active === true) {
@@ -19,64 +24,62 @@ const Dashboard = () => {
       setActive(true);
     }
   };
-  const getCoins = async () => {
-    let data = "isUser._id";
+  const getCoins = async (data) => {
+    let id = data._id;
     try {
-      const userCoins = await getCoinsUserApi(data);
+      const userCoins = await getCoinsUserApi(id);
 
       if (userCoins.success) {
-        console.log("userCoins: ", userCoins);
-        toast.info("userCoins: ", userCoins);
-        // setisLoading(false);
-        // setUserData(userCoins.getCoin);
-        // // tx
-        // const btc = userCoins.getCoin.transactions.filter((transaction) =>
-        //   transaction.trxName.includes("bitcoin")
-        // );
-        // const btccomplete = btc.filter((transaction) =>
-        //   transaction.status.includes("completed")
-        // );
-        // let btcCount = 0;
-        // let btcValueAdded = 0;
-        // for (let i = 0; i < btccomplete.length; i++) {
-        //   const element = btccomplete[i];
-        //   btcCount = parseInt(element.amount);
-        //   btcValueAdded += btcCount;
-        // }
-        // setbtcBalance(btcValueAdded);
-        // // tx
-        // // tx
-        // const eth = userCoins.getCoin.transactions.filter((transaction) =>
-        //   transaction.trxName.includes("ethereum")
-        // );
-        // const ethcomplete = eth.filter((transaction) =>
-        //   transaction.status.includes("completed")
-        // );
-        // let ethCount = 0;
-        // let ethValueAdded = 0;
-        // for (let i = 0; i < ethcomplete.length; i++) {
-        //   const element = ethcomplete[i];
-        //   ethCount = parseInt(element.amount);
-        //   ethValueAdded += ethCount;
-        // }
-        // setethBalance(ethValueAdded);
-        // // tx
-        // // tx
-        // const usdt = userCoins.getCoin.transactions.filter((transaction) =>
-        //   transaction.trxName.includes("tether")
-        // );
-        // const usdtcomplete = usdt.filter((transaction) =>
-        //   transaction.status.includes("completed")
-        // );
-        // let usdtCount = 0;
-        // let usdtValueAdded = 0;
-        // for (let i = 0; i < usdtcomplete.length; i++) {
-        //   const element = usdtcomplete[i];
-        //   usdtCount = parseInt(element.amount);
-        //   usdtValueAdded += usdtCount;
-        // }
-        // setusdtBalance(usdtValueAdded);
-        // // tx
+        setUserData(userCoins.getCoin);
+        setisLoading(false);
+        // tx
+        const btc = userCoins.getCoin.transactions.filter((transaction) =>
+          transaction.trxName.includes("bitcoin")
+        );
+        const btccomplete = btc.filter((transaction) =>
+          transaction.status.includes("completed")
+        );
+        let btcCount = 0;
+        let btcValueAdded = 0;
+        for (let i = 0; i < btccomplete.length; i++) {
+          const element = btccomplete[i];
+          btcCount = parseInt(element.amount);
+          btcValueAdded += btcCount;
+        }
+        setbtcBalance(btcValueAdded);
+        // tx
+        // tx
+        const eth = userCoins.getCoin.transactions.filter((transaction) =>
+          transaction.trxName.includes("ethereum")
+        );
+        const ethcomplete = eth.filter((transaction) =>
+          transaction.status.includes("completed")
+        );
+        let ethCount = 0;
+        let ethValueAdded = 0;
+        for (let i = 0; i < ethcomplete.length; i++) {
+          const element = ethcomplete[i];
+          ethCount = parseInt(element.amount);
+          ethValueAdded += ethCount;
+        }
+        setethBalance(ethValueAdded);
+        // tx
+        // tx
+        const usdt = userCoins.getCoin.transactions.filter((transaction) =>
+          transaction.trxName.includes("tether")
+        );
+        const usdtcomplete = usdt.filter((transaction) =>
+          transaction.status.includes("completed")
+        );
+        let usdtCount = 0;
+        let usdtValueAdded = 0;
+        for (let i = 0; i < usdtcomplete.length; i++) {
+          const element = usdtcomplete[i];
+          usdtCount = parseInt(element.amount);
+          usdtValueAdded += usdtCount;
+        }
+        setusdtBalance(usdtValueAdded);
+        // tx
 
         return;
       } else {
@@ -90,7 +93,8 @@ const Dashboard = () => {
   useEffect(() => {
     if (authUser().user.role === "user") {
       setIsUser(authUser().user);
-      getCoins();
+
+      getCoins(authUser().user);
       return;
     } else if (authUser().user.role === "admin") {
       Navigate("/admin/dashboard");
@@ -268,7 +272,12 @@ const Dashboard = () => {
                     </p>
                     <p className="font-heading text-3xl font-bold leading-normal leading-normal text-muted-800 dark:text-white">
                       <span className="after:text-success-500 after:relative after:-end-2 after:-top-3 after:text-sm">
-                        $0.00
+                        $
+                        {(
+                          btcBalance * 42087.57 +
+                          ethBalance * 2241.86 +
+                          usdtBalance
+                        ).toFixed(2)}
                         <span className="text-muted-500 dark:text-muted-400" />
                       </span>
                     </p>
@@ -284,207 +293,209 @@ const Dashboard = () => {
                             <h3 className="font-heading text-base font-semibold leading-tight text-muted-800 dark:text-white">
                               <span>My Assets</span>
                             </h3>
-                            <a
-                              href="./assets.html"
+                            <NavLink
+                              to="/assets"
                               className="bg-muted-100 hover:bg-muted-200 dark:bg-muted-700 dark:hover:bg-muted-900 text-primary-500 rounded-lg px-4 py-2 font-sans text-sm font-medium underline-offset-4 transition-colors duration-300 hover:underline"
                             >
                               View All
-                            </a>
+                            </NavLink>
                           </div>
-                          <div className="mb-2 space-y-5">
-                            <div className="flex items-center gap-3">
-                              <div className="border-muted-200 dark:border-muted-700 flex h-10 w-10 items-center justify-center rounded-full border">
-                                <svg
-                                  data-v-cd102a71
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  xmlnsXlink="http://www.w3.org/1999/xlink"
-                                  aria-hidden="true"
-                                  role="img"
-                                  className="icon text-muted-400 h-6 w-6"
-                                  width="1em"
-                                  height="1em"
-                                  viewBox="0 0 32 32"
-                                >
-                                  <path
-                                    fill="currentColor"
-                                    fillRule="evenodd"
-                                    d="M16 32C7.163 32 0 24.837 0 16S7.163 0 16 0s16 7.163 16 16s-7.163 16-16 16m7.189-17.98c.314-2.096-1.283-3.223-3.465-3.975l.708-2.84l-1.728-.43l-.69 2.765c-.454-.114-.92-.22-1.385-.326l.695-2.783L15.596 6l-.708 2.839c-.376-.086-.746-.17-1.104-.26l.002-.009l-2.384-.595l-.46 1.846s1.283.294 1.256.312c.7.175.826.638.805 1.006l-.806 3.235c.048.012.11.03.18.057l-.183-.045l-1.13 4.532c-.086.212-.303.531-.793.41c.018.025-1.256-.313-1.256-.313l-.858 1.978l2.25.561c.418.105.828.215 1.231.318l-.715 2.872l1.727.43l.708-2.84c.472.127.93.245 1.378.357l-.706 2.828l1.728.43l.715-2.866c2.948.558 5.164.333 6.097-2.333c.752-2.146-.037-3.385-1.588-4.192c1.13-.26 1.98-1.003 2.207-2.538m-3.95 5.538c-.533 2.147-4.148.986-5.32.695l.95-3.805c1.172.293 4.929.872 4.37 3.11m.535-5.569c-.487 1.953-3.495.96-4.47.717l.86-3.45c.975.243 4.118.696 3.61 2.733"
-                                  ></path>
-                                </svg>
-                              </div>
-                              <div>
-                                <h4 className="font-heading text-xs font-semibold leading-tight text-muted-800 dark:text-white">
-                                  <span>Bitcoin Wallet</span>
-                                </h4>
-                                <p className="font-alt text-xs font-normal leading-normal leading-normal">
-                                  <span className="text-muted-400">
-                                    0.00000000 BTC
-                                  </span>
-                                </p>
-                              </div>
-                              <div className="ms-auto flex items-center">
-                                <a
-                                  href="/assets/9ad4d3ce-be86-4e79-b22c-42b7cc8745bc"
-                                  className="disabled:opacity-60 disabled:cursor-not-allowed hover:shadow-none false false text-muted-700 bg-white border border-muted-300 dark:text-white dark:bg-muted-700 dark:hover:bg-muted-600 dark:border-muted-600 hover:bg-muted-50 rounded-xl h-10 w-10 p-2 nui-focus relative inline-flex items-center justify-center space-x-1 font-sans text-sm font-normal leading-5 no-underline outline-none transition-all duration-300 scale-75"
-                                  disabled="false"
-                                  muted
-                                >
+                          {!isLoading && (
+                            <div className="mb-2 space-y-5">
+                              <div className="flex items-center gap-3">
+                                <div className="border-muted-200 dark:border-muted-700 flex h-10 w-10 items-center justify-center rounded-full border">
                                   <svg
                                     data-v-cd102a71
                                     xmlns="http://www.w3.org/2000/svg"
                                     xmlnsXlink="http://www.w3.org/1999/xlink"
                                     aria-hidden="true"
                                     role="img"
-                                    className="icon h-5 w-5"
+                                    className="icon text-muted-400 h-6 w-6"
                                     width="1em"
                                     height="1em"
-                                    viewBox="0 0 24 24"
+                                    viewBox="0 0 32 32"
                                   >
                                     <path
-                                      fill="none"
-                                      stroke="currentColor"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M5 12h14m-7-7l7 7l-7 7"
-                                    />
+                                      fill="currentColor"
+                                      fillRule="evenodd"
+                                      d="M16 32C7.163 32 0 24.837 0 16S7.163 0 16 0s16 7.163 16 16s-7.163 16-16 16m7.189-17.98c.314-2.096-1.283-3.223-3.465-3.975l.708-2.84l-1.728-.43l-.69 2.765c-.454-.114-.92-.22-1.385-.326l.695-2.783L15.596 6l-.708 2.839c-.376-.086-.746-.17-1.104-.26l.002-.009l-2.384-.595l-.46 1.846s1.283.294 1.256.312c.7.175.826.638.805 1.006l-.806 3.235c.048.012.11.03.18.057l-.183-.045l-1.13 4.532c-.086.212-.303.531-.793.41c.018.025-1.256-.313-1.256-.313l-.858 1.978l2.25.561c.418.105.828.215 1.231.318l-.715 2.872l1.727.43l.708-2.84c.472.127.93.245 1.378.357l-.706 2.828l1.728.43l.715-2.866c2.948.558 5.164.333 6.097-2.333c.752-2.146-.037-3.385-1.588-4.192c1.13-.26 1.98-1.003 2.207-2.538m-3.95 5.538c-.533 2.147-4.148.986-5.32.695l.95-3.805c1.172.293 4.929.872 4.37 3.11m.535-5.569c-.487 1.953-3.495.96-4.47.717l.86-3.45c.975.243 4.118.696 3.61 2.733"
+                                    ></path>
                                   </svg>
-                                </a>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-3">
-                              <div className="border-muted-200 dark:border-muted-700 flex h-10 w-10 items-center justify-center rounded-full border">
-                                <svg
-                                  data-v-cd102a71
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  xmlnsXlink="http://www.w3.org/1999/xlink"
-                                  aria-hidden="true"
-                                  role="img"
-                                  className="icon text-muted-400 h-6 w-6"
-                                  width="1em"
-                                  height="1em"
-                                  viewBox="0 0 32 32"
-                                >
-                                  <g fill="currentColor" fillRule="evenodd">
-                                    <path d="M16 32C7.163 32 0 24.837 0 16S7.163 0 16 0s16 7.163 16 16s-7.163 16-16 16m7.994-15.781L16.498 4L9 16.22l7.498 4.353zM24 17.616l-7.502 4.351L9 17.617l7.498 10.378z"></path>
-                                    <g fillRule="nonzero">
+                                </div>
+                                <div>
+                                  <h4 className="font-heading text-xs font-semibold leading-tight text-muted-800 dark:text-white">
+                                    <span>Bitcoin Wallet</span>
+                                  </h4>
+                                  <p className="font-alt text-xs font-normal leading-normal leading-normal">
+                                    <span className="text-muted-400">
+                                      {btcBalance.toFixed(8)} BTC
+                                    </span>
+                                  </p>
+                                </div>
+                                <div className="ms-auto flex items-center">
+                                  <a
+                                    href="/assets/9ad4d3ce-be86-4e79-b22c-42b7cc8745bc"
+                                    className="disabled:opacity-60 disabled:cursor-not-allowed hover:shadow-none false false text-muted-700 bg-white border border-muted-300 dark:text-white dark:bg-muted-700 dark:hover:bg-muted-600 dark:border-muted-600 hover:bg-muted-50 rounded-xl h-10 w-10 p-2 nui-focus relative inline-flex items-center justify-center space-x-1 font-sans text-sm font-normal leading-5 no-underline outline-none transition-all duration-300 scale-75"
+                                    disabled="false"
+                                    muted
+                                  >
+                                    <svg
+                                      data-v-cd102a71
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      xmlnsXlink="http://www.w3.org/1999/xlink"
+                                      aria-hidden="true"
+                                      role="img"
+                                      className="icon h-5 w-5"
+                                      width="1em"
+                                      height="1em"
+                                      viewBox="0 0 24 24"
+                                    >
                                       <path
-                                        fillOpacity=".298"
-                                        d="M16.498 4v8.87l7.497 3.35zm0 17.968v6.027L24 17.616z"
-                                      ></path>
-                                      <path
-                                        fillOpacity=".801"
-                                        d="m16.498 20.573l7.497-4.353l-7.497-3.348z"
-                                      ></path>
-                                      <path
-                                        fillOpacity=".298"
-                                        d="m9 16.22l7.498 4.353v-7.701z"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M5 12h14m-7-7l7 7l-7 7"
                                       />
+                                    </svg>
+                                  </a>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-3">
+                                <div className="border-muted-200 dark:border-muted-700 flex h-10 w-10 items-center justify-center rounded-full border">
+                                  <svg
+                                    data-v-cd102a71
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    xmlnsXlink="http://www.w3.org/1999/xlink"
+                                    aria-hidden="true"
+                                    role="img"
+                                    className="icon text-muted-400 h-6 w-6"
+                                    width="1em"
+                                    height="1em"
+                                    viewBox="0 0 32 32"
+                                  >
+                                    <g fill="currentColor" fillRule="evenodd">
+                                      <path d="M16 32C7.163 32 0 24.837 0 16S7.163 0 16 0s16 7.163 16 16s-7.163 16-16 16m7.994-15.781L16.498 4L9 16.22l7.498 4.353zM24 17.616l-7.502 4.351L9 17.617l7.498 10.378z"></path>
+                                      <g fillRule="nonzero">
+                                        <path
+                                          fillOpacity=".298"
+                                          d="M16.498 4v8.87l7.497 3.35zm0 17.968v6.027L24 17.616z"
+                                        ></path>
+                                        <path
+                                          fillOpacity=".801"
+                                          d="m16.498 20.573l7.497-4.353l-7.497-3.348z"
+                                        ></path>
+                                        <path
+                                          fillOpacity=".298"
+                                          d="m9 16.22l7.498 4.353v-7.701z"
+                                        />
+                                      </g>
                                     </g>
-                                  </g>
-                                </svg>
+                                  </svg>
+                                </div>
+                                <div>
+                                  <h4 className="font-heading text-xs font-semibold leading-tight text-muted-800 dark:text-white">
+                                    <span>Ethereum Wallet</span>
+                                  </h4>
+                                  <p className="font-alt text-xs font-normal leading-normal leading-normal">
+                                    <span className="text-muted-400">
+                                      {ethBalance.toFixed(8)} ETH
+                                    </span>
+                                  </p>
+                                </div>
+                                <div className="ms-auto flex items-center">
+                                  <a
+                                    href="/assets/9ad4d3ce-befa-486f-8dd8-c047353b5441"
+                                    className="disabled:opacity-60 disabled:cursor-not-allowed hover:shadow-none false false text-muted-700 bg-white border border-muted-300 dark:text-white dark:bg-muted-700 dark:hover:bg-muted-600 dark:border-muted-600 hover:bg-muted-50 rounded-xl h-10 w-10 p-2 nui-focus relative inline-flex items-center justify-center space-x-1 font-sans text-sm font-normal leading-5 no-underline outline-none transition-all duration-300 scale-75"
+                                    disabled="false"
+                                    muted
+                                  >
+                                    <svg
+                                      data-v-cd102a71
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      xmlnsXlink="http://www.w3.org/1999/xlink"
+                                      aria-hidden="true"
+                                      role="img"
+                                      className="icon h-5 w-5"
+                                      width="1em"
+                                      height="1em"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M5 12h14m-7-7l7 7l-7 7"
+                                      />
+                                    </svg>
+                                  </a>
+                                </div>
                               </div>
-                              <div>
-                                <h4 className="font-heading text-xs font-semibold leading-tight text-muted-800 dark:text-white">
-                                  <span>Ethereum Wallet</span>
-                                </h4>
-                                <p className="font-alt text-xs font-normal leading-normal leading-normal">
-                                  <span className="text-muted-400">
-                                    0.00000000 ETH
-                                  </span>
-                                </p>
-                              </div>
-                              <div className="ms-auto flex items-center">
-                                <a
-                                  href="/assets/9ad4d3ce-befa-486f-8dd8-c047353b5441"
-                                  className="disabled:opacity-60 disabled:cursor-not-allowed hover:shadow-none false false text-muted-700 bg-white border border-muted-300 dark:text-white dark:bg-muted-700 dark:hover:bg-muted-600 dark:border-muted-600 hover:bg-muted-50 rounded-xl h-10 w-10 p-2 nui-focus relative inline-flex items-center justify-center space-x-1 font-sans text-sm font-normal leading-5 no-underline outline-none transition-all duration-300 scale-75"
-                                  disabled="false"
-                                  muted
-                                >
+                              <div className="flex items-center gap-3">
+                                <div className="border-muted-200 dark:border-muted-700 flex h-10 w-10 items-center justify-center rounded-full border">
                                   <svg
                                     data-v-cd102a71
                                     xmlns="http://www.w3.org/2000/svg"
                                     xmlnsXlink="http://www.w3.org/1999/xlink"
                                     aria-hidden="true"
                                     role="img"
-                                    className="icon h-5 w-5"
+                                    className="icon text-muted-400 h-6 w-6"
                                     width="1em"
                                     height="1em"
-                                    viewBox="0 0 24 24"
+                                    viewBox="0 0 32 32"
                                   >
                                     <path
-                                      fill="none"
-                                      stroke="currentColor"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M5 12h14m-7-7l7 7l-7 7"
-                                    />
+                                      fill="currentColor"
+                                      fillRule="evenodd"
+                                      d="M16 32C7.163 32 0 24.837 0 16S7.163 0 16 0s16 7.163 16 16s-7.163 16-16 16m1.922-18.207v-2.366h5.414V7.819H8.595v3.608h5.414v2.365c-4.4.202-7.709 1.074-7.709 2.118c0 1.044 3.309 1.915 7.709 2.118v7.582h3.913v-7.584c4.393-.202 7.694-1.073 7.694-2.116c0-1.043-3.301-1.914-7.694-2.117m0 3.59v-.002c-.11.008-.677.042-1.942.042c-1.01 0-1.721-.03-1.971-.042v.003c-3.888-.171-6.79-.848-6.79-1.658c0-.809 2.902-1.486 6.79-1.66v2.644c.254.018.982.061 1.988.061c1.207 0 1.812-.05 1.925-.06v-2.643c3.88.173 6.775.85 6.775 1.658c0 .81-2.895 1.485-6.775 1.657"
+                                    ></path>
                                   </svg>
-                                </a>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-3">
-                              <div className="border-muted-200 dark:border-muted-700 flex h-10 w-10 items-center justify-center rounded-full border">
-                                <svg
-                                  data-v-cd102a71
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  xmlnsXlink="http://www.w3.org/1999/xlink"
-                                  aria-hidden="true"
-                                  role="img"
-                                  className="icon text-muted-400 h-6 w-6"
-                                  width="1em"
-                                  height="1em"
-                                  viewBox="0 0 32 32"
-                                >
-                                  <path
-                                    fill="currentColor"
-                                    fillRule="evenodd"
-                                    d="M16 32C7.163 32 0 24.837 0 16S7.163 0 16 0s16 7.163 16 16s-7.163 16-16 16m1.922-18.207v-2.366h5.414V7.819H8.595v3.608h5.414v2.365c-4.4.202-7.709 1.074-7.709 2.118c0 1.044 3.309 1.915 7.709 2.118v7.582h3.913v-7.584c4.393-.202 7.694-1.073 7.694-2.116c0-1.043-3.301-1.914-7.694-2.117m0 3.59v-.002c-.11.008-.677.042-1.942.042c-1.01 0-1.721-.03-1.971-.042v.003c-3.888-.171-6.79-.848-6.79-1.658c0-.809 2.902-1.486 6.79-1.66v2.644c.254.018.982.061 1.988.061c1.207 0 1.812-.05 1.925-.06v-2.643c3.88.173 6.775.85 6.775 1.658c0 .81-2.895 1.485-6.775 1.657"
-                                  ></path>
-                                </svg>
-                              </div>
-                              <div>
-                                <h4 className="font-heading text-xs font-semibold leading-tight text-muted-800 dark:text-white">
-                                  <span>Tether Wallet</span>
-                                </h4>
-                                <p className="font-alt text-xs font-normal leading-normal leading-normal">
-                                  <span className="text-muted-400">
-                                    0.00000000 USDT
-                                  </span>
-                                </p>
-                              </div>
-                              <div className="ms-auto flex items-center">
-                                <a
-                                  href="/assets/9ad4d3ce-bf65-408b-a646-a34d667c0eb9"
-                                  className="disabled:opacity-60 disabled:cursor-not-allowed hover:shadow-none false false text-muted-700 bg-white border border-muted-300 dark:text-white dark:bg-muted-700 dark:hover:bg-muted-600 dark:border-muted-600 hover:bg-muted-50 rounded-xl h-10 w-10 p-2 nui-focus relative inline-flex items-center justify-center space-x-1 font-sans text-sm font-normal leading-5 no-underline outline-none transition-all duration-300 scale-75"
-                                  disabled="false"
-                                  muted
-                                >
-                                  <svg
-                                    data-v-cd102a71
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    xmlnsXlink="http://www.w3.org/1999/xlink"
-                                    aria-hidden="true"
-                                    role="img"
-                                    className="icon h-5 w-5"
-                                    width="1em"
-                                    height="1em"
-                                    viewBox="0 0 24 24"
+                                </div>
+                                <div>
+                                  <h4 className="font-heading text-xs font-semibold leading-tight text-muted-800 dark:text-white">
+                                    <span>Tether Wallet</span>
+                                  </h4>
+                                  <p className="font-alt text-xs font-normal leading-normal leading-normal">
+                                    <span className="text-muted-400">
+                                      {usdtBalance.toFixed(8)} USDT
+                                    </span>
+                                  </p>
+                                </div>
+                                <div className="ms-auto flex items-center">
+                                  <a
+                                    href="/assets/9ad4d3ce-bf65-408b-a646-a34d667c0eb9"
+                                    className="disabled:opacity-60 disabled:cursor-not-allowed hover:shadow-none false false text-muted-700 bg-white border border-muted-300 dark:text-white dark:bg-muted-700 dark:hover:bg-muted-600 dark:border-muted-600 hover:bg-muted-50 rounded-xl h-10 w-10 p-2 nui-focus relative inline-flex items-center justify-center space-x-1 font-sans text-sm font-normal leading-5 no-underline outline-none transition-all duration-300 scale-75"
+                                    disabled="false"
+                                    muted
                                   >
-                                    <path
-                                      fill="none"
-                                      stroke="currentColor"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M5 12h14m-7-7l7 7l-7 7"
-                                    />
-                                  </svg>
-                                </a>
+                                    <svg
+                                      data-v-cd102a71
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      xmlnsXlink="http://www.w3.org/1999/xlink"
+                                      aria-hidden="true"
+                                      role="img"
+                                      className="icon h-5 w-5"
+                                      width="1em"
+                                      height="1em"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M5 12h14m-7-7l7 7l-7 7"
+                                      />
+                                    </svg>
+                                  </a>
+                                </div>
                               </div>
                             </div>
-                          </div>
+                          )}
                         </div>
                       </div>
                       <div className="relative">
@@ -493,12 +504,12 @@ const Dashboard = () => {
                             <h3 className="font-heading text-base font-semibold leading-tight text-muted-800 dark:text-white">
                               <span>Latest Transactions</span>
                             </h3>
-                            <a
-                              href="/transactions.html"
+                            <Link
+                              to={`/transactions/${isUser._id}`}
                               className="bg-muted-100 hover:bg-muted-200 dark:bg-muted-700 dark:hover:bg-muted-900 text-primary-500 rounded-lg px-4 py-2 font-sans text-sm font-medium underline-offset-4 transition-colors duration-300 hover:underline"
                             >
                               View All{" "}
-                            </a>
+                            </Link>
                           </div>
                           <div className="space-y-4" />
                         </div>

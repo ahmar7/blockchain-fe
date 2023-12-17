@@ -383,10 +383,10 @@ const PendingTransactions = () => {
                         </div>
                         <div className="mx-auto max-w-sm">
                           <h4 className="font-heading text-xl font-medium leading-normal leading-normal text-muted-800 mb-1 mt-4 dark:text-white">
-                            Loading Users
+                            Loading Transactions
                           </h4>
                           <p className="text-muted-400 font-sans text-sm">
-                            Please wait while we load the Users.
+                            Please wait while we load transactions.
                           </p>
                         </div>
                       </div>
@@ -507,36 +507,7 @@ const PendingTransactions = () => {
                                     {/**/}
                                   </div>
                                 ) : (
-                                  <div className="hideother">
-                                    <div>
-                                      <div className="flex min-h-[400px]  items-center justify-center">
-                                        <div className="mx-auto w-full text-center max-w-xs">
-                                          <div className="mx-auto max-w-xs">
-                                            <img
-                                              className="block dark:hidden"
-                                              src={searcH}
-                                              alt="Placeholder image"
-                                            />
-                                            <img
-                                              className="hidden dark:block"
-                                              src={searcH}
-                                              alt="Placeholder image"
-                                            />
-                                          </div>
-                                          <div className="mx-auto max-w-sm">
-                                            <h4 className="font-heading text-xl font-medium leading-normal leading-normal text-muted-800 mb-1 mt-4 dark:text-white">
-                                              No transactions found
-                                            </h4>
-                                            <p className="text-muted-400 font-sans text-sm">
-                                              Try to change the filter or add a
-                                              new transaction
-                                            </p>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    {/**/}
-                                  </div>
+                                  ""
                                 );
                               }
                             )

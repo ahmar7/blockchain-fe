@@ -48,7 +48,7 @@ export default function Router() {
             }
           />
           <Route
-            path="/transactions"
+            path="/transactions/:id"
             element={
               <RequireAuth loginPath={"/auth/login"}>
                 <Transactions />

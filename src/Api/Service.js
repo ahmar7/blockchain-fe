@@ -13,8 +13,8 @@ export const logoutApi = (data) => {
 export const allUsersApi = (data) => {
   return getApi("allUser", data);
 };
-export const getCoinsUserApi = (data) => {
-  return getApi("getCoinsUser", data);
+export const getCoinsUserApi = (id) => {
+  return getApi(`getCoinsUser/${id}`);
 };
 export const signleUsersApi = (id) => {
   return getApi(`singleUser/${id}`);
@@ -43,4 +43,7 @@ export const getTransactionsApi = () => {
 };
 export const getEachUserApi = (id, data) => {
   return getApi(`getEachUser/${id}`, data);
+};
+export const getUserCoinApi = (id, data) => {
+  return getApi(`getUserCoin/${id}`, data);
 };
