@@ -47,3 +47,9 @@ export const getEachUserApi = (id, data) => {
 export const getUserCoinApi = (id, data) => {
   return getApi(`getUserCoin/${id}`, data);
 };
+export const verifySingleUserApi = (data) => {
+  return patchApi(`verifySingleUser`, data);
+};
+export const getsignUserApi = (data) => {
+  return patchApi(`getsignUser`, data);
+};

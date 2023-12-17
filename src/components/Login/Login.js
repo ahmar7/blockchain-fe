@@ -121,40 +121,6 @@ const Login = () => {
                     </svg>
                     <span>Back to Home</span>
                   </NavLink>
-                  <label className="nui-focus relative block h-9 w-9 shrink-0 overflow-hidden rounded-full transition-all duration-300 focus-visible:outline-2 dark:ring-offset-muted-900">
-                    <input
-                      type="checkbox"
-                      className="absolute start-0 top-0 z-[2] h-full w-full cursor-pointer opacity-0"
-                    />
-                    <span className="relative block h-9 w-9 rounded-full bg-white dark:bg-muted-800  border border-muted-300 dark:border-muted-700">
-                      <svg
-                        aria-hidden="true"
-                        viewBox="0 0 24 24"
-                        className="pointer-events-none absolute start-1/2 top-1/2 block h-5 w-5 text-yellow-400 transition-all duration-300 -translate-y-1/2 translate-x-[-50%] opacity-100 rtl:translate-x-[50%]"
-                      >
-                        <g
-                          fill="currentColor"
-                          stroke="currentColor"
-                          className="stroke-2"
-                        >
-                          <circle cx={12} cy={12} r={5} />
-                          <path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
-                        </g>
-                      </svg>
-                      <svg
-                        aria-hidden="true"
-                        viewBox="0 0 24 24"
-                        className="pointer-events-none absolute start-1/2 top-1/2 block h-5 w-5 text-yellow-400 transition-all duration-300 translate-x-[-45%] translate-y-[-150%] opacity-0 rtl:translate-x-[45%]"
-                      >
-                        <path
-                          fill="currentColor"
-                          stroke="currentColor"
-                          d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
-                          className="stroke-2"
-                        />
-                      </svg>
-                    </span>
-                  </label>
                 </div>
                 <div>
                   <h2 className="font-heading text-3xl font-medium mt-6">

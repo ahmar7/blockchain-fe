@@ -1,19 +1,13 @@
 import React, { useEffect, useState } from "react";
 import searcH from "../../assets/img/placeholder-search-5.svg";
-import {
-  getCoinsApi,
-  getEachUserApi,
-  getTransactionsApi,
-  getUserCoinApi,
-  signleUsersApi,
-  updateTransactionApi,
-} from "../../Api/Service";
+import { getUserCoinApi } from "../../Api/Service";
 import Log from "../../assets/img/log.jpg";
 import { useAuthUser } from "react-auth-kit";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import SideBar from "../../layout/UserSidebar/SideBar";
 
+import Truncate from "react-truncate-inside";
 const Transactions = () => {
   const [modal, setModal] = useState(false);
   const [isLoading, setisLoading] = useState(true);
@@ -48,6 +42,9 @@ const Transactions = () => {
     setModal(true);
 
     setsingleTransaction(data);
+    // new
+
+    // new
   };
   let toggleModalClose = () => {
     setModal(false);
@@ -111,92 +108,7 @@ const Transactions = () => {
                   Transactions
                 </h1>
                 <div className="ms-auto" />
-                <label className="nui-focus relative block h-9 w-9 shrink-0 overflow-hidden rounded-full transition-all duration-300 focus-visible:outline-2 dark:ring-offset-muted-900">
-                  <input
-                    type="checkbox"
-                    className="absolute start-0 top-0 z-[2] h-full w-full cursor-pointer opacity-0"
-                  />
-                  <span className="relative block h-9 w-9 rounded-full bg-white dark:bg-muted-800  border border-muted-300 dark:border-muted-700">
-                    <svg
-                      aria-hidden="true"
-                      viewBox="0 0 24 24"
-                      className="pointer-events-none absolute start-1/2 top-1/2 block h-5 w-5 text-yellow-400 transition-all duration-300 -translate-y-1/2 translate-x-[-50%] opacity-100 rtl:translate-x-[50%]"
-                    >
-                      <g
-                        fill="currentColor"
-                        stroke="currentColor"
-                        className="stroke-2"
-                      >
-                        <circle cx={12} cy={12} r={5} />
-                        <path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
-                      </g>
-                    </svg>
-                    <svg
-                      aria-hidden="true"
-                      viewBox="0 0 24 24"
-                      className="pointer-events-none absolute start-1/2 top-1/2 block h-5 w-5 text-yellow-400 transition-all duration-300 translate-x-[-45%] translate-y-[-150%] opacity-0 rtl:translate-x-[45%]"
-                    >
-                      <path
-                        fill="currentColor"
-                        stroke="currentColor"
-                        d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
-                        className="stroke-2"
-                      />
-                    </svg>
-                  </span>
-                </label>
-                <button
-                  type="button"
-                  className="border-muted-200 hover:ring-muted-200 dark:hover:ring-muted-700 dark:border-muted-700 dark:bg-muted-800 dark:ring-offset-muted-900 flex h-9 w-9 items-center justify-center rounded-full border bg-white ring-1 ring-transparent transition-all duration-300 hover:ring-offset-4"
-                >
-                  <img
-                    className="h-7 w-7 rounded-full"
-                    src="https://app.encryptwallet.io/img/langs/en.svg"
-                    alt="flag icon"
-                  />
-                </button>
-                <div className="group inline-flex items-center justify-center text-right">
-                  <div
-                    data-headlessui-state
-                    className="relative h-9 w-9 text-left"
-                  >
-                    <div
-                      disabled="false"
-                      id="headlessui-menu-button-36"
-                      aria-haspopup="menu"
-                      aria-expanded="false"
-                      data-headlessui-state
-                    >
-                      <button
-                        type="button"
-                        className="group-hover:ring-muted-200 dark:group-hover:ring-muted-700 dark:ring-offset-muted-900 inline-flex h-9 w-9 items-center justify-center rounded-full ring-1 ring-transparent transition-all duration-300 group-hover:ring-offset-4"
-                      >
-                        <span className="border-muted-200 dark:border-muted-700 dark:bg-muted-800 flex h-9 w-9 items-center justify-center rounded-full border bg-white">
-                          <svg
-                            data-v-cd102a71
-                            xmlns="http://www.w3.org/2000/svg"
-                            xmlnsXlink="http://www.w3.org/1999/xlink"
-                            aria-hidden="true"
-                            role="img"
-                            className="icon text-muted-400 h-5 w-5"
-                            width="1em"
-                            height="1em"
-                            viewBox="0 0 256 256"
-                          >
-                            <g fill="currentColor">
-                              <path
-                                d="M208 192H48a8 8 0 0 1-6.88-12C47.71 168.6 56 139.81 56 104a72 72 0 0 1 144 0c0 35.82 8.3 64.6 14.9 76a8 8 0 0 1-6.9 12"
-                                opacity=".2"
-                              />
-                              <path d="M221.8 175.94c-5.55-9.56-13.8-36.61-13.8-71.94a80 80 0 1 0-160 0c0 35.34-8.26 62.38-13.81 71.94A16 16 0 0 0 48 200h40.81a40 40 0 0 0 78.38 0H208a16 16 0 0 0 13.8-24.06M128 216a24 24 0 0 1-22.62-16h45.24A24 24 0 0 1 128 216m-80-32c7.7-13.24 16-43.92 16-80a64 64 0 1 1 128 0c0 36.05 8.28 66.73 16 80Z"></path>
-                            </g>
-                          </svg>
-                        </span>
-                      </button>
-                    </div>
-                    {/**/}
-                  </div>
-                </div>
+
                 <div className="group inline-flex items-center justify-center text-right">
                   <div
                     data-headlessui-state
@@ -365,16 +277,16 @@ const Transactions = () => {
                                       </div>
                                       <div>
                                         <p
-                                          className="font-heading text-sm font-medium leading-normal leading-normal"
+                                          className="font-heading capitalize text-sm font-medium leading-normal leading-normal"
                                           tag="h3"
                                         >
-                                          Ethereum
+                                          {Transaction.trxName}{" "}
                                           <span className="text-muted-400 capitalize">
                                             ({Transaction.status})
                                           </span>
                                         </p>
                                         <p className="font-alt text-xs font-normal leading-normal leading-normal text-muted-400 mt-1">
-                                          {Transaction.amount.toFixed(8)}
+                                          {Transaction.amount.toFixed(8)}{" "}
                                           <span className="text-muted-500">
                                             {`($${
                                               Transaction.trxName === "bitcoin"
@@ -545,9 +457,13 @@ const Transactions = () => {
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
                           <a
                             href="#"
-                            className="font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400 text-xs"
+                            className="font-medium inline-flex align-center text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400 text-xs"
                           >
-                            {singleTransaction.txId}
+                            <Truncate
+                              text={singleTransaction.txId}
+                              offset={6}
+                              width="100"
+                            />
                             <svg
                               data-v-cd102a71
                               xmlns="http://www.w3.org/2000/svg"
@@ -587,9 +503,14 @@ const Transactions = () => {
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
                           <a
                             href="#"
-                            className="font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400 text-xs"
+                            className="font-medium text-gray-900  align-center inline-flex dark:text-white hover:text-gray-600 dark:hover:text-gray-400 text-xs"
                           >
-                            {singleTransaction.txId}
+                            {" "}
+                            <Truncate
+                              text={singleTransaction.txId}
+                              offset={6}
+                              width="100"
+                            />
                             <svg
                               data-v-cd102a71
                               xmlns="http://www.w3.org/2000/svg"
@@ -626,8 +547,12 @@ const Transactions = () => {
                         <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
                           Block
                         </dt>
-                        <dd className="mt-1 text-sm text-gray-900 dark:text-white">
-                          {singleTransaction.txId}
+                        <dd className="mt-1 inline-flex  align-center text-sm text-gray-900 dark:text-white">
+                          <Truncate
+                            text={singleTransaction.txId}
+                            offset={6}
+                            width="100"
+                          />
                         </dd>
                       </div>
                       <div className="sm:col-span-1">
@@ -645,9 +570,13 @@ const Transactions = () => {
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
                           <a
                             href="#"
-                            className="font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
+                            className="font-medium inline-flex align-center text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
                           >
-                            {singleTransaction.fromAddress}
+                            <Truncate
+                              text={singleTransaction.fromAddress}
+                              offset={6}
+                              width="100"
+                            />
                             <svg
                               data-v-cd102a71
                               xmlns="http://www.w3.org/2000/svg"
@@ -687,9 +616,13 @@ const Transactions = () => {
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
                           <a
                             href="#"
-                            className="font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
+                            className="font-medium inline-flex align-center text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
                           >
-                            {singleTransaction.txId}
+                            <Truncate
+                              text={singleTransaction.txId}
+                              offset={6}
+                              width="100"
+                            />
                             <svg
                               data-v-cd102a71
                               xmlns="http://www.w3.org/2000/svg"

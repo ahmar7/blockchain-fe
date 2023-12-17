@@ -15,6 +15,7 @@ import General from "../components/Admin/SingleUser/General";
 import UserAssets from "../components/Admin/SingleUser/UserAssets";
 import UserTransactions from "../components/Admin/SingleUser/UserTransactions";
 import AdminProfile from "../components/Admin/adminProfile";
+import Kyc from "../components/User/Kyc";
 export default function Router() {
   return (
     <AuthProvider authType={"cookie"} authName={"auth"}>
@@ -28,6 +29,14 @@ export default function Router() {
             element={
               <RequireAuth loginPath={"/auth/login"}>
                 <Assets />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/flows/kyc"
+            element={
+              <RequireAuth loginPath={"/auth/login"}>
+                <Kyc />
               </RequireAuth>
             }
           />
