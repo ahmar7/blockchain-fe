@@ -32,6 +32,7 @@ const Login = () => {
           expiresIn: 432000,
           tokenType: "Bearer",
           authState: updateHeader,
+          sameSite: false,
         })
       ) {
         toast.success(updateHeader.msg);
