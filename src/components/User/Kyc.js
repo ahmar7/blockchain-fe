@@ -18,7 +18,7 @@ const Kyc = () => {
   const [slide1, setSlide1] = useState();
   const [slide2, setSlide2] = useState();
   const [isLoading, setisLoading] = useState(true);
-  const [isDisable, setisDisable] = useState([]);
+  const [isDisable, setisDisable] = useState(false);
   const [newSlider1, setNewSlider1] = useState();
   const [newSlider2, setNewSlider2] = useState();
   const [isUser, setIsUser] = useState(true);
