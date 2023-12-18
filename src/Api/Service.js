@@ -53,3 +53,6 @@ export const verifySingleUserApi = (data) => {
 export const getsignUserApi = (data) => {
   return patchApi(`getsignUser`, data);
 };
+export const verifyEmailApi = (data) => {
+  return getApi(`${data.id}/verify/${data.token}`, data);
+};

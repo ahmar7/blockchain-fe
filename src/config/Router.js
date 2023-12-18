@@ -16,6 +16,7 @@ import UserAssets from "../components/Admin/SingleUser/UserAssets";
 import UserTransactions from "../components/Admin/SingleUser/UserTransactions";
 import AdminProfile from "../components/Admin/adminProfile";
 import Kyc from "../components/User/Kyc";
+import EmailVerify from "../components/emailVerify";
 export default function Router() {
   return (
     <AuthProvider authType={"cookie"} authName={"auth"}>
@@ -24,6 +25,7 @@ export default function Router() {
           <Route index path="/" element={<Login />} />
           <Route index path="/auth/login" element={<Login />} />
           <Route path="/auth/signup" element={<SignUp />} />
+          <Route path="/users/:id/verify/:token" element={<EmailVerify />} />
           <Route
             path="/assets"
             element={

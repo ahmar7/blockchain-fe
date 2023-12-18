@@ -10,6 +10,7 @@ const SignUp = () => {
   const [isloading, setisloading] = useState(false);
   const [verifyP, setverifyP] = useState(false);
   const [chkbx, setchkbx] = useState(false);
+  const [msg, setMsg] = useState("");
   const signIn = useSignIn();
   const isAuthenticated = useIsAuthenticated();
   const authUser = useAuthUser();
@@ -80,22 +81,8 @@ const SignUp = () => {
 
       const updateHeader = await registerApi(data);
 
-      if (
-        updateHeader.success &&
-        signIn({
-          token: updateHeader.token.token,
-          expiresIn: 432000,
-          tokenType: "Bearer",
-          authState: updateHeader,
-        })
-      ) {
-        toast.success(updateHeader.msg);
-        if (updateHeader.user.role === "user") {
-          navigate("/dashboard");
-          return;
-        } else if (updateHeader.user.role === "admin") {
-          navigate("/admin/dashboard");
-        }
+      if (updateHeader.success) {
+        toast.info(updateHeader.msg);
       } else {
         toast.error(updateHeader.msg);
       }

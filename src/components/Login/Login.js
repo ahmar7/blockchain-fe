@@ -43,7 +43,7 @@ const Login = () => {
           navigate("/admin/dashboard");
         }
       } else {
-        toast.error(updateHeader.msg);
+        toast.info(updateHeader.msg);
       }
     } catch (error) {
       console.log("error: ", error);
