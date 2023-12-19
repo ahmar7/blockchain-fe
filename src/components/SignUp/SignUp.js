@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, Navigate, useNavigate } from "react-router-dom";
 
 import { toast } from "react-toastify";
 import { loginApi, registerApi } from "../../Api/Service";
@@ -27,6 +27,7 @@ const SignUp = () => {
     city: "",
     country: "",
     postalCode: "",
+    cpassword: "",
   });
   let handleInput = (e) => {
     let name = e.target.name;
@@ -62,9 +63,14 @@ const SignUp = () => {
         !userData.address ||
         !userData.city ||
         !userData.country ||
-        !userData.postalCode
+        !userData.postalCode ||
+        !userData.cpassword
       ) {
         toast.error("All the fields are required");
+        return;
+      }
+      if (userData.password != userData.cpassword) {
+        toast.error("Password and confirm password doesn't match");
         return;
       }
       let data = {
@@ -83,6 +89,7 @@ const SignUp = () => {
 
       if (updateHeader.success) {
         toast.info(updateHeader.msg);
+        navigate("/auth/login");
       } else {
         toast.error(updateHeader.msg);
       }
@@ -355,6 +362,47 @@ const SignUp = () => {
                               onChange={handleInput}
                               value={userData.password}
                               name="password"
+                              className="nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 pe-4 ps-9 rounded-xl"
+                              placeholder="********"
+                            />
+                            {/**/}
+                            {/**/}
+                            <div className="text-muted-400 group-focus-within/nui-input:text-primary-500 absolute start-0 top-0 flex items-center justify-center transition-colors duration-300 peer-disabled:cursor-not-allowed peer-disabled:opacity-75 h-10 w-10">
+                              <svg
+                                data-v-cd102a71
+                                xmlns="http://www.w3.org/2000/svg"
+                                xmlnsXlink="http://www.w3.org/1999/xlink"
+                                aria-hidden="true"
+                                role="img"
+                                className="icon h-[1.15rem] w-[1.15rem]"
+                                width="1em"
+                                height="1em"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  fill="currentColor"
+                                  d="M6 22q-.825 0-1.412-.587T4 20V10q0-.825.588-1.412T6 8h1V6q0-2.075 1.463-3.537T12 1q2.075 0 3.538 1.463T17 6v2h1q.825 0 1.413.588T20 10v10q0 .825-.587 1.413T18 22zm0-2h12V10H6zm6-3q.825 0 1.413-.587T14 15q0-.825-.587-1.412T12 13q-.825 0-1.412.588T10 15q0 .825.588 1.413T12 17M9 8h6V6q0-1.25-.875-2.125T12 3q-1.25 0-2.125.875T9 6zM6 20V10z"
+                                ></path>
+                              </svg>
+                            </div>
+
+                            {/**/}
+                          </div>
+                        </div>
+                        <div className="relative">
+                          <label
+                            className="nui-label w-full pb-1 text-[0.825rem]"
+                            htmlFor="ninja-input-15"
+                          >
+                            Confirm password
+                          </label>
+                          <div className="group/nui-input relative">
+                            <input
+                              id="ninja-input-15"
+                              type="password"
+                              onChange={handleInput}
+                              value={userData.cpassword}
+                              name="cpassword"
                               className="nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 pe-4 ps-9 rounded-xl"
                               placeholder="********"
                             />

@@ -4,6 +4,7 @@ import success from "../assets/img/success.png";
 import styles from "./styles.module.css";
 import Fragment from "react-dot-fragment";
 import { verifyEmailApi } from "../Api/Service";
+import { toast } from "react-toastify";
 
 const EmailVerify = () => {
   const [validUrl, setValidUrl] = useState(false);
