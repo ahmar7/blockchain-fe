@@ -29,7 +29,7 @@ const Login = () => {
         updateHeader.success &&
         signIn({
           token: updateHeader.token.token,
-          expiresIn: 432000,
+          expiresIn: 4318,
           tokenType: "Bearer",
           authState: updateHeader,
           sameSite: false,

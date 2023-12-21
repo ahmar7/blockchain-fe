@@ -170,13 +170,12 @@ const SignUp = () => {
                   </NavLink>
                 </div>
                 <div>
-                  <h2 className="font-heading text-3xl font-medium mt-6">
+                  <h2 className="font-heading txts font-medium mt-6">
                     {" "}
-                    Welcome to{" "}
-                    <span className="text-primary-500">My Wallet</span>
+                    Create Your Blockchain.com Account
                   </h2>
                   <p className="font-alt text-sm font-normal leading-normal leading-normal text-muted-400 mb-6">
-                    Let's start by creating you account{" "}
+                    Get Started For Free by Signing Up Now
                   </p>
                 </div>
                 <div className="mt-6">

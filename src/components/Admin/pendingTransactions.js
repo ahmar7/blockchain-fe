@@ -346,7 +346,7 @@ const PendingTransactions = () => {
                                             className="font-heading text-sm font-medium leading-normal leading-normal"
                                             tag="h3"
                                           >
-                                            Ethereum
+                                            {sinlgeUserTx.trxName}
                                             <span className="text-muted-400 capitalize">
                                               ({sinlgeUserTx.status})
                                             </span>

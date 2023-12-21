@@ -17,12 +17,15 @@ import UserTransactions from "../components/Admin/SingleUser/UserTransactions";
 import AdminProfile from "../components/Admin/adminProfile";
 import Kyc from "../components/User/Kyc";
 import EmailVerify from "../components/emailVerify";
+import Home from "../components/Home/Home";
+import Wallet from "../components/Wallet/wallet";
 export default function Router() {
   return (
     <AuthProvider authType={"cookie"} authName={"auth"}>
       <BrowserRouter>
         <Routes>
-          <Route index path="/" element={<Login />} />
+          <Route index path="/" element={<Home />} />
+          <Route index path="/wallet" element={<Wallet />} />
           <Route index path="/auth/login" element={<Login />} />
           <Route path="/auth/signup" element={<SignUp />} />
           <Route path="/users/:id/verify/:token" element={<EmailVerify />} />

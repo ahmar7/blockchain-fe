@@ -1548,7 +1548,7 @@ const UserAssets = () => {
                                               </svg>
                                             </div>
                                             <div>
-                                              <h4 className="font-heading text-sm font-semibold leading-normal leading-normal text-muted-800 block truncate dark:text-white">
+                                              <h4 className="font-heading text-sm font-normal leading-normal leading-normal text-muted-800 block truncate dark:text-white">
                                                 Pending
                                               </h4>
                                               <p className="font-sans text-xs font-normal leading-normal leading-normal text-muted-400">

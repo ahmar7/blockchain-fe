@@ -101,7 +101,7 @@ const Kyc = () => {
                 <div className="relative flex h-16 w-full items-center justify-between px-4">
                   <div className="flex items-center">
                     <a
-                      href="/"
+                      href="#"
                       className="border-muted-200 dark:border-muted-700 flex w-14 items-center justify-center border-r pe-6"
                     >
                       <svg
