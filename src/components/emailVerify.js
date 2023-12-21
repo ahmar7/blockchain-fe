@@ -37,7 +37,7 @@ const EmailVerify = () => {
   }, [param]);
 
   return (
-    <Fragment>
+    <>
       {validUrl ? (
         <div className={styles.container}>
           <img src={success} alt="success_img" className={styles.success_img} />
@@ -48,8 +48,8 @@ const EmailVerify = () => {
         </div>
       ) : (
         <h1>{header}</h1>
-      )}
-    </Fragment>
+      )}{" "}
+    </>
   );
 };
 

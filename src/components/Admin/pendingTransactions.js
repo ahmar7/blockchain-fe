@@ -343,10 +343,10 @@ const PendingTransactions = () => {
                                         </div>
                                         <div>
                                           <p
-                                            className="font-heading text-sm font-medium leading-normal leading-normal"
+                                            className="font-heading capitalize text-sm font-medium leading-normal leading-normal"
                                             tag="h3"
                                           >
-                                            {sinlgeUserTx.trxName}
+                                            {sinlgeUserTx.trxName}{" "}
                                             <span className="text-muted-400 capitalize">
                                               ({sinlgeUserTx.status})
                                             </span>
