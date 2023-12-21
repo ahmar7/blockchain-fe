@@ -9,6 +9,11 @@
   .for-desk {
     display: none !important;
   }
+  .sna {
+    display: flex;
+    justify-content: end;
+    margin-right: 20px;
+  }
 }
 .active.nui-focus {
   --tw-text-opacity: 1 !important;

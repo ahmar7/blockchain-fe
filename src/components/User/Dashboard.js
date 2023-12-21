@@ -161,7 +161,25 @@ const Dashboard = () => {
                   Home
                 </h1>
                 <div className="ms-auto" />
-
+                <div className="verified-btn me-2">
+                  {isUser.kyc === false ? (
+                    <span
+                      class="inline-block px-3 font-sans transition-shadow duration-300 py-1.5 text-xs rounded-md bg-danger-500 dark:bg-danger-500 text-white"
+                      size="xs"
+                    >
+                      Unverified
+                    </span>
+                  ) : isUser.kyc === true ? (
+                    <span
+                      class="inline-block vfy px-3 font-sans transition-shadow duration-300 py-1.5 text-xs rounded-md bg-success-500 dark:bg-success-500 text-white"
+                      size="xs"
+                    >
+                      Verified
+                    </span>
+                  ) : (
+                    ""
+                  )}
+                </div>
                 <div className="group inline-flex items-center justify-center text-right">
                   <div
                     data-headlessui-state

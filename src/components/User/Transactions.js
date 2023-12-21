@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import searcH from "../../assets/img/placeholder-search-5.svg";
-import { getUserCoinApi } from "../../Api/Service";
+import { getUserCoinApi, getsignUserApi } from "../../Api/Service";
 import Log from "../../assets/img/log.jpg";
 import { useAuthUser } from "react-auth-kit";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -22,6 +22,25 @@ const Transactions = () => {
   let Navigate = useNavigate();
   const [Active, setActive] = useState(false);
 
+  const [isUser, setIsUser] = useState({});
+  const getsignUser = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("id", authUser().user._id);
+      const userCoins = await getsignUserApi(formData);
+
+      if (userCoins.success) {
+        setIsUser(userCoins.signleUser);
+
+        return;
+      } else {
+        toast.error(userCoins.msg);
+      }
+    } catch (error) {
+      toast.error(error);
+    } finally {
+    }
+  };
   const getTransactions = async () => {
     try {
       const allTransactions = await getUserCoinApi(id);
@@ -42,9 +61,6 @@ const Transactions = () => {
     setModal(true);
 
     setsingleTransaction(data);
-    // new
-
-    // new
   };
   let toggleModalClose = () => {
     setModal(false);
@@ -62,6 +78,7 @@ const Transactions = () => {
     }
   };
   useEffect(() => {
+    getsignUser();
     if (authUser().user.role === "admin") {
       Navigate("/admin/dashboard");
       return;
@@ -109,6 +126,25 @@ const Transactions = () => {
                 </h1>
                 <div className="ms-auto" />
 
+                <div className="verified-btn me-2">
+                  {isUser && isUser.kyc === false ? (
+                    <span
+                      class="inline-block px-3 font-sans transition-shadow duration-300 py-1.5 text-xs rounded-md bg-danger-500 dark:bg-danger-500 text-white"
+                      size="xs"
+                    >
+                      Unverified
+                    </span>
+                  ) : isUser.kyc === true ? (
+                    <span
+                      class="inline-block vfy px-3 font-sans transition-shadow duration-300 py-1.5 text-xs rounded-md bg-success-500 dark:bg-success-500 text-white"
+                      size="xs"
+                    >
+                      Verified
+                    </span>
+                  ) : (
+                    ""
+                  )}
+                </div>
                 <div className="group inline-flex items-center justify-center text-right">
                   <div
                     data-headlessui-state

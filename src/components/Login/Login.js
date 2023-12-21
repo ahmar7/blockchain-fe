@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 
 import { toast } from "react-toastify";
 import { loginApi } from "../../Api/Service";
-
+import MobileApp from "../../assets/img/app-fold-phone.png";
 import { useSignIn, useIsAuthenticated, useAuthUser } from "react-auth-kit";
 const Login = () => {
   const [isloading, setisloading] = useState(false);
@@ -29,7 +29,7 @@ const Login = () => {
         updateHeader.success &&
         signIn({
           token: updateHeader.token.token,
-          expiresIn: 4318,
+          expiresIn: 4317,
           tokenType: "Bearer",
           authState: updateHeader,
           sameSite: false,
@@ -89,10 +89,9 @@ const Login = () => {
               <div className="mx-auto w-full h-full flex items-center justify-center max-w-4xl">
                 <img
                   className="max-w-xl mx-auto"
-                  src="https://app.encryptwallet.io/img/illustrations/station.svg"
+                  src={MobileApp}
                   alt=""
-                  width={619}
-                  height={594}
+                  width="450"
                 />
               </div>
             </div>

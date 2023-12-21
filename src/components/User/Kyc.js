@@ -288,10 +288,10 @@ const Kyc = () => {
                             <div className="group/nui-radio-headless relative">
                               {/**/}
                               <div className="relative">
-                                <div className="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-xl peer-checked:!border-primary-500 relative border-2 p-8 opacity-60   peer-checked:opacity-100 peer-checked:grayscale-0 peer-checked:[&_.child]:!opacity-100">
+                                <div className="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-xl peer-checked:!border-primary-500 relative border-2 p-8    peer-checked:opacity-100 peer-checked:grayscale-0 peer-checked:[&_.child]:!opacity-100">
                                   <div className="flex flex-col text-center">
                                     <p className="font-heading text-base font-medium leading-normal leading-normal">
-                                      ID photo
+                                      Upload ID
                                     </p>
                                     <p className="font-alt text-xs font-normal leading-snug text-muted-500 dark:text-muted-400">
                                       Please upload a clear image of a valid
@@ -351,10 +351,10 @@ const Kyc = () => {
                                   accept="image/*"
                                   className="peer absolute inset-0 z-20 h-full w-full cursor-pointer opacity-0"
                                 />
-                                <div className="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-xl peer-checked:!border-primary-500 relative border-2 p-8 opacity-60   peer-checked:opacity-100 peer-checked: -0 peer-checked:[&_.child]:!opacity-100">
+                                <div className="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-xl peer-checked:!border-primary-500 relative border-2 p-8    peer-checked:opacity-100 peer-checked: -0 peer-checked:[&_.child]:!opacity-100">
                                   <div className="flex flex-col text-center">
                                     <p className="font-heading text-base font-medium leading-normal leading-normal">
-                                      ID photo
+                                      Upload Utility Bill
                                     </p>
                                     <p className="font-alt text-xs font-normal leading-snug text-muted-500 dark:text-muted-400">
                                       Please upload a clear image of a recent
