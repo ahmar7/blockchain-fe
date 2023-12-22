@@ -19,6 +19,7 @@ import Kyc from "../components/User/Kyc";
 import EmailVerify from "../components/emailVerify";
 import Home from "../components/Home/Home";
 import Wallet from "../components/Wallet/wallet";
+import UserVerifications from "../components/Admin/SingleUser/UserVerificatons";
 export default function Router() {
   return (
     <AuthProvider authType={"cookie"} authName={"auth"}>
@@ -130,6 +131,14 @@ export default function Router() {
             element={
               <RequireAuth loginPath={"/auth/login"}>
                 <UserTransactions />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/admin/users/:id/verifications"
+            element={
+              <RequireAuth loginPath={"/auth/login"}>
+                <UserVerifications />
               </RequireAuth>
             }
           />

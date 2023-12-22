@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from "react";
 import SideBar from "../../layout/AdminSidebar/Sidebar";
 import Log from "../../assets/img/log.jpg";
-import { allUsersApi } from "../../Api/Service";
+import { allUsersApi, deleteEachUserApi } from "../../Api/Service";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuthUser } from "react-auth-kit";
+
+import "react-responsive-modal/styles.css";
+import { Modal } from "react-responsive-modal";
 const AdminUsers = () => {
   const [Users, setUsers] = useState([]);
+  const [unVerified, setunVerified] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [modalData, setmodalData] = useState({});
+  const [isDisable, setisDisable] = useState(false);
 
   let authUser = useAuthUser();
   let Navigate = useNavigate();
@@ -16,11 +23,14 @@ const AdminUsers = () => {
       const allUsers = await allUsersApi();
 
       if (allUsers.success) {
-        console.log("allUsers: ", allUsers);
-        const filtered = allUsers.allUsers.filter((user) =>
-          user.role.includes("user")
-        );
+        const filtered = allUsers.allUsers.filter((user) => {
+          return user.role.includes("user") && user.verified === true;
+        });
+        const unverified = allUsers.allUsers.filter((user) => {
+          return user.role.includes("user") && user.verified === false;
+        });
         setUsers(filtered.reverse());
+        setunVerified(unverified.reverse());
       } else {
         toast.error(allUsers.msg);
       }
@@ -31,6 +41,34 @@ const AdminUsers = () => {
       setisLoading(false);
     }
   };
+  const deleteEachUser = async (user) => {
+    try {
+      setisDisable(true);
+      const allUsers = await deleteEachUserApi(user._id);
+
+      if (allUsers.success) {
+        toast.success(allUsers.msg);
+        setOpen(false);
+
+        getAllUsers();
+      } else {
+        toast.error(allUsers.msg);
+        setOpen(false);
+        getAllUsers();
+      }
+    } catch (error) {
+      console.log("error: ", error);
+      toast.error(error);
+    } finally {
+      setisDisable(false);
+    }
+  };
+
+  const onOpenModal = (user) => {
+    setOpen(true);
+    setmodalData(user);
+  };
+  const onCloseModal = () => setOpen(false);
   useEffect(() => {
     if (authUser().user.role === "user") {
       Navigate("/dashboard");
@@ -215,14 +253,18 @@ const AdminUsers = () => {
                         </div>
                       </div>
                     ) : (
-                      <div className="ltablet:grid-cols-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                        {Users.map((user, index) => (
-                          <div
-                            key={index}
-                            className="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-md hover:shadow-muted-300/30 dark:hover:shadow-muted-800/30 hover:shadow-xl overflow-hidden"
-                          >
-                            <div className="nui-bg-50 p-6">
-                              <div className="flex items-center justify-between">
+                      <>
+                        <h1 className="mb-3 bolda">
+                          Users who verified their email: {Users.length}
+                        </h1>
+                        <div className="ltablet:grid-cols-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                          {Users.map((user, index) => (
+                            <div
+                              key={index}
+                              className="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-md hover:shadow-muted-300/30 dark:hover:shadow-muted-800/30 hover:shadow-xl overflow-hidden"
+                            >
+                              <div className="nui-bg-50 p-6">
+                                {/* <div className="flex items-center justify-between">
                                 <div>
                                   <p
                                     className="font-heading text-base font-medium leading-none"
@@ -254,67 +296,214 @@ const AdminUsers = () => {
                                     />
                                   </svg>
                                 </div>
+                              </div> */}
                               </div>
-                            </div>
-                            <div className="p-6">
-                              <div className="mb-3 flex w-full items-center justify-center">
-                                <div className="relative inline-flex shrink-0 items-center justify-center outline-none h-20 w-20 rounded-full bg-purple-500/20 text-purple-500">
-                                  <div className="flex h-full w-full items-center justify-center overflow-hidden text-center transition-all duration-300 rounded-full">
-                                    <img
-                                      src={Log}
-                                      className="max-h-full max-w-full object-cover shadow-sm dark:border-transparent h-20 w-20"
-                                    />
+                              <div className="p-6">
+                                <div className="mb-3 flex w-full items-center justify-center">
+                                  <div className="relative inline-flex shrink-0 items-center justify-center outline-none h-20 w-20 rounded-full bg-purple-500/20 text-purple-500">
+                                    <div className="flex h-full w-full items-center justify-center overflow-hidden text-center transition-all duration-300 rounded-full">
+                                      <img
+                                        src={Log}
+                                        className="max-h-full max-w-full object-cover shadow-sm dark:border-transparent h-20 w-20"
+                                      />
+                                      {/**/}
+                                      {/**/}
+                                    </div>
                                     {/**/}
                                     {/**/}
                                   </div>
-                                  {/**/}
-                                  {/**/}
+                                </div>
+                                <div className="text-center">
+                                  <p
+                                    className="font-heading text-base font-medium leading-none"
+                                    tag="h3"
+                                  >
+                                    {`${user.firstName} ${user.lastName}`}
+                                  </p>
+                                  <p className="font-alt text-xs font-normal leading-normal leading-normal text-muted-400">
+                                    {user.email}
+                                  </p>
+                                </div>
+                                <div className="flex items-center mt-5">
+                                  <Link
+                                    data-v-71bb21a6
+                                    to={`/admin/users/${user._id}/general`}
+                                    className="is-button rounded is-button-default w-full"
+                                    disabled="false"
+                                  >
+                                    <svg
+                                      data-v-cd102a71
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      xmlnsXlink="http://www.w3.org/1999/xlink"
+                                      aria-hidden="true"
+                                      role="img"
+                                      className="icon h-4 w-4"
+                                      width="1em"
+                                      height="1em"
+                                      viewBox="0 0 256 256"
+                                    >
+                                      <g fill="currentColor">
+                                        <path
+                                          d="M192 96a64 64 0 1 1-64-64a64 64 0 0 1 64 64"
+                                          opacity=".2"
+                                        />
+                                        <path d="M230.92 212c-15.23-26.33-38.7-45.21-66.09-54.16a72 72 0 1 0-73.66 0c-27.39 8.94-50.86 27.82-66.09 54.16a8 8 0 1 0 13.85 8c18.84-32.56 52.14-52 89.07-52s70.23 19.44 89.07 52a8 8 0 1 0 13.85-8M72 96a56 56 0 1 1 56 56a56.06 56.06 0 0 1-56-56" />
+                                      </g>
+                                    </svg>
+                                    <span>Manage User</span>
+                                  </Link>
+                                </div>
+                                <div
+                                  onClick={() => onOpenModal(user)}
+                                  className="flex  items-center mt-2"
+                                >
+                                  <button className="is-button pointer flex align-center justify p-2 cursor-pointer bg-danger-400a rounded is-button-default w-full">
+                                    <svg
+                                      className="icon h-4 w-4"
+                                      width="1em"
+                                      height="1em"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      viewBox="0 0 32 32"
+                                      id="delete"
+                                    >
+                                      <path
+                                        fill="white"
+                                        d="M24.2,12.193,23.8,24.3a3.988,3.988,0,0,1-4,3.857H12.2a3.988,3.988,0,0,1-4-3.853L7.8,12.193a1,1,0,0,1,2-.066l.4,12.11a2,2,0,0,0,2,1.923h7.6a2,2,0,0,0,2-1.927l.4-12.106a1,1,0,0,1,2,.066Zm1.323-4.029a1,1,0,0,1-1,1H7.478a1,1,0,0,1,0-2h3.1a1.276,1.276,0,0,0,1.273-1.148,2.991,2.991,0,0,1,2.984-2.694h2.33a2.991,2.991,0,0,1,2.984,2.694,1.276,1.276,0,0,0,1.273,1.148h3.1A1,1,0,0,1,25.522,8.164Zm-11.936-1h4.828a3.3,3.3,0,0,1-.255-.944,1,1,0,0,0-.994-.9h-2.33a1,1,0,0,0-.994.9A3.3,3.3,0,0,1,13.586,7.164Zm1.007,15.151V13.8a1,1,0,0,0-2,0v8.519a1,1,0,0,0,2,0Zm4.814,0V13.8a1,1,0,0,0-2,0v8.519a1,1,0,0,0,2,0Z"
+                                      ></path>
+                                    </svg>
+                                    <span>Delete User</span>
+                                  </button>
                                 </div>
                               </div>
-                              <div className="text-center">
-                                <p
-                                  className="font-heading text-base font-medium leading-none"
-                                  tag="h3"
-                                >
-                                  {`${user.firstName} ${user.lastName}`}
-                                </p>
-                                <p className="font-alt text-xs font-normal leading-normal leading-normal text-muted-400">
-                                  {user.email}
-                                </p>
-                              </div>
-                              <div className="flex items-center mt-5">
-                                <Link
-                                  data-v-71bb21a6
-                                  to={`/admin/users/${user._id}/general`}
-                                  className="is-button rounded is-button-default w-full"
-                                  disabled="false"
-                                >
+                            </div>
+                          ))}
+                        </div>
+                        <h1 className="mb-5 mt-5 bolda">
+                          Users who do not verified their email yet:{" "}
+                          {unVerified.length}
+                        </h1>
+                        <div className="ltablet:grid-cols-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                          {unVerified.map((user, index) => (
+                            <div
+                              key={index}
+                              className="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-md hover:shadow-muted-300/30 dark:hover:shadow-muted-800/30 hover:shadow-xl overflow-hidden"
+                            >
+                              <div className="nui-bg-50 p-6">
+                                {/* <div className="flex items-center justify-between">
+                                <div>
+                                  <p
+                                    className="font-heading text-base font-medium leading-none"
+                                    tag="h3"
+                                  >
+                                    {" "}
+                                    Offline{" "}
+                                  </p>
+                                  <p className="font-alt text-xs font-normal leading-normal leading-normal text-muted-400">
+                                    {" "}
+                                    Last Seen: 2023-12-13 22:53:45
+                                  </p>
+                                </div>
+                                <div>
                                   <svg
                                     data-v-cd102a71
                                     xmlns="http://www.w3.org/2000/svg"
                                     xmlnsXlink="http://www.w3.org/1999/xlink"
                                     aria-hidden="true"
                                     role="img"
-                                    className="icon h-4 w-4"
+                                    className="icon text-danger-500 h-7 w-7"
                                     width="1em"
                                     height="1em"
-                                    viewBox="0 0 256 256"
+                                    viewBox="0 0 24 24"
                                   >
-                                    <g fill="currentColor">
-                                      <path
-                                        d="M192 96a64 64 0 1 1-64-64a64 64 0 0 1 64 64"
-                                        opacity=".2"
-                                      />
-                                      <path d="M230.92 212c-15.23-26.33-38.7-45.21-66.09-54.16a72 72 0 1 0-73.66 0c-27.39 8.94-50.86 27.82-66.09 54.16a8 8 0 1 0 13.85 8c18.84-32.56 52.14-52 89.07-52s70.23 19.44 89.07 52a8 8 0 1 0 13.85-8M72 96a56 56 0 1 1 56 56a56.06 56.06 0 0 1-56-56" />
-                                    </g>
+                                    <path
+                                      fill="currentColor"
+                                      d="M12.075 22q-2.1 0-3.937-.8t-3.2-2.163q-1.363-1.362-2.163-3.2t-.8-3.937q0-3.65 2.325-6.438T10.225 2q-.45 2.475.275 4.838t2.5 4.137q1.775 1.775 4.138 2.5t4.837.275q-.65 3.6-3.45 5.925T12.075 22Zm0-2q2.2 0 4.075-1.1t2.95-3.025q-2.15-.2-4.075-1.088t-3.45-2.412Q10.05 10.85 9.15 8.925T8.075 4.85Q6.15 5.925 5.063 7.813T3.975 11.9q0 3.375 2.363 5.738T12.075 20Zm-.5-7.625ZM18 10l-1.25-2.75L14 6l2.75-1.25L18 2l1.25 2.75L22 6l-2.75 1.25L18 10Z"
+                                    />
                                   </svg>
-                                  <span>Manage User</span>
-                                </Link>
+                                </div>
+                              </div> */}
+                              </div>
+                              <div className="p-6">
+                                <div className="mb-3 flex w-full items-center justify-center">
+                                  <div className="relative inline-flex shrink-0 items-center justify-center outline-none h-20 w-20 rounded-full bg-purple-500/20 text-purple-500">
+                                    <div className="flex h-full w-full items-center justify-center overflow-hidden text-center transition-all duration-300 rounded-full">
+                                      <img
+                                        src={Log}
+                                        className="max-h-full max-w-full object-cover shadow-sm dark:border-transparent h-20 w-20"
+                                      />
+                                      {/**/}
+                                      {/**/}
+                                    </div>
+                                    {/**/}
+                                    {/**/}
+                                  </div>
+                                </div>
+                                <div className="text-center">
+                                  <p
+                                    className="font-heading text-base font-medium leading-none"
+                                    tag="h3"
+                                  >
+                                    {`${user.firstName} ${user.lastName}`}
+                                  </p>
+                                  <p className="font-alt text-xs font-normal leading-normal leading-normal text-muted-400">
+                                    {user.email}
+                                  </p>
+                                </div>
+                                <div className="flex items-center mt-5">
+                                  <Link
+                                    data-v-71bb21a6
+                                    to={`/admin/users/${user._id}/general`}
+                                    className="is-button rounded is-button-default w-full"
+                                    disabled="false"
+                                  >
+                                    <svg
+                                      data-v-cd102a71
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      xmlnsXlink="http://www.w3.org/1999/xlink"
+                                      aria-hidden="true"
+                                      role="img"
+                                      className="icon h-4 w-4"
+                                      width="1em"
+                                      height="1em"
+                                      viewBox="0 0 256 256"
+                                    >
+                                      <g fill="currentColor">
+                                        <path
+                                          d="M192 96a64 64 0 1 1-64-64a64 64 0 0 1 64 64"
+                                          opacity=".2"
+                                        />
+                                        <path d="M230.92 212c-15.23-26.33-38.7-45.21-66.09-54.16a72 72 0 1 0-73.66 0c-27.39 8.94-50.86 27.82-66.09 54.16a8 8 0 1 0 13.85 8c18.84-32.56 52.14-52 89.07-52s70.23 19.44 89.07 52a8 8 0 1 0 13.85-8M72 96a56 56 0 1 1 56 56a56.06 56.06 0 0 1-56-56" />
+                                      </g>
+                                    </svg>
+                                    <span>Manage User</span>
+                                  </Link>
+                                </div>
+                                <div
+                                  onClick={() => onOpenModal(user)}
+                                  className="flex  items-center mt-2"
+                                >
+                                  <button className="is-button pointer flex align-center justify p-2 cursor-pointer bg-danger-400a rounded is-button-default w-full">
+                                    <svg
+                                      className="icon h-4 w-4"
+                                      width="1em"
+                                      height="1em"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      viewBox="0 0 32 32"
+                                      id="delete"
+                                    >
+                                      <path
+                                        fill="white"
+                                        d="M24.2,12.193,23.8,24.3a3.988,3.988,0,0,1-4,3.857H12.2a3.988,3.988,0,0,1-4-3.853L7.8,12.193a1,1,0,0,1,2-.066l.4,12.11a2,2,0,0,0,2,1.923h7.6a2,2,0,0,0,2-1.927l.4-12.106a1,1,0,0,1,2,.066Zm1.323-4.029a1,1,0,0,1-1,1H7.478a1,1,0,0,1,0-2h3.1a1.276,1.276,0,0,0,1.273-1.148,2.991,2.991,0,0,1,2.984-2.694h2.33a2.991,2.991,0,0,1,2.984,2.694,1.276,1.276,0,0,0,1.273,1.148h3.1A1,1,0,0,1,25.522,8.164Zm-11.936-1h4.828a3.3,3.3,0,0,1-.255-.944,1,1,0,0,0-.994-.9h-2.33a1,1,0,0,0-.994.9A3.3,3.3,0,0,1,13.586,7.164Zm1.007,15.151V13.8a1,1,0,0,0-2,0v8.519a1,1,0,0,0,2,0Zm4.814,0V13.8a1,1,0,0,0-2,0v8.519a1,1,0,0,0,2,0Z"
+                                      ></path>
+                                    </svg>
+                                    <span>Delete User</span>
+                                  </button>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
-                      </div>
+                          ))}
+                        </div>
+                      </>
                     )}
                   </div>
                 </div>
@@ -324,6 +513,41 @@ const AdminUsers = () => {
           </div>
         </div>
       </div>
+      <Modal open={open} onClose={onCloseModal} center>
+        <div className="p-5 rounded2">
+          <h2>
+            Do you want to delete{" "}
+            <b>{`${modalData.firstName} ${modalData.lastName}`}</b> Permanently?
+            <div className="flex flex-col gap-2 mt-2 flex-row  items-center">
+              <div className="relative flex h-8 items-center justify-end px-6 sm:h-10 sm:justify-center sm:px-2 w-full sm:w-80">
+                <button
+                  onClick={() => deleteEachUser(modalData)}
+                  type="button"
+                  disabled={isDisable}
+                  className="relative font-sans font-normal text-sm inline-flex items-center justify-center leading-5 no-underline h-8 px-3 py-2 space-x-1 border nui-focus transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed hover:enabled:shadow-none border-danger-500 text-danger-50 bg-danger-500 dark:bg-danger-500 dark:border-danger-500 text-white hover:enabled:bg-danger-400 dark:hover:enabled:bg-danger-400 hover:enabled:shadow-lg hover:enabled:shadow-danger-500/50 dark:hover:enabled:shadow-danger-800/20 focus-visible:outline-danger-400/70 focus-within:outline-danger-400/70 focus-visible:bg-danger-500 active:enabled:bg-danger-500 dark:focus-visible:outline-danger-400/70 dark:focus-within:outline-danger-400/70 dark:focus-visible:bg-danger-500 dark:active:enabled:bg-danger-500 rounded-md mr-2"
+                >
+                  {isDisable ? (
+                    <div>
+                      <div className="nui-placeload animate-nui-placeload h-4 w-8 rounded mx-auto"></div>
+                    </div>
+                  ) : (
+                    "Delete"
+                  )}
+                </button>
+                <button
+                  onClick={onCloseModal}
+                  type="button"
+                  className="relative font-sans font-normal text-sm inline-flex items-center justify-center leading-5 no-underline h-8 px-3 py-2 space-x-1 border nui-focus transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed hover:enabled:shadow-none border-info-500 text-info-50 bg-info-500 dark:bg-info-500 dark:border-info-500 text-white hover:enabled:bg-info-400 dark:hover:enabled:bg-info-400 hover:enabled:shadow-lg hover:enabled:shadow-info-500/50 dark:hover:enabled:shadow-info-800/20 focus-visible:outline-info-400/70 focus-within:outline-info-400/70 focus-visible:bg-info-500 active:enabled:bg-info-500 dark:focus-visible:outline-info-400/70 dark:focus-within:outline-info-400/70 dark:focus-visible:bg-info-500 dark:active:enabled:bg-info-500 rounded-md mr-2"
+                >
+                  <span>Cancel</span>
+                </button>
+                {/**/}
+                {/**/}
+              </div>
+            </div>
+          </h2>
+        </div>
+      </Modal>
     </div>
   );
 };

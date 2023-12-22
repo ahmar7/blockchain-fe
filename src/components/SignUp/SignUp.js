@@ -4,6 +4,7 @@ import { NavLink, Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { loginApi, registerApi } from "../../Api/Service";
 
+import MobileApp from "../../assets/img/app-fold-phone.png";
 import { useSignIn, useIsAuthenticated, useAuthUser } from "react-auth-kit";
 
 const SignUp = () => {
@@ -132,14 +133,13 @@ const SignUp = () => {
           ></div>
           <seokit />
           <div className="dark:bg-muted-800 flex min-h-screen bg-white">
-            <div className="bg-muted-100 dark:bg-muted-900 relative hidden w-0 flex-1 items-center justify-center lg:flex lg:w-3/5">
+            <div className="bg-muted-100 bg-g dark:bg-muted-900 relative hidden w-0 flex-1 items-center justify-center lg:flex lg:w-3/5">
               <div className="mx-auto w-full h-full flex items-center justify-center max-w-4xl">
                 <img
                   className="max-w-xl mx-auto"
-                  src="https://app.encryptwallet.io/img/illustrations/station.svg"
+                  src={MobileApp}
                   alt=""
-                  width={619}
-                  height={594}
+                  width="400"
                 />
               </div>
             </div>

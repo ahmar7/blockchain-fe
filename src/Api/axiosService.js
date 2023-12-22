@@ -48,7 +48,7 @@ export const putApi = async (endpoint, data) => {
   try {
     const response = await axiosService.put(endpoint, data, {
       withCredentials: true,
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "multipart/form-data" },
       credentials: "include",
     });
 
@@ -78,6 +78,7 @@ export const patchApi = async (endpoint, data) => {
         msg: error?.message,
       }
     );
+    //
   }
 };
 

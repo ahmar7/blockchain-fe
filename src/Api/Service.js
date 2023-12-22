@@ -56,3 +56,9 @@ export const getsignUserApi = (data) => {
 export const verifyEmailApi = (data) => {
   return getApi(`${data.id}/verify/${data.token}`, data);
 };
+export const deleteEachUserApi = (id) => {
+  return deleteApi(`deleteEachUser/${id}`, id);
+};
+export const updateKycApi = (id, data) => {
+  return patchApi(`updateKyc/${id}`, data);
+};

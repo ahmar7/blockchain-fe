@@ -85,13 +85,13 @@ const Login = () => {
           ></div>
           <seokit />
           <div className="dark:bg-muted-800 flex min-h-screen bg-white">
-            <div className="bg-muted-100 dark:bg-muted-900 relative hidden w-0 flex-1 items-center justify-center lg:flex lg:w-3/5">
+            <div className="bg-muted-100 bg-g dark:bg-muted-900 relative hidden w-0 flex-1 items-center justify-center lg:flex lg:w-3/5">
               <div className="mx-auto w-full h-full flex items-center justify-center max-w-4xl">
                 <img
                   className="max-w-xl mx-auto"
                   src={MobileApp}
                   alt=""
-                  width="450"
+                  width="400"
                 />
               </div>
             </div>

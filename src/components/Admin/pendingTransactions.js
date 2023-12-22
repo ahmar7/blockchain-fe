@@ -44,7 +44,7 @@ const PendingTransactions = () => {
       if (allTransactions.success) {
         // setData(filter)
 
-        setUserTransactions(allTransactions.Transaction);
+        setUserTransactions(allTransactions.Transaction.reverse());
 
         setisLoading(false);
 

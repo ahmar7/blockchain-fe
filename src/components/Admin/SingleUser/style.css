@@ -29,6 +29,10 @@ input::-webkit-inner-spin-button {
 .align-center {
   align-items: center;
 }
+.bg-danger-400a {
+  background-color: rgb(244 63 94) !important;
+  color: white !important;
+}
 /* Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
@@ -36,4 +40,21 @@ input[type="number"] {
 .fluxb li:hover {
   background-color: rgb(237 233 254);
   color: rgb(76 29 149);
+}
+.bolda {
+  /* font-weight: bold; */
+  font-size: 22px;
+}
+.bg-g {
+  background-image: url("../../../assets/img/home-hero-gradient.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.react-responsive-modal-modal {
+  border-radius: 20px;
+  text-align: center;
+}
+
+.react-responsive-modal-modal .rounded2 {
+  padding-top: 30px;
 }
