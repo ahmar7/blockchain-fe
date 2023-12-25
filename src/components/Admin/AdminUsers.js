@@ -35,7 +35,6 @@ const AdminUsers = () => {
         toast.error(allUsers.msg);
       }
     } catch (error) {
-      console.log("error: ", error);
       toast.error(error);
     } finally {
       setisLoading(false);
@@ -57,7 +56,6 @@ const AdminUsers = () => {
         getAllUsers();
       }
     } catch (error) {
-      console.log("error: ", error);
       toast.error(error);
     } finally {
       setisDisable(false);

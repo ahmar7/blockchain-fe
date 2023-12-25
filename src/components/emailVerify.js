@@ -24,7 +24,6 @@ const EmailVerify = () => {
           setValidUrl(false);
         }
       } catch (error) {
-        console.log("error: ", error);
         toast.error(
           error?.data?.msg || error?.message || "Something went wrong"
         );

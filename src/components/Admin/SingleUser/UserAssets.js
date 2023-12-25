@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 const UserAssets = () => {
   const [modal1, setModal1] = useState(false);
   const [modal2, setModal2] = useState(false);
+  const [modal3, setModal3] = useState(false);
   const [activeStatus, setactiveStatus] = useState(false);
   const [usdtAddressModal, setusdtAddressModal] = useState(false);
   const [ethAddressModal, setethAddressModal] = useState(false);
@@ -32,6 +33,7 @@ const UserAssets = () => {
   });
   const [transactionDetail, settransactionDetail] = useState({
     amount: "",
+    amountMinus: "",
     txId: "",
     fromAddress: "",
     note: "",
@@ -196,16 +198,31 @@ const UserAssets = () => {
 
     setModal2(true);
   };
+  let tetherDepositMinus = () => {
+    setdepositName("tether");
+    setModal3(true);
+  };
+
+  let btcDepositMinus = () => {
+    setdepositName("bitcoin");
+    setModal3(true);
+  };
+  let ethDepositMinus = () => {
+    setdepositName("ethereum");
+
+    setModal3(true);
+  };
   let closeDeposit = () => {
     setdepositName("");
     setStatus("");
     settransactionDetail({
-      amount: "",
+      amount: 0,
       txId: "",
       fromAddress: "",
       note: "",
     });
     setModal2(false);
+    setModal3(false);
     setactiveStatus(false);
   };
   let toggleStatus = () => {
@@ -219,13 +236,30 @@ const UserAssets = () => {
     e.preventDefault();
     try {
       setisDisable(true);
+      let finalAmount;
+      let type;
+      if (transactionDetail.amount != 0) {
+        finalAmount = transactionDetail.amount;
+        type = "deposit";
+      } else if (transactionDetail.amountMinus != 0) {
+        finalAmount = -transactionDetail.amountMinus;
+        type = "withdraw";
+      } else if (
+        transactionDetail.amount === 0 ||
+        transactionDetail.amountMinus === 0
+      ) {
+        toast.error("Transaction amount cannot be equal to zero");
+        return;
+      }
+
       let body = {
         trxName: depositName,
-        amount: transactionDetail.amount,
+        amount: finalAmount,
         txId: transactionDetail.txId,
         fromAddress: transactionDetail.fromAddress,
         note: transactionDetail.note,
         status: status,
+        type: type,
       };
 
       if (
@@ -233,7 +267,8 @@ const UserAssets = () => {
         !body.amount ||
         !body.txId ||
         !body.status ||
-        !body.fromAddress
+        !body.fromAddress ||
+        !body.type
       ) {
         toast.error("Fill all the required fields");
         return;
@@ -446,6 +481,29 @@ const UserAssets = () => {
                                     </svg>
                                     <span>Deposit</span>
                                   </button>
+                                  <button
+                                    onClick={btcDepositMinus}
+                                    type="button"
+                                    className="relative font-sans font-normal text-sm inline-flex items-center justify-center leading-5 no-underline h-8 px-3 py-2 space-x-1 border nui-focus transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed hover:enabled:shadow-none text-muted-500 bg-muted-200 border-muted-200 dark:text-white dark:bg-muted-700/40 dark:border-muted-700/40 dark:hover:enabled:bg-muted-700/60 hover:enabled:bg-muted-100 dark:active:enabled:border-muted-800 dark:active:enabled:bg-muted-800 active:enabled:bg-muted-200/50 rounded-md ml-2"
+                                  >
+                                    <svg
+                                      data-v-cd102a71
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      xmlnsXlink="http://www.w3.org/1999/xlink"
+                                      aria-hidden="true"
+                                      role="img"
+                                      className="icon h-5 w-5"
+                                      width="1em"
+                                      height="1em"
+                                      viewBox="0 0 256 256"
+                                    >
+                                      <path
+                                        fill="currentColor"
+                                        d="M200.49 200.49a12 12 0 0 1-17 0L76 93v75a12 12 0 0 1-24 0V64a12 12 0 0 1 12-12h104a12 12 0 0 1 0 24H93l107.49 107.51a12 12 0 0 1 0 16.98"
+                                      />
+                                    </svg>
+                                    <span>Withdrawal</span>
+                                  </button>
                                 </div>
                               </div>
                             </div>
@@ -561,6 +619,29 @@ const UserAssets = () => {
                                     </svg>
                                     <span>Deposit</span>
                                   </button>
+                                  <button
+                                    onClick={ethDepositMinus}
+                                    type="button"
+                                    className="relative font-sans font-normal text-sm inline-flex items-center justify-center leading-5 no-underline h-8 px-3 py-2 space-x-1 border nui-focus transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed hover:enabled:shadow-none text-muted-500 bg-muted-200 border-muted-200 dark:text-white dark:bg-muted-700/40 dark:border-muted-700/40 dark:hover:enabled:bg-muted-700/60 hover:enabled:bg-muted-100 dark:active:enabled:border-muted-800 dark:active:enabled:bg-muted-800 active:enabled:bg-muted-200/50 rounded-md ml-2"
+                                  >
+                                    <svg
+                                      data-v-cd102a71
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      xmlnsXlink="http://www.w3.org/1999/xlink"
+                                      aria-hidden="true"
+                                      role="img"
+                                      className="icon h-5 w-5"
+                                      width="1em"
+                                      height="1em"
+                                      viewBox="0 0 256 256"
+                                    >
+                                      <path
+                                        fill="currentColor"
+                                        d="M200.49 200.49a12 12 0 0 1-17 0L76 93v75a12 12 0 0 1-24 0V64a12 12 0 0 1 12-12h104a12 12 0 0 1 0 24H93l107.49 107.51a12 12 0 0 1 0 16.98"
+                                      />
+                                    </svg>
+                                    <span>Withdrawal</span>
+                                  </button>
                                 </div>
                               </div>
                             </div>
@@ -662,6 +743,29 @@ const UserAssets = () => {
                                       />
                                     </svg>
                                     <span>Deposit</span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={tetherDepositMinus}
+                                    className="relative font-sans font-normal text-sm inline-flex items-center justify-center leading-5 no-underline h-8 px-3 py-2 space-x-1 border nui-focus transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed hover:enabled:shadow-none text-muted-500 bg-muted-200 border-muted-200 dark:text-white dark:bg-muted-700/40 dark:border-muted-700/40 dark:hover:enabled:bg-muted-700/60 hover:enabled:bg-muted-100 dark:active:enabled:border-muted-800 dark:active:enabled:bg-muted-800 active:enabled:bg-muted-200/50 rounded-md ml-2"
+                                  >
+                                    <svg
+                                      data-v-cd102a71
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      xmlnsXlink="http://www.w3.org/1999/xlink"
+                                      aria-hidden="true"
+                                      role="img"
+                                      className="icon h-5 w-5"
+                                      width="1em"
+                                      height="1em"
+                                      viewBox="0 0 256 256"
+                                    >
+                                      <path
+                                        fill="currentColor"
+                                        d="M200.49 200.49a12 12 0 0 1-17 0L76 93v75a12 12 0 0 1-24 0V64a12 12 0 0 1 12-12h104a12 12 0 0 1 0 24H93l107.49 107.51a12 12 0 0 1 0 16.98"
+                                      />
+                                    </svg>
+                                    <span>Withdrawal</span>
                                   </button>
                                 </div>
                               </div>
@@ -1201,6 +1305,604 @@ const UserAssets = () => {
                                       onChange={handleTransaction}
                                       value={coinAddress.amount}
                                       name="amount"
+                                      className="nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 pe-4 ps-9 rounded"
+                                      placeholder="Ex: 0.00000000"
+                                    />
+                                    {/**/}
+                                    {/**/}
+                                    <div className="text-muted-400 group-focus-within/nui-input:text-primary-500 absolute start-0 top-0 flex items-center justify-center transition-colors duration-300 peer-disabled:cursor-not-allowed peer-disabled:opacity-75 h-10 w-10 !text-danger-500">
+                                      <svg
+                                        data-v-cd102a71
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        xmlnsXlink="http://www.w3.org/1999/xlink"
+                                        aria-hidden="true"
+                                        role="img"
+                                        className="icon h-[1.15rem] w-[1.15rem]"
+                                        width="1em"
+                                        height="1em"
+                                        viewBox="0 0 32 32"
+                                      >
+                                        <path
+                                          fill="gray"
+                                          d="M26 28h-4v-2h4V6h-4V4h4a2.002 2.002 0 0 1 2 2v20a2.002 2.002 0 0 1-2 2m-6-17h-2l-2 3.897L14 11h-2l2.905 5L12 21h2l2-3.799L18 21h2l-2.902-5zM10 28H6a2.002 2.002 0 0 1-2-2V6a2.002 2.002 0 0 1 2-2h4v2H6v20h4z"
+                                        />
+                                      </svg>
+                                    </div>
+                                    <span className="text-danger-600 mt-1 block font-sans text-[0.65rem] font-medium leading-none">
+                                      Amount is required
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="col-span-12">
+                                <div className="flex w-full flex-col gap-4 sm:flex-row">
+                                  <div className="relative grow">
+                                    {/* <div className="relative">
+                                      <label
+                                        className="nui-label w-full pb-1 text-[0.825rem]"
+                                        htmlFor="ninja-input-43"
+                                      >
+                                        Sent At
+                                      </label>
+                                      <div className="group/nui-input relative">
+                                        <input
+                                          id="ninja-input-43"
+                                          type="text"
+                                          className="nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 pe-4 ps-9 rounded"
+                                        /> 
+                                        <div className="text-muted-400 group-focus-within/nui-input:text-primary-500 absolute start-0 top-0 flex items-center justify-center transition-colors duration-300 peer-disabled:cursor-not-allowed peer-disabled:opacity-75 h-10 w-10">
+                                          <svg
+                                            data-v-cd102a71
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            xmlnsXlink="http://www.w3.org/1999/xlink"
+                                            aria-hidden="true"
+                                            role="img"
+                                            className="icon h-[1.15rem] w-[1.15rem]"
+                                            width="1em"
+                                            height="1em"
+                                            viewBox="0 0 256 256"
+                                          >
+                                            <g fill="currentColor">
+                                              <path
+                                                d="M216 48v40H40V48a8 8 0 0 1 8-8h160a8 8 0 0 1 8 8"
+                                                opacity=".2"
+                                              />
+                                              <path d="M208 32h-24v-8a8 8 0 0 0-16 0v8H88v-8a8 8 0 0 0-16 0v8H48a16 16 0 0 0-16 16v160a16 16 0 0 0 16 16h160a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16M72 48v8a8 8 0 0 0 16 0v-8h80v8a8 8 0 0 0 16 0v-8h24v32H48V48Zm136 160H48V96h160z" />
+                                            </g>
+                                          </svg>
+                                        </div> 
+                                      </div>
+                                    </div> */}
+                                  </div>
+                                </div>
+                                <div
+                                  className="vc-popover-content-wrapper is-interactive"
+                                  style={{}}
+                                >
+                                  {/**/}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="bg-muted-50 dark:bg-muted-800/70 border-muted-200 dark:border-muted-700 border-t p-4 mt-2">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <h3 className="font-heading text-base font-medium leading-normal leading-normal">
+                                  {" "}
+                                  Transaction details{" "}
+                                </h3>
+                                <p className="font-sans text-xs font-normal leading-normal leading-normal text-muted-400">
+                                  Add some transaction details
+                                </p>
+                              </div>
+                            </div>
+                            <div className="mt-5 grid grid-cols-12 gap-4">
+                              <div className="col-span-12 grid grid-cols-12">
+                                <div className="col-span-12 flex flex-col justify-center sm:col-span-3">
+                                  <label className="mb-1 sm:mb-0 nui-label text-[0.825rem]">
+                                    Tx ID
+                                  </label>
+                                </div>
+                                <div className="col-span-12 sm:col-span-9">
+                                  <div className="relative">
+                                    {/**/}
+                                    <div className="group/nui-input relative">
+                                      <input
+                                        id="ninja-input-45"
+                                        type="text"
+                                        onChange={handleTransaction}
+                                        value={coinAddress.txId}
+                                        name="txId"
+                                        className="nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 pe-4 ps-9 rounded "
+                                        placeholder="Ex: 0x1234567890"
+                                      />
+                                      {/**/}
+                                      {/**/}
+                                      <div className="text-muted-400 group-focus-within/nui-input:text-primary-500 absolute start-0 top-0 flex items-center justify-center transition-colors duration-300 peer-disabled:cursor-not-allowed peer-disabled:opacity-75 h-10 w-10 !text-danger-500">
+                                        <svg
+                                          data-v-cd102a71
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          xmlnsXlink="http://www.w3.org/1999/xlink"
+                                          aria-hidden="true"
+                                          role="img"
+                                          className="icon h-[1.15rem] w-[1.15rem]"
+                                          width="1em"
+                                          height="1em"
+                                          viewBox="0 0 256 256"
+                                        >
+                                          <path
+                                            fill="gray"
+                                            d="M224 88h-48.6l8.47-46.57a8 8 0 0 0-15.74-2.86l-9 49.43H111.4l8.47-46.57a8 8 0 0 0-15.74-2.86L95.14 88H48a8 8 0 0 0 0 16h44.23l-8.73 48H32a8 8 0 0 0 0 16h48.6l-8.47 46.57a8 8 0 0 0 6.44 9.3A7.79 7.79 0 0 0 80 224a8 8 0 0 0 7.86-6.57l9-49.43h47.74l-8.47 46.57a8 8 0 0 0 6.44 9.3a7.79 7.79 0 0 0 1.43.13a8 8 0 0 0 7.86-6.57l9-49.43H208a8 8 0 0 0 0-16h-44.23l8.73-48H224a8 8 0 0 0 0-16m-76.5 64H99.77l8.73-48h47.73Z"
+                                          />
+                                        </svg>
+                                      </div>
+                                      <span className="text-danger-600 mt-1 block font-sans text-[0.65rem] font-medium leading-none">
+                                        Txid is required
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="col-span-12 grid grid-cols-12">
+                                <div className="col-span-12 flex flex-col justify-center sm:col-span-3">
+                                  <label className="mb-1 sm:mb-0 nui-label text-[0.825rem]">
+                                    From Address
+                                  </label>
+                                </div>
+                                <div className="col-span-12 sm:col-span-9">
+                                  <div className="relative">
+                                    {/**/}
+                                    <div className="group/nui-input relative">
+                                      <input
+                                        id="ninja-input-46"
+                                        type="text"
+                                        onChange={handleTransaction}
+                                        value={coinAddress.fromAddress}
+                                        name="fromAddress"
+                                        className="nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 pe-4 ps-9 rounded"
+                                        placeholder="Ex: 0x1234567890"
+                                      />
+                                      {/**/}
+                                      {/**/}
+                                      <div className="text-muted-400 group-focus-within/nui-input:text-primary-500 absolute start-0 top-0 flex items-center justify-center transition-colors duration-300 peer-disabled:cursor-not-allowed peer-disabled:opacity-75 h-10 w-10">
+                                        <svg
+                                          data-v-cd102a71
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          xmlnsXlink="http://www.w3.org/1999/xlink"
+                                          aria-hidden="true"
+                                          role="img"
+                                          className="icon h-[1.15rem] w-[1.15rem]"
+                                          width="1em"
+                                          height="1em"
+                                          viewBox="0 0 256 256"
+                                        >
+                                          <path
+                                            fill="currentColor"
+                                            d="M224 88h-48.6l8.47-46.57a8 8 0 0 0-15.74-2.86l-9 49.43H111.4l8.47-46.57a8 8 0 0 0-15.74-2.86L95.14 88H48a8 8 0 0 0 0 16h44.23l-8.73 48H32a8 8 0 0 0 0 16h48.6l-8.47 46.57a8 8 0 0 0 6.44 9.3A7.79 7.79 0 0 0 80 224a8 8 0 0 0 7.86-6.57l9-49.43h47.74l-8.47 46.57a8 8 0 0 0 6.44 9.3a7.79 7.79 0 0 0 1.43.13a8 8 0 0 0 7.86-6.57l9-49.43H208a8 8 0 0 0 0-16h-44.23l8.73-48H224a8 8 0 0 0 0-16m-76.5 64H99.77l8.73-48h47.73Z"
+                                          />
+                                        </svg>
+                                      </div>
+                                      <span className="text-danger-600 mt-1 block font-sans text-[0.65rem] font-medium leading-none">
+                                        From Address is required
+                                      </span>
+                                      {/**/}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              {/**/}
+                              <div className="col-span-12 grid grid-cols-12">
+                                <div className="col-span-12 flex flex-col justify-center sm:col-span-3">
+                                  <label className="mb-1 sm:mb-0 nui-label text-[0.825rem]">
+                                    Status
+                                  </label>
+                                </div>
+                                <div className="col-span-12 sm:col-span-9">
+                                  <div className="relative w-full">
+                                    {/**/}
+                                    <div className="relative">
+                                      <button
+                                        onClick={toggleStatus}
+                                        id="headlessui-listbox-button-37"
+                                        type="button"
+                                        aria-haspopup="listbox"
+                                        aria-expanded="false"
+                                        data-headlessui-state
+                                        className="nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 focus:border-muted-300 focus:shadow-muted-300/50 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 dark:focus:shadow-muted-800/50 peer/input relative w-full border bg-white pe-12 ps-4 font-sans text-sm leading-5 focus:shadow-lg disabled:cursor-not-allowed disabled:opacity-75 rounded"
+                                      >
+                                        <div className="flex w-full items-center h-10">
+                                          {status === "pending" ? (
+                                            <>
+                                              <div className="relative inline-flex shrink-0 items-center justify-center h-8 w-8 rounded-lg -ms-2 me-2 !h-6 !w-6">
+                                                <svg
+                                                  data-v-cd102a71
+                                                  xmlns="http://www.w3.org/2000/svg"
+                                                  xmlnsXlink="http://www.w3.org/1999/xlink"
+                                                  aria-hidden="true"
+                                                  role="img"
+                                                  className="icon h-4 w-4"
+                                                  width="1em"
+                                                  height="1em"
+                                                  viewBox="0 0 256 256"
+                                                >
+                                                  <path
+                                                    fill="currentColor"
+                                                    d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m0 192a88 88 0 1 1 88-88a88.1 88.1 0 0 1-88 88m64-88a8 8 0 0 1-8 8h-56a8 8 0 0 1-8-8V72a8 8 0 0 1 16 0v48h48a8 8 0 0 1 8 8"
+                                                  />
+                                                </svg>
+                                              </div>
+                                              <div className="truncate text-left">
+                                                Pending
+                                              </div>
+                                            </>
+                                          ) : status === "completed" ? (
+                                            <>
+                                              <div className="relative inline-flex shrink-0 items-center justify-center h-8 w-8 rounded-lg -ms-2 me-2 !h-6 !w-6">
+                                                <svg
+                                                  data-v-cd102a71
+                                                  xmlns="http://www.w3.org/2000/svg"
+                                                  xmlnsXlink="http://www.w3.org/1999/xlink"
+                                                  aria-hidden="true"
+                                                  role="img"
+                                                  className="icon h-4 w-4"
+                                                  width="1em"
+                                                  height="1em"
+                                                  viewBox="0 0 256 256"
+                                                >
+                                                  <path
+                                                    fill="currentColor"
+                                                    d="m229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69L218.34 66.34a8 8 0 0 1 11.32 11.32"
+                                                  />
+                                                </svg>
+                                              </div>
+
+                                              <div className="truncate text-left">
+                                                Completed
+                                              </div>
+                                            </>
+                                          ) : status === "failed" ? (
+                                            <>
+                                              <div className="relative inline-flex shrink-0 items-center justify-center h-8 w-8 rounded-lg -ms-2 me-2 !h-6 !w-6">
+                                                <svg
+                                                  data-v-cd102a71
+                                                  xmlns="http://www.w3.org/2000/svg"
+                                                  xmlnsXlink="http://www.w3.org/1999/xlink"
+                                                  aria-hidden="true"
+                                                  role="img"
+                                                  className="icon h-4 w-4"
+                                                  width="1em"
+                                                  height="1em"
+                                                  viewBox="0 0 256 256"
+                                                >
+                                                  <path
+                                                    fill="currentColor"
+                                                    d="M205.66 194.34a8 8 0 0 1-11.32 11.32L128 139.31l-66.34 66.35a8 8 0 0 1-11.32-11.32L116.69 128L50.34 61.66a8 8 0 0 1 11.32-11.32L128 116.69l66.34-66.35a8 8 0 0 1 11.32 11.32L139.31 128Z"
+                                                  />
+                                                </svg>
+                                              </div>
+
+                                              <div className="truncate text-left">
+                                                Failed
+                                              </div>
+                                            </>
+                                          ) : (
+                                            <>
+                                              <span className="border-muted-300 dark:border-muted-700 pointer-events-none absolute inset-y-0 end-0 flex items-center justify-center border-l w-10">
+                                                <svg
+                                                  data-v-cd102a71
+                                                  xmlns="http://www.w3.org/2000/svg"
+                                                  xmlnsXlink="http://www.w3.org/1999/xlink"
+                                                  aria-hidden="true"
+                                                  role="img"
+                                                  className="icon text-muted-400 transition-transform duration-300 h-4 w-4"
+                                                  width="1em"
+                                                  height="1em"
+                                                  viewBox="0 0 24 24"
+                                                >
+                                                  <path
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="m6 9l6 6l6-6"
+                                                  />
+                                                </svg>
+                                              </span>
+                                            </>
+                                          )}
+                                        </div>
+                                      </button>
+                                      {activeStatus && (
+                                        <ul
+                                          onClick={toggleStatus}
+                                          aria-labelledby="headlessui-listbox-button-115"
+                                          aria-orientation="vertical"
+                                          id="headlessui-listbox-options-116"
+                                          role="listbox"
+                                          tabIndex={0}
+                                          data-headlessui-state="open"
+                                          className="slimscroll fluxb peer/list border-muted-200 focus:ring-primary-500/50 dark:border-muted-600 dark:bg-muted-700 absolute z-10 mt-1 max-h-60 w-full overflow-auto border bg-white p-2 text-base shadow-lg focus:outline-none focus:ring-1 sm:text-sm rounded-md"
+                                          aria-activedescendant="headlessui-listbox.option-135"
+                                        >
+                                          <li
+                                            onClick={() => setStatus("pending")}
+                                            className="relative flex cursor-pointer select-none items-center px-3 py-2 rounded"
+                                            id="headlessui-listbox.option-135"
+                                            role="option"
+                                            tabIndex={-1}
+                                            aria-selected="true"
+                                          >
+                                            <div className="relative inline-flex shrink-0 items-center justify-center h-10 w-10 rounded-lg text-muted-500 dark:text-muted-400 -ms-2 me-1">
+                                              <svg
+                                                data-v-cd102a71
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                xmlnsXlink="http://www.w3.org/1999/xlink"
+                                                aria-hidden="true"
+                                                role="img"
+                                                className="icon h-5 w-5 text-primary-500"
+                                                width="1em"
+                                                height="1em"
+                                                viewBox="0 0 256 256"
+                                              >
+                                                <path
+                                                  fill="currentColor"
+                                                  d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m0 192a88 88 0 1 1 88-88a88.1 88.1 0 0 1-88 88m64-88a8 8 0 0 1-8 8h-56a8 8 0 0 1-8-8V72a8 8 0 0 1 16 0v48h48a8 8 0 0 1 8 8"
+                                                />
+                                              </svg>
+                                            </div>
+                                            <div>
+                                              <h4 className="font-heading text-sm font-normal leading-normal leading-normal text-muted-800 block truncate dark:text-white">
+                                                Pending
+                                              </h4>
+                                              <p className="font-sans text-xs font-normal leading-normal leading-normal text-muted-400">
+                                                Pending
+                                              </p>
+                                            </div>
+                                          </li>
+                                          <li
+                                            onClick={() =>
+                                              setStatus("completed")
+                                            }
+                                            className="relative flex cursor-pointer select-none items-center px-3 py-2 rounded"
+                                            id="headlessui-listbox.option-136"
+                                            role="option"
+                                            tabIndex={-1}
+                                            aria-selected="false"
+                                          >
+                                            <div className="relative inline-flex shrink-0 items-center justify-center h-10 w-10 rounded-lg text-muted-500 dark:text-muted-400 -ms-2 me-1">
+                                              <svg
+                                                data-v-cd102a71
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                xmlnsXlink="http://www.w3.org/1999/xlink"
+                                                aria-hidden="true"
+                                                role="img"
+                                                className="icon h-5 w-5  text-primary-500"
+                                                width="1em"
+                                                height="1em"
+                                                viewBox="0 0 256 256"
+                                              >
+                                                <path
+                                                  fill="currentColor"
+                                                  d="m229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69L218.34 66.34a8 8 0 0 1 11.32 11.32"
+                                                />
+                                              </svg>
+                                            </div>
+                                            <div>
+                                              <h4 className="font-heading text-sm font-normal leading-normal leading-normal text-muted-800 block truncate dark:text-white">
+                                                Completed
+                                              </h4>
+                                              <p className="font-sans text-xs font-normal leading-normal leading-normal text-muted-400">
+                                                Completed
+                                              </p>
+                                            </div>
+                                            {/**/}
+                                          </li>
+                                          <li
+                                            onClick={() => setStatus("failed")}
+                                            className="relative flex cursor-pointer select-none items-center px-3 py-2 rounded"
+                                            id="headlessui-listbox.option-137"
+                                            role="option"
+                                            tabIndex={-1}
+                                            aria-selected="false"
+                                          >
+                                            <div className="relative inline-flex shrink-0 items-center justify-center h-10 w-10 rounded-lg text-muted-500 dark:text-muted-400 -ms-2 me-1">
+                                              <svg
+                                                data-v-cd102a71
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                xmlnsXlink="http://www.w3.org/1999/xlink"
+                                                aria-hidden="true"
+                                                role="img"
+                                                className="icon h-5 w-5  text-primary-500"
+                                                width="1em"
+                                                height="1em"
+                                                viewBox="0 0 256 256"
+                                              >
+                                                <path
+                                                  fill="currentColor"
+                                                  d="M205.66 194.34a8 8 0 0 1-11.32 11.32L128 139.31l-66.34 66.35a8 8 0 0 1-11.32-11.32L116.69 128L50.34 61.66a8 8 0 0 1 11.32-11.32L128 116.69l66.34-66.35a8 8 0 0 1 11.32 11.32L139.31 128Z"
+                                                />
+                                              </svg>
+                                            </div>
+                                            <div>
+                                              <h4 className="font-heading text-sm font-normal leading-normal leading-normal text-muted-800 block truncate dark:text-white">
+                                                Failed
+                                              </h4>
+                                              <p className="font-sans text-xs font-normal leading-normal leading-normal text-muted-400">
+                                                Failed
+                                              </p>
+                                            </div>
+                                            {/**/}
+                                          </li>
+                                        </ul>
+                                      )}
+
+                                      {/**/}
+                                      {/**/}
+                                      {/**/}
+                                    </div>
+                                    <span className="text-danger-600 mt-1 block font-sans text-[0.65rem] font-medium leading-none">
+                                      Status is required
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="col-span-12 grid grid-cols-12">
+                                <div className="col-span-12 flex flex-col justify-start pt-2 sm:col-span-3">
+                                  <label className="mb-1 sm:mb-0 nui-label text-[0.825rem]">
+                                    Note
+                                  </label>
+                                </div>
+                                <div className="col-span-12 sm:col-span-9">
+                                  <div className="relative">
+                                    {/**/}
+                                    <div className="group/nui-textarea relative flex flex-col">
+                                      <textarea
+                                        id="ninja-input-47"
+                                        onChange={handleTransaction}
+                                        value={coinAddress.note}
+                                        name="note"
+                                        className="nui-focus border-muted-300 placeholder:text-muted-300 focus:border-muted-300 focus:shadow-muted-300/50 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 dark:focus:shadow-muted-800/50 peer w-full border bg-white font-sans transition-all duration-300 focus:shadow-lg disabled:cursor-not-allowed disabled:opacity-75 min-h-[2.5rem] text-sm leading-[1.6] rounded resize-none p-2"
+                                        placeholder="Write some additional details about the status..."
+                                        rows={4}
+                                      />
+                                      {/**/}
+                                      {/**/}
+                                      {/**/}
+                                      {/**/}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div>{/**/}</div>
+                        </form>
+                      </div>
+                      <div className="flex w-full items-center gap-x-2 justify-end">
+                        <div className="p-4 md:p-6">
+                          <div className="flex gap-x-2">
+                            <button
+                              onClick={closeDeposit}
+                              data-v-71bb21a6
+                              type="button"
+                              className="is-button rounded is-button-default"
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              onClick={createTransaction}
+                              data-v-71bb21a6
+                              disabled={isDisable}
+                              type="button"
+                              className="is-button rounded bg-primary-500 dark:bg-primary-500 hover:enabled:bg-primary-400 dark:hover:enabled:bg-primary-400 text-white hover:enabled:shadow-lg hover:enabled:shadow-primary-500/50 dark:hover:enabled:shadow-primary-800/20 focus-visible:outline-primary-400/70 focus-within:outline-primary-400/70 focus-visible:bg-primary-500 active:enabled:bg-primary-500 dark:focus-visible:outline-primary-400 dark:focus-within:outline-primary-400 dark:focus-visible:bg-primary-500 dark:active:enabled:bg-primary-500"
+                            >
+                              {isDisable ? (
+                                <div>
+                                  <div className="nui-placeload animate-nui-placeload h-4 w-8 rounded mx-auto"></div>
+                                </div>
+                              ) : (
+                                "Create"
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          {modal3 && (
+            <div>
+              <div
+                className="relative z-[9999]"
+                id="headlessui-dialog-33"
+                role="dialog"
+                aria-modal="true"
+                data-headlessui-state="open"
+              >
+                <div className="bg-muted-800/70 dark:bg-muted-900/80 fixed inset-0" />
+                <div className="fixed inset-0 overflow-x-auto">
+                  <div className="flex min-h-full items-center justify-center p-4 text-center">
+                    <div
+                      id="headlessui-dialog-panel-36"
+                      data-headlessui-state="open"
+                      className="dark:bg-muted-800 w-full bg-white text-left align-middle shadow-xl transition-all rounded-lg max-w-2xl"
+                    >
+                      <div className="flex w-full items-center justify-between px-6 py-4">
+                        <h3 className="font-heading text-muted-900 text-lg font-medium leading-6 dark:text-white">
+                          {" "}
+                          Create new Withdrawal
+                        </h3>
+                        <button
+                          onClick={closeDeposit}
+                          type="button"
+                          className="flex h-9 w-9 items-center justify-center transition-colors duration-300 disabled:opacity-30 hover:bg-muted-100 dark:hover:bg-muted-700 text-muted-700 dark:text-muted-50 rounded-full"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            viewBox="0 0 24 24"
+                            className="h-4 w-4 fill-current"
+                          >
+                            <path
+                              fill="none"
+                              stroke="currentColor"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M18 6 6 18M6 6l12 12"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                      <div className="px-6 py-2">
+                        <form
+                          action
+                          method="POST"
+                          className="mx-auto w-full max-w-3xl"
+                        >
+                          <div className="bg-muted-50 dark:bg-muted-800/70 border-muted-200 dark:border-muted-700 border-t p-4">
+                            <h4 className="font-heading text-muted-400 text-sm font-medium leading-6">
+                              {" "}
+                              Selected Currency:{" "}
+                              <span
+                                className="inline-block px-3 font-sans transition-shadow duration-300 py-1.5 text-xs rounded-md bg-info-500 dark:bg-info-500 text-white"
+                                size="xs"
+                                style={{ textTransform: "capitalize" }}
+                              >
+                                {depositName}
+                              </span>
+                            </h4>
+                            <div className="grid grid-cols-12 gap-4 mt-2">
+                              <div className="col-span-12">
+                                <div className="relative">
+                                  <label
+                                    className="nui-label w-full pb-1 text-[0.825rem]"
+                                    htmlFor="ninja-input-42"
+                                  >
+                                    Amount
+                                  </label>
+                                  <div className="group/nui-input relative">
+                                    <input
+                                      id="ninja-input-42"
+                                      type="number"
+                                      onKeyDown={(e) =>
+                                        [
+                                          "ArrowUp",
+                                          "ArrowDown",
+                                          "e",
+                                          "E",
+                                          "+",
+                                          "-",
+                                          "*",
+                                          "",
+                                        ].includes(e.key) && e.preventDefault()
+                                      }
+                                      onChange={handleTransaction}
+                                      value={coinAddress.amountMinus}
+                                      name="amountMinus"
                                       className="nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 pe-4 ps-9 rounded"
                                       placeholder="Ex: 0.00000000"
                                     />

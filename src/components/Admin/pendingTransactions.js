@@ -43,8 +43,11 @@ const PendingTransactions = () => {
       const allTransactions = await getTransactionsApi();
       if (allTransactions.success) {
         // setData(filter)
+        setUserTransactions(allTransactions.Transaction);
 
-        setUserTransactions(allTransactions.Transaction.reverse());
+        // setUserTransactions(pendingTransactionsLengthArray);
+
+        //
 
         setisLoading(false);
 
@@ -136,6 +139,7 @@ const PendingTransactions = () => {
       return;
     }
     getTransactions();
+
     // getSignleUser();
   }, []);
 
@@ -318,29 +322,53 @@ const PendingTransactions = () => {
                                   <div key={index}>
                                     <div className="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-xl p-3">
                                       <div className="flex w-full items-center gap-2">
-                                        <div className="relative inline-flex shrink-0 items-center justify-center outline-none h-12 w-12 nui-mask nui-mask-blob bg-success-100 text-success-400">
-                                          <div className="flex h-full w-full items-center justify-center overflow-hidden text-center transition-all duration-300">
-                                            <svg
-                                              data-v-cd102a71
-                                              xmlns="http://www.w3.org/2000/svg"
-                                              xmlnsXlink="http://www.w3.org/1999/xlink"
-                                              aria-hidden="true"
-                                              role="img"
-                                              className="icon"
-                                              width="1em"
-                                              height="1em"
-                                              viewBox="0 0 24 24"
-                                            >
-                                              <path
-                                                fill="currentColor"
-                                                d="M11 20V7.825l-5.6 5.6L4 12l8-8l8 8l-1.4 1.425l-5.6-5.6V20z"
-                                              />
-                                            </svg>
+                                        {sinlgeUserTx.type === "deposit" ? (
+                                          <div className="relative inline-flex shrink-0 items-center justify-center outline-none h-12 w-12 nui-mask nui-mask-blob bg-success-100 text-success-400">
+                                            <div className="flex h-full w-full items-center justify-center overflow-hidden text-center transition-all duration-300">
+                                              <svg
+                                                data-v-cd102a71
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                xmlnsXlink="http://www.w3.org/1999/xlink"
+                                                aria-hidden="true"
+                                                role="img"
+                                                className="icon"
+                                                width="1em"
+                                                height="1em"
+                                                viewBox="0 0 24 24"
+                                              >
+                                                <path
+                                                  fill="currentColor"
+                                                  d="M11 20V7.825l-5.6 5.6L4 12l8-8l8 8l-1.4 1.425l-5.6-5.6V20z"
+                                                />
+                                              </svg>
+                                            </div>
                                           </div>
-
-                                          {/**/}
-                                          {/**/}
-                                        </div>
+                                        ) : sinlgeUserTx.type === "withdraw" ? (
+                                          <div className="relative inline-flex shrink-0 items-center justify-center outline-none h-12 w-12 nui-mask nui-mask-blob bg-danger-100 text-danger-400">
+                                            <div className="flex h-full w-full items-center justify-center overflow-hidden text-center transition-all duration-300">
+                                              <svg
+                                                data-v-cd102a71
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                xmlnsXlink="http://www.w3.org/1999/xlink"
+                                                aria-hidden="true"
+                                                role="img"
+                                                className="icon"
+                                                width="1em"
+                                                height="1em"
+                                                viewBox="0 0 24 24"
+                                              >
+                                                <path
+                                                  fill="currentColor"
+                                                  d="M11 4v12.175l-5.6-5.6L4 12l8 8l8-8l-1.4-1.425l-5.6 5.6V4z"
+                                                />
+                                              </svg>
+                                            </div>
+                                            {/**/}
+                                            {/**/}
+                                          </div>
+                                        ) : (
+                                          ""
+                                        )}
                                         <div>
                                           <p
                                             className="font-heading capitalize text-sm font-medium leading-normal leading-normal"

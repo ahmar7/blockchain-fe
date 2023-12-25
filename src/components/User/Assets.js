@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 const Assets = () => {
   const [Active, setActive] = useState(false);
   let toggleBar = () => {
-    console.log("ad");
     if (Active === true) {
       setActive(false);
     } else {

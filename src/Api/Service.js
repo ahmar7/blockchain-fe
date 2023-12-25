@@ -62,3 +62,6 @@ export const deleteEachUserApi = (id) => {
 export const updateKycApi = (id, data) => {
   return patchApi(`updateKyc/${id}`, data);
 };
+export const sendTicketApi = (data) => {
+  return postApi(`sendTicket`, data);
+};

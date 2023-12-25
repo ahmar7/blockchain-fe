@@ -1043,11 +1043,13 @@ const Header = () => {
                 </button>
               </Link>
               <Link
-                href="/auth/signup"
-                onClick={toggleNav}
+                to="/auth/signup"
                 className="Link__CustomLink-sc-1p80yfz-0 hDjhKH SignupButton__CustomLink-sc-4rqyau-1 crgNqM"
               >
-                <button className="Button__BaseButton-sc-1e82yhp-0 eOOfRK SignupButton__Component-sc-4rqyau-0 cDxlUM">
+                <button
+                  onClick={toggleNav}
+                  className="Button__BaseButton-sc-1e82yhp-0 eOOfRK SignupButton__Component-sc-4rqyau-0 cDxlUM"
+                >
                   Sign Up
                 </button>
               </Link>

@@ -16,13 +16,14 @@ const Dashboard = () => {
   const Navigate = useNavigate();
 
   const [modal, setModal] = useState(false);
-  const [isUser, setIsUser] = useState(true);
+  const [isUser, setIsUser] = useState([]);
   const [isLoading, setisLoading] = useState(true);
   const [UserData, setUserData] = useState(true);
 
   const [singleTransaction, setsingleTransaction] = useState();
   const [UserTransactions, setUserTransactions] = useState([]);
   const [btcBalance, setbtcBalance] = useState(0);
+
   const [ethBalance, setethBalance] = useState(0);
   const [usdtBalance, setusdtBalance] = useState(0);
   const [Active, setActive] = useState(false);
@@ -104,6 +105,7 @@ const Dashboard = () => {
     } finally {
     }
   };
+
   const getsignUser = async () => {
     try {
       const formData = new FormData();
@@ -180,7 +182,7 @@ const Dashboard = () => {
                 </h1>
                 <div className="ms-auto" />
                 <div className="verified-btn me-2">
-                  {isUser.kyc === false ? (
+                  {isUser && isUser.kyc === false ? (
                     <span
                       class="inline-block px-3 font-sans transition-shadow duration-300 py-1.5 text-xs rounded-md bg-danger-500 dark:bg-danger-500 text-white"
                       size="xs"
@@ -321,8 +323,8 @@ const Dashboard = () => {
                                   </p>
                                 </div>
                                 <div className="ms-auto flex items-center">
-                                  <a
-                                    href="/assets/9ad4d3ce-be86-4e79-b22c-42b7cc8745bc"
+                                  <Link
+                                    to="/assets"
                                     className="disabled:opacity-60 disabled:cursor-not-allowed hover:shadow-none false false text-muted-700 bg-white border border-muted-300 dark:text-white dark:bg-muted-700 dark:hover:bg-muted-600 dark:border-muted-600 hover:bg-muted-50 rounded-xl h-10 w-10 p-2 nui-focus relative inline-flex items-center justify-center space-x-1 font-sans text-sm font-normal leading-5 no-underline outline-none transition-all duration-300 scale-75"
                                     disabled="false"
                                     muted
@@ -347,7 +349,7 @@ const Dashboard = () => {
                                         d="M5 12h14m-7-7l7 7l-7 7"
                                       />
                                     </svg>
-                                  </a>
+                                  </Link>
                                 </div>
                               </div>
                               <div className="flex items-center gap-3">
@@ -393,8 +395,8 @@ const Dashboard = () => {
                                   </p>
                                 </div>
                                 <div className="ms-auto flex items-center">
-                                  <a
-                                    href="/assets/9ad4d3ce-befa-486f-8dd8-c047353b5441"
+                                  <Link
+                                    to="/assets"
                                     className="disabled:opacity-60 disabled:cursor-not-allowed hover:shadow-none false false text-muted-700 bg-white border border-muted-300 dark:text-white dark:bg-muted-700 dark:hover:bg-muted-600 dark:border-muted-600 hover:bg-muted-50 rounded-xl h-10 w-10 p-2 nui-focus relative inline-flex items-center justify-center space-x-1 font-sans text-sm font-normal leading-5 no-underline outline-none transition-all duration-300 scale-75"
                                     disabled="false"
                                     muted
@@ -419,7 +421,7 @@ const Dashboard = () => {
                                         d="M5 12h14m-7-7l7 7l-7 7"
                                       />
                                     </svg>
-                                  </a>
+                                  </Link>
                                 </div>
                               </div>
                               <div className="flex items-center gap-3">
@@ -453,8 +455,8 @@ const Dashboard = () => {
                                   </p>
                                 </div>
                                 <div className="ms-auto flex items-center">
-                                  <a
-                                    href="/assets/9ad4d3ce-bf65-408b-a646-a34d667c0eb9"
+                                  <Link
+                                    to="/assets"
                                     className="disabled:opacity-60 disabled:cursor-not-allowed hover:shadow-none false false text-muted-700 bg-white border border-muted-300 dark:text-white dark:bg-muted-700 dark:hover:bg-muted-600 dark:border-muted-600 hover:bg-muted-50 rounded-xl h-10 w-10 p-2 nui-focus relative inline-flex items-center justify-center space-x-1 font-sans text-sm font-normal leading-5 no-underline outline-none transition-all duration-300 scale-75"
                                     disabled="false"
                                     muted
@@ -479,7 +481,7 @@ const Dashboard = () => {
                                         d="M5 12h14m-7-7l7 7l-7 7"
                                       />
                                     </svg>
-                                  </a>
+                                  </Link>
                                 </div>
                               </div>
                             </div>
@@ -562,29 +564,53 @@ const Dashboard = () => {
                               <div key={index}>
                                 <div className="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-xl p-3">
                                   <div className="flex w-full items-center gap-2">
-                                    <div className="relative inline-flex shrink-0 items-center justify-center outline-none h-12 w-12 nui-mask nui-mask-blob bg-success-100 text-success-400">
-                                      <div className="flex h-full w-full items-center justify-center overflow-hidden text-center transition-all duration-300">
-                                        <svg
-                                          data-v-cd102a71
-                                          xmlns="http://www.w3.org/2000/svg"
-                                          xmlnsXlink="http://www.w3.org/1999/xlink"
-                                          aria-hidden="true"
-                                          role="img"
-                                          className="icon"
-                                          width="1em"
-                                          height="1em"
-                                          viewBox="0 0 24 24"
-                                        >
-                                          <path
-                                            fill="currentColor"
-                                            d="M11 20V7.825l-5.6 5.6L4 12l8-8l8 8l-1.4 1.425l-5.6-5.6V20z"
-                                          />
-                                        </svg>
+                                    {Transaction.type === "deposit" ? (
+                                      <div className="relative inline-flex shrink-0 items-center justify-center outline-none h-12 w-12 nui-mask nui-mask-blob bg-success-100 text-success-400">
+                                        <div className="flex h-full w-full items-center justify-center overflow-hidden text-center transition-all duration-300">
+                                          <svg
+                                            data-v-cd102a71
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            xmlnsXlink="http://www.w3.org/1999/xlink"
+                                            aria-hidden="true"
+                                            role="img"
+                                            className="icon"
+                                            width="1em"
+                                            height="1em"
+                                            viewBox="0 0 24 24"
+                                          >
+                                            <path
+                                              fill="currentColor"
+                                              d="M11 20V7.825l-5.6 5.6L4 12l8-8l8 8l-1.4 1.425l-5.6-5.6V20z"
+                                            />
+                                          </svg>
+                                        </div>
                                       </div>
-
-                                      {/**/}
-                                      {/**/}
-                                    </div>
+                                    ) : Transaction.type === "withdraw" ? (
+                                      <div className="relative inline-flex shrink-0 items-center justify-center outline-none h-12 w-12 nui-mask nui-mask-blob bg-danger-100 text-danger-400">
+                                        <div className="flex h-full w-full items-center justify-center overflow-hidden text-center transition-all duration-300">
+                                          <svg
+                                            data-v-cd102a71
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            xmlnsXlink="http://www.w3.org/1999/xlink"
+                                            aria-hidden="true"
+                                            role="img"
+                                            className="icon"
+                                            width="1em"
+                                            height="1em"
+                                            viewBox="0 0 24 24"
+                                          >
+                                            <path
+                                              fill="currentColor"
+                                              d="M11 4v12.175l-5.6-5.6L4 12l8 8l8-8l-1.4-1.425l-5.6 5.6V4z"
+                                            />
+                                          </svg>
+                                        </div>
+                                        {/**/}
+                                        {/**/}
+                                      </div>
+                                    ) : (
+                                      ""
+                                    )}
                                     <div>
                                       <p
                                         className="font-heading capitalize text-sm font-medium leading-normal leading-normal"
