@@ -373,6 +373,36 @@
   justify-content: center;
   margin-right: 0.75rem;
 }
+.maj {
+  align-items: center;
+  gap: 5px;
+}
+.fsm {
+  margin-left: 10px;
+  font-size: 12px;
+}
+.fsm1 {
+  font-size: 14px;
+}
+.flexsa {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.toggle-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9;
+  height: 100vh;
+}
+.mston {
+  z-index: 999 !important;
+}
+.text-black {
+  color: black !important;
+}
 .deHTay {
   background-color: rgb(240, 242, 247);
   height: 3.5rem;

@@ -1,0 +1,17 @@
+.flexasa {
+  display: flex;
+  justify-content: start;
+  text-align: left;
+  color: rgb(200, 10, 10) !important;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.bld {
+  font-weight: bold;
+}
+
+.mxcon {
+  width: max-content !important;
+}

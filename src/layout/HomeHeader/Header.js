@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Header.css";
+import { useAuthUser } from "react-auth-kit";
 const Header = () => {
+  let authUser = useAuthUser();
   const [isNav, setisNav] = useState(false);
   let toggleNav = () => {
     if (isNav === false) {
@@ -10,6 +12,7 @@ const Header = () => {
       setisNav(false);
     }
   };
+
   return (
     <div>
       <div className="Header__TopBar-ra9ecu-0 eVUBqp">
@@ -418,22 +421,49 @@ const Header = () => {
                 </svg>
               </button>
             </div>
-            <Link
-              to="/auth/login"
-              className="Link__CustomLink-sc-1p80yfz-0 hDjhKH LoginButton__CustomLink-sc-9q8gbu-1 bOFsqz"
-            >
-              <button className="Button__BaseButton-sc-1e82yhp-0 cxOGwh LoginButton__Component-sc-9q8gbu-0 hUelrf">
-                Log In
-              </button>
-            </Link>
-            <Link
-              to="/auth/signup"
-              className="Link__CustomLink-sc-1p80yfz-0 hDjhKH SignupButton__CustomLink-sc-4rqyau-1 crgNqM"
-            >
-              <button className="Button__BaseButton-sc-1e82yhp-0 llgLia SignupButton__Component-sc-4rqyau-0 cDdOpj">
-                Sign Up
-              </button>
-            </Link>
+            {authUser() ? (
+              authUser().user.role === "user" ? (
+                <a
+                  href="/dashboard"
+                  className="Link__CustomLink-sc-1p80yfz-0 hDjhKH LoginButton__CustomLink-sc-9q8gbu-1 bOFsqz"
+                >
+                  <button className="Button__BaseButton-sc-1e82yhp-0 cxOGwh LoginButton__Component-sc-9q8gbu-0 hUelrf">
+                    Dashboard
+                  </button>
+                </a>
+              ) : authUser().user.role === "admin" ? (
+                <a
+                  href="/admin/dashboard"
+                  className="Link__CustomLink-sc-1p80yfz-0 hDjhKH LoginButton__CustomLink-sc-9q8gbu-1 bOFsqz"
+                >
+                  <button className="Button__BaseButton-sc-1e82yhp-0 cxOGwh LoginButton__Component-sc-9q8gbu-0 hUelrf">
+                    Dashboard
+                  </button>
+                </a>
+              ) : (
+                ""
+              )
+            ) : (
+              <>
+                <a
+                  href="/auth/login"
+                  className="Link__CustomLink-sc-1p80yfz-0 hDjhKH LoginButton__CustomLink-sc-9q8gbu-1 bOFsqz"
+                >
+                  <button className="Button__BaseButton-sc-1e82yhp-0 cxOGwh LoginButton__Component-sc-9q8gbu-0 hUelrf">
+                    Log In
+                  </button>
+                </a>
+                <a
+                  href="/auth/signup"
+                  className="Link__CustomLink-sc-1p80yfz-0 hDjhKH SignupButton__CustomLink-sc-4rqyau-1 crgNqM"
+                >
+                  <button className="Button__BaseButton-sc-1e82yhp-0 llgLia SignupButton__Component-sc-4rqyau-0 cDdOpj">
+                    Sign Up
+                  </button>
+                </a>
+              </>
+            )}
+
             <div
               onClick={toggleNav}
               className="TabletMenu__Container-ds1nxt-2 dOAKcZ"
@@ -1032,28 +1062,52 @@ const Header = () => {
             </section>
           </div>
           <footer className="MobileMenu__Footer-vbfhhc-16 dLGWtx">
-            <div className="MobileMenu__ButtonsRow-vbfhhc-17 eCTxqO">
-              <Link
-                to="/auth/login"
-                onClick={toggleNav}
-                className="Link__CustomLink-sc-1p80yfz-0 hDjhKH LoginButton__CustomLink-sc-9q8gbu-1 bOFsqz"
-              >
-                <button className="Button__BaseButton-sc-1e82yhp-0 bHMlWK LoginButton__Component-sc-9q8gbu-0 hiHwFx">
-                  Log In
-                </button>
-              </Link>
-              <Link
-                to="/auth/signup"
-                className="Link__CustomLink-sc-1p80yfz-0 hDjhKH SignupButton__CustomLink-sc-4rqyau-1 crgNqM"
-              >
-                <button
-                  onClick={toggleNav}
-                  className="Button__BaseButton-sc-1e82yhp-0 eOOfRK SignupButton__Component-sc-4rqyau-0 cDxlUM"
+            {authUser() ? (
+              authUser().user.role === "user" ? (
+                <a
+                  href="/dashboard"
+                  className="Link__CustomLink-sc-1p80yfz-0 hDjhKH SignupButton__CustomLink-sc-4rqyau-1 crgNqM"
                 >
-                  Sign Up
-                </button>
-              </Link>
-            </div>
+                  <button className="Button__BaseButton-sc-1e82yhp-0 eOOfRK SignupButton__Component-sc-4rqyau-0 cDxlUM">
+                    Dashboard
+                  </button>
+                </a>
+              ) : authUser().user.role === "admin" ? (
+                <a
+                  href="/admin/dashboard"
+                  className="Link__CustomLink-sc-1p80yfz-0 hDjhKH SignupButton__CustomLink-sc-4rqyau-1 crgNqM"
+                >
+                  <button className="Button__BaseButton-sc-1e82yhp-0 eOOfRK SignupButton__Component-sc-4rqyau-0 cDxlUM">
+                    Dashboard
+                  </button>
+                </a>
+              ) : (
+                ""
+              )
+            ) : (
+              <div className="MobileMenu__ButtonsRow-vbfhhc-17 eCTxqO">
+                <Link
+                  to="/auth/login"
+                  onClick={toggleNav}
+                  className="Link__CustomLink-sc-1p80yfz-0 hDjhKH LoginButton__CustomLink-sc-9q8gbu-1 bOFsqz"
+                >
+                  <button className="Button__BaseButton-sc-1e82yhp-0 bHMlWK LoginButton__Component-sc-9q8gbu-0 hiHwFx">
+                    Log In
+                  </button>
+                </Link>
+                <Link
+                  to="/auth/signup"
+                  className="Link__CustomLink-sc-1p80yfz-0 hDjhKH SignupButton__CustomLink-sc-4rqyau-1 crgNqM"
+                >
+                  <button
+                    onClick={toggleNav}
+                    className="Button__BaseButton-sc-1e82yhp-0 eOOfRK SignupButton__Component-sc-4rqyau-0 cDxlUM"
+                  >
+                    Sign Up
+                  </button>
+                </Link>
+              </div>
+            )}
           </footer>
         </div>
       )}
