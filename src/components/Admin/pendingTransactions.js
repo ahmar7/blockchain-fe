@@ -43,7 +43,7 @@ const PendingTransactions = () => {
       const allTransactions = await getTransactionsApi();
       if (allTransactions.success) {
         // setData(filter)
-        setUserTransactions(allTransactions.Transaction);
+        setUserTransactions(allTransactions.Transaction.reverse());
 
         // setUserTransactions(pendingTransactionsLengthArray);
 

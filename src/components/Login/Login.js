@@ -35,6 +35,8 @@ const Login = () => {
           sameSite: false,
         })
       ) {
+        console.log("updateHeader: ", updateHeader);
+        localStorage.setItem("token", updateHeader.token);
         toast.success(updateHeader.msg);
         if (updateHeader.user.role === "user") {
           navigate("/dashboard");
