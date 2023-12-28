@@ -30,9 +30,11 @@ const Dashboard = () => {
         );
         setUsers(filtered);
       } else {
+        toast.dismiss();
         toast.error(allUsers.msg);
       }
     } catch (error) {
+      toast.dismiss();
       toast.error(error);
     } finally {
       setisLoading(false);
@@ -71,9 +73,11 @@ const Dashboard = () => {
 
         return;
       } else {
+        toast.dismiss();
         toast.error(allTransactions.msg);
       }
     } catch (error) {
+      toast.dismiss();
       toast.error(error);
     } finally {
     }

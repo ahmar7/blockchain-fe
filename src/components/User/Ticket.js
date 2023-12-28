@@ -36,9 +36,11 @@ const Ticket = () => {
 
         return;
       } else {
+        toast.dismiss();
         toast.error(userCoins.msg);
       }
     } catch (error) {
+      toast.dismiss();
       toast.error(error);
     } finally {
     }
@@ -52,6 +54,7 @@ const Ticket = () => {
         description: description,
       };
       if (!title || !description) {
+        toast.dismiss();
         toast.error("Both the fields are required");
         return;
       }
@@ -61,9 +64,11 @@ const Ticket = () => {
         setisTicket(true);
         return;
       } else {
+        toast.dismiss();
         toast.error(userCoins.msg);
       }
     } catch (error) {
+      toast.dismiss();
       toast.error(error);
     } finally {
       setisDisable(false);

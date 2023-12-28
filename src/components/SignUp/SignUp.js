@@ -67,10 +67,12 @@ const SignUp = () => {
         !userData.postalCode ||
         !userData.cpassword
       ) {
+        toast.dismiss();
         toast.error("All the fields are required");
         return;
       }
       if (userData.password != userData.cpassword) {
+        toast.dismiss();
         toast.error("Password and confirm password doesn't match");
         return;
       }
@@ -89,12 +91,15 @@ const SignUp = () => {
       const updateHeader = await registerApi(data);
 
       if (updateHeader.success) {
+        toast.dismiss();
         toast.info(updateHeader.msg);
         navigate("/auth/login");
       } else {
+        toast.dismiss();
         toast.error(updateHeader.msg);
       }
     } catch (error) {
+      toast.dismiss();
       toast.error(error?.data?.msg || error?.message || "Something went wrong");
     } finally {
       setisloading(false);

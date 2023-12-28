@@ -45,9 +45,11 @@ const AdminProfile = () => {
       if (signleUser.success) {
         setUserData(signleUser.signleUser);
       } else {
+        toast.dismiss();
         toast.error(signleUser.msg);
       }
     } catch (error) {
+      toast.dismiss();
       toast.error(error);
     } finally {
       setisLoading(false);
@@ -72,11 +74,14 @@ const AdminProfile = () => {
       const signleUser = await updateSignleUsersApi(userData._id, body);
 
       if (signleUser.success) {
+        toast.dismiss();
         toast.success(signleUser.msg);
       } else {
+        toast.dismiss();
         toast.error(signleUser.msg);
       }
     } catch (error) {
+      toast.dismiss();
       toast.error(error);
     } finally {
       setisDisable(false);

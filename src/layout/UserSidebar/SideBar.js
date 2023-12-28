@@ -214,10 +214,7 @@ const SideBar = (props) => {
             </NavLink>
           </li>
           <li onClick={() => isLoginOrLogout()}>
-            <a
-              href="javascript:void(0)"
-              className=" router-link-active nui-focus text-muted-500 color-whute dark:text-muted-400/80 hover:bg-muted-100 dark:hover:bg-muted-700/60 hover:text-muted-600 dark:hover:text-muted-200 flex cursor-pointer items-center gap-4 rounded-lg py-3 transition-colors duration-300 px-4"
-            >
+            <p className="cursor-pointer router-link-active nui-focus text-muted-500 color-whute dark:text-muted-400/80 hover:bg-muted-100 dark:hover:bg-muted-700/60 hover:text-muted-600 dark:hover:text-muted-200 flex cursor-pointer items-center gap-4 rounded-lg py-3 transition-colors duration-300 px-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -235,7 +232,7 @@ const SideBar = (props) => {
               <span className="whitespace-nowrap font-sans text-sm block">
                 Logout
               </span>
-            </a>
+            </p>
           </li>
           {/**/}
         </ul>
@@ -307,17 +304,16 @@ const SideBar = (props) => {
                     tabIndex={-1}
                     data-headlessui-state
                   >
-                    <a
+                    <p
                       onClick={() => isLoginOrLogout()}
-                      href="javascript:void(0)"
-                      className="group flex w-full items-center rounded-md p-3 text-sm transition-colors duration-300 text-muted-400"
+                      className="group flex w-full cursor-pointer items-center rounded-md p-3 text-sm transition-colors duration-300 text-muted-400"
                     >
                       <div className="ms-3">
                         <h6 className="font-heading text-muted-800 text-xs font-medium leading-none dark:text-white">
                           Logout
                         </h6>
                       </div>
-                    </a>
+                    </p>
                   </div>
                 </div>
               </div>

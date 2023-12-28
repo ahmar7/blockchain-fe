@@ -4,7 +4,7 @@ import { useAuthUser, useSignOut } from "react-auth-kit";
 
 import Log from "../../assets/img/log.jpg";
 import { toast } from "react-toastify";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, NavLink } from "react-router-dom";
 const UserHeader = () => {
   let AuthUse = useAuthUser();
   let signOut = useSignOut();
@@ -26,9 +26,11 @@ const UserHeader = () => {
 
         return;
       } else {
+        toast.dismiss();
         toast.error(userCoins.msg);
       }
     } catch (error) {
+      toast.dismiss();
       toast.error(error);
     } finally {
     }
@@ -58,13 +60,13 @@ const UserHeader = () => {
                 </Link>
               </li>
               <li className="Header__ListItem-ra9ecu-9 kRTKLx">
-                <a
-                  href="https://exchange.blockchain.com"
+                <NavLink
+                  to="/exchange"
                   className="Link__CustomLink-sc-1p80yfz-0 hDjhKH Text__Body1-sc-1fwf07x-7 Text__Body1Highlight-sc-1fwf07x-8 Header__Link-ra9ecu-10 vvWMe kmtyGJ kIWMbY"
                   target="_self"
                 >
                   Exchange
-                </a>
+                </NavLink>
               </li>
               <li className="Header__ListItem-ra9ecu-9 kRTKLx">
                 <a

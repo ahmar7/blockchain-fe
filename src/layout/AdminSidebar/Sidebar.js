@@ -268,10 +268,7 @@ const SideBar = (props) => {
             </NavLink>
           </li>
           <li onClick={() => isLoginOrLogout()}>
-            <a
-              href="javascript:void(0)"
-              className=" router-link-active nui-focus text-muted-500 dark:text-muted-400/80 hover:bg-muted-100 dark:hover:bg-muted-700/60 hover:text-muted-600 dark:hover:text-muted-200 flex cursor-pointer items-center gap-4 rounded-lg py-3 transition-colors duration-300 px-4"
-            >
+            <p className=" router-link-active cursor-pointer nui-focus text-muted-500 dark:text-muted-400/80 hover:bg-muted-100 dark:hover:bg-muted-700/60 hover:text-muted-600 dark:hover:text-muted-200 flex cursor-pointer items-center gap-4 rounded-lg py-3 transition-colors duration-300 px-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -289,7 +286,7 @@ const SideBar = (props) => {
               <span className="whitespace-nowrap font-sans text-sm block">
                 Logout
               </span>
-            </a>
+            </p>
           </li>
           {/**/}
         </ul>

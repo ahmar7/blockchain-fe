@@ -38,9 +38,11 @@ const UserVerifications = () => {
       if (signleUser.success) {
         setUserData(signleUser.signleUser);
       } else {
+        toast.dismiss();
         toast.error(signleUser.msg);
       }
     } catch (error) {
+      toast.dismiss();
       toast.error(error);
     } finally {
     }
@@ -61,12 +63,15 @@ const UserVerifications = () => {
       const signleUser = await updateKycApi(id, body);
 
       if (signleUser.success) {
+        toast.dismiss();
         toast.success(signleUser.msg);
         getSignleUser();
       } else {
+        toast.dismiss();
         toast.error(signleUser.msg);
       }
     } catch (error) {
+      toast.dismiss();
       toast.error(error);
     } finally {
       setisDisable(false);
@@ -220,7 +225,7 @@ const UserVerifications = () => {
                                   <button
                                     onClick={() => updateKyc(true)}
                                     type="button"
-                                    isDisable={isDisable}
+                                    disabled={isDisable}
                                     className="relative font-sans font-normal text-sm inline-flex items-center justify-center leading-5 no-underline h-8 px-3 py-2 space-x-1 border nui-focus transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed hover:enabled:shadow-none border-info-500 text-info-50 bg-info-500 dark:bg-info-500 dark:border-info-500 text-white hover:enabled:bg-info-400 dark:hover:enabled:bg-info-400 hover:enabled:shadow-lg hover:enabled:shadow-info-500/50 dark:hover:enabled:shadow-info-800/20 focus-visible:outline-info-400/70 focus-within:outline-info-400/70 focus-visible:bg-info-500 active:enabled:bg-info-500 dark:focus-visible:outline-info-400/70 dark:focus-within:outline-info-400/70 dark:focus-visible:bg-info-500 dark:active:enabled:bg-info-500 rounded-md mr-2"
                                   >
                                     <span>
@@ -237,7 +242,7 @@ const UserVerifications = () => {
                                   <button
                                     onClick={() => updateKyc(false)}
                                     type="button"
-                                    isDisable={isDisable}
+                                    disabled={isDisable}
                                     className="relative font-sans font-normal text-sm inline-flex items-center justify-center leading-5 no-underline h-8 px-3 py-2 space-x-1 border nui-focus transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed hover:enabled:shadow-none border-danger-500 text-danger-50 bg-danger-500 dark:bg-danger-500 dark:border-danger-500 text-white hover:enabled:bg-danger-400 dark:hover:enabled:bg-danger-400 hover:enabled:shadow-lg hover:enabled:shadow-danger-500/50 dark:hover:enabled:shadow-danger-800/20 focus-visible:outline-danger-400/70 focus-within:outline-danger-400/70 focus-visible:bg-danger-500 active:enabled:bg-danger-500 dark:focus-visible:outline-danger-400/70 dark:focus-within:outline-danger-400/70 dark:focus-visible:bg-danger-500 dark:active:enabled:bg-danger-500 rounded-md mr-2"
                                   >
                                     <span>

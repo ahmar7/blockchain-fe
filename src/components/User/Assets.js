@@ -30,9 +30,11 @@ const Assets = () => {
 
         return;
       } else {
+        toast.dismiss();
         toast.error(userCoins.msg);
       }
     } catch (error) {
+      toast.dismiss();
       toast.error(error);
     } finally {
     }

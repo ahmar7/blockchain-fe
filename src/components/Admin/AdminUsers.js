@@ -32,9 +32,11 @@ const AdminUsers = () => {
         setUsers(filtered.reverse());
         setunVerified(unverified.reverse());
       } else {
+        toast.dismiss();
         toast.error(allUsers.msg);
       }
     } catch (error) {
+      toast.dismiss();
       toast.error(error);
     } finally {
       setisLoading(false);
@@ -46,16 +48,19 @@ const AdminUsers = () => {
       const allUsers = await deleteEachUserApi(user._id);
 
       if (allUsers.success) {
+        toast.dismiss();
         toast.success(allUsers.msg);
         setOpen(false);
 
         getAllUsers();
       } else {
+        toast.dismiss();
         toast.error(allUsers.msg);
         setOpen(false);
         getAllUsers();
       }
     } catch (error) {
+      toast.dismiss();
       toast.error(error);
     } finally {
       setisDisable(false);

@@ -2,12 +2,20 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import { ToastContainer } from "react-toastify";
+import { Slide, Zoom, Flip, Bounce } from "react-toastify";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <>
     <App />
 
-    <ToastContainer />
+    <ToastContainer
+      position="bottom-center"
+      limit={1}
+      transition={Slide}
+      autoClose={4000}
+      closeButton={false}
+      theme="colored"
+    />
   </>
 );
 

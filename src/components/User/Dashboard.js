@@ -8,10 +8,12 @@ import {
   getCoinsUserApi,
   getsignUserApi,
 } from "../../Api/Service";
-import chartGuy from "../../assets/img/chart-guy.svg";
+import chartGuy from "../../assets/img/11.png";
 import { toast } from "react-toastify";
 import Truncate from "react-truncate-inside";
 import UserHeader from "./UserHeader";
+import LineChart from "./LivePriceChart";
+import axios from "axios";
 const Dashboard = () => {
   const authUser = useAuthUser();
   const Navigate = useNavigate();
@@ -99,9 +101,11 @@ const Dashboard = () => {
 
         return;
       } else {
+        toast.dismiss();
         toast.error(userCoins.msg);
       }
     } catch (error) {
+      toast.dismiss();
       toast.error(error);
     } finally {
     }
@@ -120,9 +124,11 @@ const Dashboard = () => {
 
         return;
       } else {
+        toast.dismiss();
         toast.error(userCoins.msg);
       }
     } catch (error) {
+      toast.dismiss();
       toast.error(error);
     } finally {
     }
@@ -148,6 +154,48 @@ const Dashboard = () => {
       Navigate("/admin/dashboard");
       return;
     }
+  }, []);
+  //
+  const [btcData, setBtcData] = useState({ labels: [], datasets: [] });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart",
+          {
+            params: {
+              vs_currency: "usd",
+              days: "30",
+              // Adjust the number of days as needed
+            },
+          }
+        );
+
+        const prices = response.data.prices;
+
+        const chartData = {
+          labels: prices.map((price) =>
+            new Date(price[0]).toLocaleDateString()
+          ),
+          datasets: [
+            {
+              label: "BTC Price",
+              data: prices.map((price) => price[1]),
+              borderColor: "rgba(75,192,192,1)",
+              borderWidth: 2,
+              fill: false,
+            },
+          ],
+        };
+
+        setBtcData(chartData);
+      } catch (error) {
+        console.error("Error fetching BTC data:", error);
+      }
+    };
+
+    fetchData();
   }, []);
   return (
     <div className="dark">
@@ -450,16 +498,12 @@ const Dashboard = () => {
                           <div>
                             <img
                               src={chartGuy}
-                              className="block dark:hidden mx-auto"
-                              width={300}
-                              height={150}
+                              className="block imgtu dark:hidden mx-auto"
                               alt="Placeholder illustration"
                             />
                             <img
                               src={chartGuy}
-                              className="hidden dark:block mx-auto"
-                              width={300}
-                              height={150}
+                              className="hidden dark:block imgtu mx-auto"
                               alt="Placeholder illustration"
                             />
                             <div className="mt-4 text-center">
@@ -513,6 +557,10 @@ const Dashboard = () => {
                     ) : (
                       ""
                     )}
+                    <div className="line-bg">
+                      <LineChart data={btcData} />
+                    </div>
+                    <br />
                     <div className="relative  ">
                       <div className="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-md p-6">
                         <div className="mb-8 flex items-center justify-between">
@@ -667,6 +715,17 @@ const Dashboard = () => {
                         src="https://changenow.io/embeds/exchange-widget/v2/stepper-connector.js"
                       ></script> */}
                     </div>
+
+                    {/* <iframe
+                      className="iframing"
+                      id="iframe-widget"
+                      src="https://changenow.io/embeds/exchange-widget/v2/widget.html?FAQ=true&amount=0.15&amountFiat=1500&backgroundColor=&darkMode=false&from=btc&fromFiat=usd&horizontal=true&isFiat=true&lang=en-US&link_id=785be0a4559251&locales=true&logo=true&primaryColor=00C26F&to=usdterc20&toFiat=btc&toTheMoon=true"
+                    ></iframe>
+                    <script
+                      defer
+                      type="text/javascript"
+                      src="https://changenow.io/embeds/exchange-widget/v2/stepper-connector.js"
+                    ></script> */}
                   </div>
                   {/**/}
                 </div>

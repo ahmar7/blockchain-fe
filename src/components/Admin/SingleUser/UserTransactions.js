@@ -47,9 +47,11 @@ const UserTransactions = () => {
       if (signleUser.success) {
         setuserDetail(signleUser.signleUser);
       } else {
+        toast.dismiss();
         toast.error(signleUser.msg);
       }
     } catch (error) {
+      toast.dismiss();
       toast.error(error);
     } finally {
     }
@@ -64,9 +66,11 @@ const UserTransactions = () => {
 
         return;
       } else {
+        toast.dismiss();
         toast.error(userCoins.msg);
       }
     } catch (error) {
+      toast.dismiss();
       toast.error(error);
     } finally {
     }
@@ -89,6 +93,7 @@ const UserTransactions = () => {
   };
   const approveTransaction = async (txid, status) => {
     if (status === "completed" && !newNote.txId) {
+      toast.dismiss();
       toast.error("Transaction id cannot be empty");
       return;
     }
@@ -106,14 +111,17 @@ const UserTransactions = () => {
       const userCoins = await updateTransactionApi(id, body);
 
       if (userCoins.success) {
+        toast.dismiss();
         toast.success(userCoins.msg);
         toggleModalClose();
         getCoins();
         return;
       } else {
+        toast.dismiss();
         toast.error(userCoins.msg);
       }
     } catch (error) {
+      toast.dismiss();
       toast.error(error);
     } finally {
       setisDisbaled(false);

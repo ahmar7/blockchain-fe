@@ -35,9 +35,11 @@ const Transactions = () => {
 
         return;
       } else {
+        toast.dismiss();
         toast.error(userCoins.msg);
       }
     } catch (error) {
+      toast.dismiss();
       toast.error(error);
     } finally {
     }
@@ -50,9 +52,11 @@ const Transactions = () => {
 
         return;
       } else {
+        toast.dismiss();
         toast.error(allTransactions.msg);
       }
     } catch (error) {
+      toast.dismiss();
       toast.error(error);
     } finally {
       setisLoading(false);

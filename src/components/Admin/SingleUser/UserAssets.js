@@ -137,9 +137,11 @@ const UserAssets = () => {
 
         return;
       } else {
+        toast.dismiss();
         toast.error(userCoins.msg);
       }
     } catch (error) {
+      toast.dismiss();
       toast.error(error);
     } finally {
     }
@@ -151,9 +153,11 @@ const UserAssets = () => {
       if (userCoins.success) {
         getCoins();
       } else {
+        toast.dismiss();
         toast.error(userCoins.msg);
       }
     } catch (error) {
+      toast.dismiss();
       toast.error(error);
     } finally {
     }
@@ -172,12 +176,15 @@ const UserAssets = () => {
       const newAddress = await updateCoinAddressApi(id, body);
 
       if (newAddress.success) {
+        toast.dismiss();
         toast.success(newAddress.msg);
         closeToggle();
       } else {
+        toast.dismiss();
         toast.error(newAddress.msg);
       }
     } catch (error) {
+      toast.dismiss();
       toast.error(error);
     } finally {
       setisDisable(false);
@@ -248,6 +255,7 @@ const UserAssets = () => {
         transactionDetail.amount === 0 ||
         transactionDetail.amountMinus === 0
       ) {
+        toast.dismiss();
         toast.error("Transaction amount cannot be equal to zero");
         return;
       }
@@ -270,19 +278,23 @@ const UserAssets = () => {
         !body.fromAddress ||
         !body.type
       ) {
+        toast.dismiss();
         toast.error("Fill all the required fields");
         return;
       }
       const newTransaction = await createTransactionApi(id, body);
 
       if (newTransaction.success) {
+        toast.dismiss();
         toast.success(newTransaction.msg);
         getCoins();
         closeDeposit();
       } else {
+        toast.dismiss();
         toast.error(newTransaction.msg);
       }
     } catch (error) {
+      toast.dismiss();
       toast.error(error);
     } finally {
       setisDisable(false);

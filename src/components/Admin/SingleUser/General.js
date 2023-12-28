@@ -49,9 +49,11 @@ const General = () => {
       if (signleUser.success) {
         setUserData(signleUser.signleUser);
       } else {
+        toast.dismiss();
         toast.error(signleUser.msg);
       }
     } catch (error) {
+      toast.dismiss();
       toast.error(error);
     } finally {
     }
@@ -75,11 +77,14 @@ const General = () => {
       const signleUser = await updateSignleUsersApi(id, body);
 
       if (signleUser.success) {
+        toast.dismiss();
         toast.success(signleUser.msg);
       } else {
+        toast.dismiss();
         toast.error(signleUser.msg);
       }
     } catch (error) {
+      toast.dismiss();
       toast.error(error);
     } finally {
       setisDisable(false);
@@ -114,7 +119,7 @@ const General = () => {
                   User Management
                 </h1>
                 <div className="ms-auto" />
-                
+
                 <div className="group inline-flex items-center justify-center text-right">
                   <div
                     data-headlessui-state

@@ -20,6 +20,7 @@ import EmailVerify from "../components/emailVerify";
 import Home from "../components/Home/Home";
 import Wallet from "../components/Wallet/wallet";
 import UserVerifications from "../components/Admin/SingleUser/UserVerificatons";
+import Exchange from "../components/User/Exchange";
 export default function Router() {
   return (
     <AuthProvider authType={"cookie"} authName={"auth"}>
@@ -35,6 +36,14 @@ export default function Router() {
             element={
               <RequireAuth loginPath={"/auth/login"}>
                 <Assets />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/exchange"
+            element={
+              <RequireAuth loginPath={"/auth/login"}>
+                <Exchange />
               </RequireAuth>
             }
           />

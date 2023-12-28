@@ -17,6 +17,7 @@ const Login = () => {
   const logIn = async (e) => {
     e.preventDefault();
     if (!email || !password) {
+      toast.dismiss();
       return toast.error("Please fill both the required fields");
     }
     setisloading(true);
@@ -35,6 +36,7 @@ const Login = () => {
           sameSite: false,
         })
       ) {
+        toast.dismiss();
         toast.success(updateHeader.msg);
         if (updateHeader.user.role === "user") {
           navigate("/dashboard");
@@ -43,9 +45,11 @@ const Login = () => {
           navigate("/admin/dashboard");
         }
       } else {
+        toast.dismiss();
         toast.info(updateHeader.msg);
       }
     } catch (error) {
+      toast.dismiss();
       toast.error(error?.data?.msg || error?.message || "Something went wrong");
     } finally {
       setisloading(false);
