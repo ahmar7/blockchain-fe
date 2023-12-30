@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getsignUserApi } from "../../Api/Service";
+import { getsignUserApi, logoutApi } from "../../Api/Service";
 import { useAuthUser, useSignOut } from "react-auth-kit";
 
 import Log from "../../assets/img/log.jpg";
@@ -35,10 +35,24 @@ const UserHeader = () => {
     } finally {
     }
   };
-  const isLoginOrLogout = () => {
-    signOut();
+  const isLoginOrLogout = async () => {
+    try {
+      const logout = await logoutApi();
 
-    Navigate("/auth/login");
+      if (logout.success) {
+        signOut();
+
+        Navigate("/auth/login");
+        return;
+      } else {
+        toast.dismiss();
+        toast.error(logout.msg);
+      }
+    } catch (error) {
+      toast.dismiss();
+      toast.error(error);
+    } finally {
+    }
   };
   useEffect(() => {
     getsignUser();

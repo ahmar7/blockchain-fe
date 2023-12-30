@@ -3,7 +3,14 @@ import SideBar from "../../layout/AdminSidebar/Sidebar";
 import { useAuthUser } from "react-auth-kit";
 import { useNavigate } from "react-router-dom";
 import Log from "../../assets/img/log.jpg";
-import { allUsersApi, getTransactionsApi } from "../../Api/Service";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import {
+  allUsersApi,
+  getHtmlDataApi,
+  getTransactionsApi,
+  setHtmlDataApi,
+} from "../../Api/Service";
 import { toast } from "react-toastify";
 const Dashboard = () => {
   let Navigate = useNavigate();
@@ -12,6 +19,9 @@ const Dashboard = () => {
   const [isLoading, setisLoading] = useState(true);
   const [Users, setUsers] = useState("");
   const [completed, setCompleted] = useState();
+  const [isDisable, setisDisable] = useState(false);
+  const [Description, setDescription] = useState({});
+  const [newDescription, setnewDescription] = useState("");
   let toggleBar = () => {
     if (Active === true) {
       setActive(false);
@@ -20,6 +30,65 @@ const Dashboard = () => {
     }
   };
   const [isUser, setIsUser] = useState(true);
+  const handleQuillChange = (content, _, source, editor) => {
+    setnewDescription(content);
+  };
+  const getHtmlData = async () => {
+    try {
+      const description = await getHtmlDataApi();
+
+      if (description.success) {
+        setDescription(description.description[0]);
+        setnewDescription(description.description[0].description);
+
+        return;
+      } else {
+        toast.dismiss();
+        toast.error(description.msg);
+        console.log("description: ", description);
+      }
+    } catch (error) {
+      console.log("description: ", error);
+      toast.dismiss();
+      toast.error(error);
+    } finally {
+    }
+  };
+  const setHtmlData = async () => {
+    try {
+      setisDisable(true);
+      let editDesc = newDescription;
+      if (
+        editDesc === "<p><br></p>" ||
+        editDesc === "<h1><br></h1>" ||
+        editDesc === "<h2><br></h2>" ||
+        editDesc === "<h3><br></h3>" ||
+        editDesc === "<h4><br></h4>" ||
+        editDesc === "<h5><br></h5>" ||
+        editDesc === "<h6><br></h6>"
+      ) {
+        editDesc = "";
+      } else {
+        editDesc = newDescription;
+      }
+      let data = { id: Description._id, description: editDesc };
+      const descriptionUpdate = await setHtmlDataApi(data);
+      getHtmlData();
+
+      if (descriptionUpdate.success) {
+        toast.success(descriptionUpdate.msg);
+        setDescription(descriptionUpdate.description);
+
+        return;
+      } else {
+        toast.error("Something went wrong, please try again");
+      }
+    } catch (error) {
+      toast.error(error);
+    } finally {
+      setisDisable(false);
+    }
+  };
   const getAllUsers = async () => {
     try {
       const allUsers = await allUsersApi();
@@ -89,6 +158,7 @@ const Dashboard = () => {
       Navigate("/dashboard");
       return;
     } else if (authUser().user.role === "admin") {
+      getHtmlData();
       setIsUser(authUser.user);
       return;
     }
@@ -309,6 +379,74 @@ const Dashboard = () => {
                 </div>
               </div>
               {/**/}
+              <ReactQuill
+                className="htmlcode"
+                value={newDescription}
+                onChange={handleQuillChange}
+                modules={{
+                  toolbar: [
+                    [{ link: "link" }],
+                    ["bold", "italic", "underline", "strike"],
+                    ["blockquote"],
+
+                    [{ header: 1 }, { header: 2 }],
+                    [{ list: "ordered" }, { list: "bullet" }],
+                    [{ script: "sub" }, { script: "super" }],
+                    [{ indent: "-1" }, { indent: "+1" }],
+                    [{ direction: "rtl" }],
+
+                    [{ size: ["small", false, "large", "huge"] }],
+                    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+                    [{ color: [] }, { background: [] }],
+
+                    [{ align: [] }],
+
+                    ["clean"],
+                  ],
+                }}
+              />
+              <div className="text-center mt-2">
+                <button
+                  disabled={isDisable}
+                  onClick={setHtmlData}
+                  data-v-71bb21a6
+                  className="is-button rounded bg-primary-500 dark:bg-primary-500 hover:enabled:bg-primary-400 dark:hover:enabled:bg-primary-400 text-white hover:enabled:shadow-lg hover:enabled:shadow-primary-500/50 dark:hover:enabled:shadow-primary-800/20 focus-visible:outline-primary-400/70 focus-within:outline-primary-400/70 focus-visible:bg-primary-500 active:enabled:bg-primary-500 dark:focus-visible:outline-primary-400 dark:focus-within:outline-primary-400 dark:focus-visible:bg-primary-500 dark:active:enabled:bg-primary-500 w-24"
+                >
+                  {isDisable ? (
+                    <div>
+                      <div className="nui-placeload animate-nui-placeload h-4 w-8 rounded mx-auto"></div>
+                    </div>
+                  ) : (
+                    "Save"
+                  )}
+                </button>
+              </div>
+
+              {/*  */}
+              <br />
+              {newDescription === "" ||
+              newDescription === "<p><br></p>" ||
+              newDescription === "<h1><br></h1>" ||
+              newDescription === "<h2><br></h2>" ||
+              newDescription === "<h3><br></h3>" ||
+              newDescription === "<h4><br></h4>" ||
+              newDescription === "<h5><br></h5>" ||
+              newDescription === "<h6><br></h6>" ? (
+                ""
+              ) : (
+                <div className="dark">
+                  <h3 className="mb-2 font-bold inveret">
+                    This will the output for all users on their dashboard
+                    footer:
+                  </h3>
+                  <div
+                    className="htmData"
+                    dangerouslySetInnerHTML={{ __html: newDescription }}
+                  />
+                </div>
+              )}
+              {/*  */}
             </div>
           </div>
 

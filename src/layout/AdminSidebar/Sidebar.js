@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import Log from "../../assets/img/log.jpg";
 import { useAuthUser, useSignOut } from "react-auth-kit";
+import { logoutApi } from "../../Api/Service";
+import { toast } from "react-toastify";
 const SideBar = (props) => {
   let signOut = useSignOut();
 
@@ -25,10 +27,24 @@ const SideBar = (props) => {
     }
   };
   let Navigate = useNavigate();
-  const isLoginOrLogout = () => {
-    signOut();
-    Navigate("/auth/login");
-    return;
+  const isLoginOrLogout = async () => {
+    try {
+      const logout = await logoutApi();
+
+      if (logout.success) {
+        signOut();
+
+        Navigate("/auth/login");
+        return;
+      } else {
+        toast.dismiss();
+        toast.error(logout.msg);
+      }
+    } catch (error) {
+      toast.dismiss();
+      toast.error(error);
+    } finally {
+    }
   };
   return (
     <div

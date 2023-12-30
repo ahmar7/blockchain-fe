@@ -36,9 +36,101 @@
   border-radius: 0.375rem !important;
   padding: 1.5rem !important;
 }
+.poffers {
+  text-align: center;
+}
+.poffers h1 {
+  font-size: 28px;
+  font-weight: bold;
+}
+.signlw {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid;
+  padding: 5px 20px;
+  width: 150px;
+  height: 50px;
+  border-radius: 10px;
+}
+.flex-vts {
+  display: flex;
+  margin-top: 20px;
 
+  justify-content: center;
+  gap: 15px;
+}
+.custim {
+  width: 100px !important;
+}
+.img-ico svg {
+  width: 20px;
+}
+.poffers {
+  padding-bottom: 30px;
+}
+.nma {
+  font-weight: bold;
+}
+.htmData {
+  border-radius: 0.375rem;
+
+  border: 1px solid rgb(51 65 85);
+  color: white;
+  padding: 1.5rem;
+  background-color: #1e293b;
+}
+.htmData a {
+  color: #8b5cf6;
+  text-decoration: underline;
+}
+.htmData ol {
+  display: block !important;
+  list-style-type: decimal !important;
+  margin-block-start: 1em !important;
+  margin-block-end: 1em !important;
+  margin-inline-start: 0px !important;
+  margin-inline-end: 0px !important;
+  padding-inline-start: 40px !important;
+}
+.htmData ol li {
+  list-style: decimal !important;
+}
+.htmData ul li {
+  list-style: disc !important;
+}
+.htmData ul {
+  display: block !important;
+  list-style-type: disc !important;
+  margin-block-start: 1em !important;
+  margin-block-end: 1em !important;
+  margin-inline-start: 0px !important;
+  margin-inline-end: 0px !important;
+  padding-inline-start: 40px !important;
+}
+.inveret,
+.htmData p,
+.htmData h1,
+.htmData h2,
+.htmData h3,
+.htmData h4,
+.htmData h5,
+.htmData h6 {
+  font-size: revert !important;
+  line-break: anywhere;
+}
+.htmlcode {
+  margin-top: 20px;
+}
 @media (max-width: 768px) {
   .line-bg {
     padding: 0px !important;
+  }
+}
+@media (max-width: 375px) {
+  .flex-vts {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 }

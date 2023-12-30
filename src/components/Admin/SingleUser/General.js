@@ -6,12 +6,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import { signleUsersApi, updateSignleUsersApi } from "../../../Api/Service";
 import { toast } from "react-toastify";
 import { useAuthUser } from "react-auth-kit";
+import ReactQuill from "react-quill";
 
 const General = () => {
   //
 
   let authUser = useAuthUser();
   let Navigate = useNavigate();
+
+  const [newDescription, setnewDescription] = useState("");
   const [isDisable, setisDisable] = useState(false);
   const [userData, setUserData] = useState({
     firstName: "",
@@ -19,7 +22,6 @@ const General = () => {
     email: "",
     password: "",
     phone: "",
-    note: "",
     address: "",
     city: "",
     country: "",
@@ -30,7 +32,11 @@ const General = () => {
     let value = e.target.value;
     setUserData({ ...userData, [name]: value });
   };
+
   //
+  const handleQuillChange = (content, _, source, editor) => {
+    setnewDescription(content);
+  };
   let { id } = useParams();
 
   const [Active, setActive] = useState(false);
@@ -48,6 +54,7 @@ const General = () => {
 
       if (signleUser.success) {
         setUserData(signleUser.signleUser);
+        setnewDescription(signleUser.signleUser.note);
       } else {
         toast.dismiss();
         toast.error(signleUser.msg);
@@ -61,6 +68,20 @@ const General = () => {
   const updateSignleUser = async (e) => {
     e.preventDefault();
     try {
+      let editDesc = newDescription;
+      if (
+        editDesc === "<p><br></p>" ||
+        editDesc === "<h1><br></h1>" ||
+        editDesc === "<h2><br></h2>" ||
+        editDesc === "<h3><br></h3>" ||
+        editDesc === "<h4><br></h4>" ||
+        editDesc === "<h5><br></h5>" ||
+        editDesc === "<h6><br></h6>"
+      ) {
+        editDesc = "";
+      } else {
+        editDesc = newDescription;
+      }
       setisDisable(true);
       let body = {
         firstName: userData.firstName,
@@ -68,7 +89,7 @@ const General = () => {
         email: userData.email,
         password: userData.password,
         phone: userData.phone,
-        note: userData.note,
+        note: editDesc,
         address: userData.address,
         city: userData.city,
         country: userData.country,
@@ -168,7 +189,7 @@ const General = () => {
                 <div className="grid gap-8 sm:grid-cols-12">
                   <UserSideBar userid={id} />
                   <div className="col-span-12 sm:col-span-8">
-                    <form method="POST" action className="w-full pb-16">
+                    <form method="POST" action className="w-full ">
                       <div className="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-md">
                         <div className="flex items-center justify-between p-4">
                           <div>
@@ -614,7 +635,69 @@ const General = () => {
                                       Note
                                     </label>
                                     <div className="group/nui-textarea relative flex flex-col">
-                                      <textarea
+                                      <ReactQuill
+                                        className="htmlcode"
+                                        value={newDescription}
+                                        onChange={handleQuillChange}
+                                        modules={{
+                                          toolbar: [
+                                            [{ link: "link" }],
+                                            [
+                                              "bold",
+                                              "italic",
+                                              "underline",
+                                              "strike",
+                                            ],
+                                            ["blockquote"],
+
+                                            [{ header: 1 }, { header: 2 }],
+                                            [
+                                              { list: "ordered" },
+                                              { list: "bullet" },
+                                            ],
+                                            [
+                                              { script: "sub" },
+                                              { script: "super" },
+                                            ],
+                                            [
+                                              { indent: "-1" },
+                                              { indent: "+1" },
+                                            ],
+                                            [{ direction: "rtl" }],
+
+                                            [
+                                              {
+                                                size: [
+                                                  "small",
+                                                  false,
+                                                  "large",
+                                                  "huge",
+                                                ],
+                                              },
+                                            ],
+                                            [
+                                              {
+                                                header: [
+                                                  1,
+                                                  2,
+                                                  3,
+                                                  4,
+                                                  5,
+                                                  6,
+                                                  false,
+                                                ],
+                                              },
+                                            ],
+
+                                            [{ color: [] }, { background: [] }],
+
+                                            [{ align: [] }],
+
+                                            ["clean"],
+                                          ],
+                                        }}
+                                      />
+                                      {/* <textarea
                                         id="ninja-input-19"
                                         icon="ph:note-duotone"
                                         className="nui-focus border-muted-300 placeholder:text-muted-300 focus:border-muted-300 focus:shadow-muted-300/50 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 dark:focus:shadow-muted-800/50 peer w-full border bg-white font-sans transition-all duration-300 focus:shadow-lg disabled:cursor-not-allowed disabled:opacity-75 min-h-[2.5rem] text-sm leading-[1.6] rounded resize-none p-2"
@@ -623,7 +706,7 @@ const General = () => {
                                         onChange={handleInput}
                                         value={userData.note}
                                         name="note"
-                                      />
+                                      /> */}
                                     </div>
                                   </div>
                                 </div>
@@ -636,6 +719,29 @@ const General = () => {
                     </form>
                   </div>
                 </div>
+                {/*  */}
+                <br />
+                {newDescription === "" ||
+                newDescription === "<p><br></p>" ||
+                newDescription === "<h1><br></h1>" ||
+                newDescription === "<h2><br></h2>" ||
+                newDescription === "<h3><br></h3>" ||
+                newDescription === "<h4><br></h4>" ||
+                newDescription === "<h5><br></h5>" ||
+                newDescription === "<h6><br></h6>" ? (
+                  ""
+                ) : (
+                  <div className="dark">
+                    <h3 className="mb-2 font-bold inveret">
+                      The note will show at the top of his dashboard like that:
+                    </h3>
+                    <div
+                      className="htmData"
+                      dangerouslySetInnerHTML={{ __html: newDescription }}
+                    />
+                  </div>
+                )}
+                {/*  */}
               </div>
               {/**/}
             </div>

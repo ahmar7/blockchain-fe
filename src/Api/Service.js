@@ -19,6 +19,12 @@ export const getCoinsUserApi = (id) => {
 export const signleUsersApi = (id) => {
   return getApi(`singleUser/${id}`);
 };
+export const getHtmlDataApi = () => {
+  return getApi(`getHtmlData`);
+};
+export const setHtmlDataApi = (data) => {
+  return patchApi(`setHtmlData`, data);
+};
 export const updateSignleUsersApi = (id, data) => {
   return postApi(`updateSingleUser/${id}`, data);
 };

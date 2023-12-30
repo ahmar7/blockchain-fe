@@ -6,6 +6,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
   getCoinsApi,
   getCoinsUserApi,
+  getHtmlDataApi,
   getsignUserApi,
 } from "../../Api/Service";
 import chartGuy from "../../assets/img/11.png";
@@ -20,6 +21,7 @@ const Dashboard = () => {
 
   const [modal, setModal] = useState(false);
   const [isUser, setIsUser] = useState([]);
+  const [Description, setDescription] = useState("");
   const [isLoading, setisLoading] = useState(true);
   const [UserData, setUserData] = useState(true);
 
@@ -133,6 +135,26 @@ const Dashboard = () => {
     } finally {
     }
   };
+  const getHtmlData = async () => {
+    console.log("description: ");
+    try {
+      const description = await getHtmlDataApi();
+
+      if (description.success) {
+        setDescription(description.description[0].description);
+        console.log("description: ", description);
+
+        return;
+      } else {
+        toast.dismiss();
+        toast.error(userCoins.msg);
+      }
+    } catch (error) {
+      toast.dismiss();
+      toast.error(error);
+    } finally {
+    }
+  };
   let toggleModal = async (data) => {
     setModal(true);
 
@@ -144,6 +166,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     getsignUser();
+    getHtmlData();
     if (authUser().user.role === "user") {
       // setIsUser(authUser().user);
 
@@ -265,10 +288,23 @@ const Dashboard = () => {
                   </div>
                 </div>
                 {isUser.note ? (
-                  <div className="mb-6 flex flex-col justify-between gap-y-4 sm:flex-row sm:items-center">
+                  <div
+                    className="mb-6 flex flex-col justify-between gap-y-4 sm:flex-row sm:items-center"
+                    style={{ display: "block" }}
+                  >
                     <div>
                       <p className="font-alt text-sm font-normal leading-normal leading-normal text-muted-500 dark:text-muted-400">
-                        {`Note: ${isUser.note}`}
+                        {/* {`Note: ${isUser.note}`} */}
+
+                        <br />
+                        {isUser.note === "" ? (
+                          ""
+                        ) : (
+                          <div
+                            className="htmData"
+                            dangerouslySetInnerHTML={{ __html: isUser.note }}
+                          />
+                        )}
                       </p>
                     </div>
                   </div>
@@ -703,34 +739,21 @@ const Dashboard = () => {
                             ))}
                         </div>
                       </div>
-                      {/* <iframe
-                        id="iframe-widget"
-                        style={{ width: "500px", height: "600px" }}
-                        src="https://changenow.io/embeds/exchange-widget/v2/widget.html?FAQ=true&amount=0.15&amountFiat=1500&backgroundColor=&darkMode=false&from=btc&fromFiat=usd&horizontal=true&isFiat=true&lang=en-US&link_id=785be0a4559251&locales=true&logo=true&primaryColor=00C26F&to=usdterc20&toFiat=btc&toTheMoon=true"
-                      ></iframe>
-                         {" "}
-                      <script
-                        defer
-                        type="text/javascript"
-                        src="https://changenow.io/embeds/exchange-widget/v2/stepper-connector.js"
-                      ></script> */}
                     </div>
-
-                    {/* <iframe
-                      className="iframing"
-                      id="iframe-widget"
-                      src="https://changenow.io/embeds/exchange-widget/v2/widget.html?FAQ=true&amount=0.15&amountFiat=1500&backgroundColor=&darkMode=false&from=btc&fromFiat=usd&horizontal=true&isFiat=true&lang=en-US&link_id=785be0a4559251&locales=true&logo=true&primaryColor=00C26F&to=usdterc20&toFiat=btc&toTheMoon=true"
-                    ></iframe>
-                    <script
-                      defer
-                      type="text/javascript"
-                      src="https://changenow.io/embeds/exchange-widget/v2/stepper-connector.js"
-                    ></script> */}
                   </div>
                   {/**/}
                 </div>
               </div>
               {/**/}
+              <br />
+              {Description === "" ? (
+                ""
+              ) : (
+                <div
+                  className="htmData"
+                  dangerouslySetInnerHTML={{ __html: Description }}
+                />
+              )}
             </div>
           </div>
           <div>
