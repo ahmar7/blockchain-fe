@@ -142,12 +142,11 @@ const Dashboard = () => {
 
       if (description.success) {
         setDescription(description.description[0].description);
-        console.log("description: ", description);
 
         return;
       } else {
         toast.dismiss();
-        toast.error(userCoins.msg);
+        toast.error(description.msg);
       }
     } catch (error) {
       toast.dismiss();

@@ -4,6 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import Log from "../../assets/img/log.jpg";
 import { useAuthUser, useSignOut } from "react-auth-kit";
 import { logoutApi } from "../../Api/Service";
+import { toast } from "react-toastify";
 const SideBar = (props) => {
   let signOut = useSignOut();
 
