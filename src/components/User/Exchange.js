@@ -17,6 +17,7 @@ const Exchange = () => {
 
       setCryptoPrices(response.data);
     } catch (error) {
+      setCryptoPrices("error");
       // console.error("Error fetching crypto prices:", error);
     }
   };
@@ -57,13 +58,14 @@ const Exchange = () => {
         </select>
       </label>
       <p>
-        {/* {console.log(cryptoPrices[crypto.toLowerCase()][currency])} */}
-        Current {crypto} price in {currency}:{" "}
-        {cryptoPrices &&
-        cryptoPrices[crypto.toLowerCase()] !== undefined &&
-        !isNaN(amount)
+        Current {crypto} price in {currency}: {console.log(cryptoPrices)}
+        {cryptoPrices === "error"
+          ? "-"
+          : cryptoPrices &&
+            cryptoPrices[crypto.toLowerCase()] !== undefined &&
+            !cryptoPrices === NaN
           ? amount * cryptoPrices[crypto.toLowerCase()][currency]
-          : "xsaxas"}
+          : "loading"}
         {currency}
         {/* {totalValue} */}
       </p>
