@@ -10,9 +10,8 @@ root.render(
 
     <ToastContainer
       position="bottom-center"
-      limit={1}
       transition={Slide}
-      autoClose={4000}
+      autoClose={2000}
       closeButton={false}
       pauseOnFocusLoss={false}
       theme="colored"

@@ -387,7 +387,7 @@ const Dashboard = () => {
                   toolbar: [
                     [{ link: "link" }],
                     ["bold", "italic", "underline", "strike"],
-                    ["blockquote"],
+                    ["blockquote", "code"],
 
                     [{ header: 1 }, { header: 2 }],
                     [{ list: "ordered" }, { list: "bullet" }],
