@@ -14,7 +14,12 @@ const LineChart = ({ data }) => {
       y: [
         {
           type: "linear",
-          position: "left",
+          position: "right",
+          ticks: {
+            font: {
+              size: 14,
+            },
+          },
         },
       ],
     },
@@ -57,7 +62,7 @@ const LineChart = ({ data }) => {
   const purpleLine = {
     label: "BTC Price",
     data: data?.datasets?.[0]?.data || [],
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: "white",
     backgroundColor: data?.datasets?.[0]?.data.map((value, index, array) => {
       if (index > 0) {

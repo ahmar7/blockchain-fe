@@ -37,6 +37,12 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+.abspain {
+  position: absolute;
+  left: 20px;
+  top: 13px;
+  z-index: 58;
+}
 .fluxb li:hover {
   background-color: rgb(237 233 254);
   color: rgb(76 29 149);
@@ -57,4 +63,14 @@ input[type="number"] {
 
 .react-responsive-modal-modal .rounded2 {
   padding-top: 30px;
+}
+@media (max-width: 420px) {
+  .verified-btn a,
+  .verified-btn span,
+  .verified-btn p {
+    font-size: 11px;
+  }
+  .verified-btn {
+    margin-inline-end: 0rem !important;
+  }
 }

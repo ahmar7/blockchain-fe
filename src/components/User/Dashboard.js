@@ -202,20 +202,20 @@ const Dashboard = () => {
       <div>
         <div className="bg-muted-100 dark:bg-muted-900 pb-20">
           <SideBar state={Active} toggle={toggleBar} />
+          <button
+            onClick={toggleBar}
+            type="button"
+            className="flex for-mbl h-10 w-10 items-center justify-center mb- -ms-3 abspain"
+          >
+            <div className="relative h-5 w-5">
+              <span className="bg-primary-500 absolute block h-0.5 w-full transition-all duration-300 top-0.5 top-0.5" />
+              <span className="bg-primary-500 absolute top-1/2 block h-0.5 w-full max-w-[50%] transition-all duration-300" />
+              <span className="bg-primary-500 absolute block h-0.5 w-full transition-all duration-300 bottom-0 bottom-0" />
+            </div>
+          </button>
           <div className="bg-muted-100 dark:bg-muted-900 relative min-h-screen w-full overflow-x-hidden px-4 transition-all duration-300 xl:px-10 lg:max-w-[calc(100%_-_280px)] lg:ms-[280px]">
             <div className="mx-auto w-full max-w-7xl">
               <UserHeader />
-              <button
-                onClick={toggleBar}
-                type="button"
-                className="flex for-mbl h-10 w-10 items-center justify-center mb- -ms-3"
-              >
-                <div className="relative h-5 w-5">
-                  <span className="bg-primary-500 absolute block h-0.5 w-full transition-all duration-300 top-0.5 top-0.5" />
-                  <span className="bg-primary-500 absolute top-1/2 block h-0.5 w-full max-w-[50%] transition-all duration-300" />
-                  <span className="bg-primary-500 absolute block h-0.5 w-full transition-all duration-300 bottom-0 bottom-0" />
-                </div>
-              </button>
               <div
                 className="nuxt-loading-indicator"
                 style={{

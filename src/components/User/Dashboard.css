@@ -36,3 +36,9 @@
   border-radius: 0.375rem !important;
   padding: 1.5rem !important;
 }
+
+@media (max-width: 768px) {
+  .line-bg {
+    padding: 0px !important;
+  }
+}

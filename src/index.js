@@ -14,6 +14,7 @@ root.render(
       transition={Slide}
       autoClose={4000}
       closeButton={false}
+      pauseOnFocusLoss={false}
       theme="colored"
     />
   </>

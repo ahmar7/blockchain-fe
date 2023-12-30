@@ -101,10 +101,11 @@ const UserTransactions = () => {
     let _id = txid._id;
     let txId = newNote.txId;
     let trxName = txid.trxName;
+    let type = txid.type;
     let note = newNote.note;
     let fromAddress = txid.fromAddress;
 
-    let body = { amount, txId, trxName, _id, note, fromAddress, status };
+    let body = { amount, txId, trxName, type, _id, note, fromAddress, status };
 
     try {
       setisDisbaled(true);

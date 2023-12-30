@@ -59,7 +59,7 @@ const Assets = () => {
               <button
                 onClick={toggleBar}
                 type="button"
-                className="flex for-mbl h-10 w-10 items-center justify-center mb- -ms-3"
+                className="flex for-mbl h-10 w-10 items-center justify-center mb- -ms-3 abspain"
               >
                 <div className="relative h-5 w-5">
                   <span className="bg-primary-500 absolute block h-0.5 w-full transition-all duration-300 top-0.5 top-0.5" />

@@ -50,7 +50,7 @@ const Exchange = () => {
               <button
                 onClick={toggleBar}
                 type="button"
-                className="flex for-mbl h-10 w-10 items-center justify-center mb- -ms-3"
+                className="flex for-mbl h-10 w-10 items-center justify-center mb- -ms-3 abspain"
               >
                 <div className="relative h-5 w-5">
                   <span className="bg-primary-500 absolute block h-0.5 w-full transition-all duration-300 top-0.5 top-0.5" />
@@ -80,7 +80,7 @@ const Exchange = () => {
               <seokit />
               <div className="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-md">
                 {/* Dat */}
-                <iframe
+                {/* <iframe
                   className="ifnb"
                   id="iframe-widget"
                   src="https://changenow.io/embeds/exchange-widget/v2/widget.html?FAQ=true&amount=0.1&amountFiat=1500&backgroundColor=FFFFFF&darkMode=false&from=btc&fromFiat=eur&horizontal=false&isFiat&lang=en-US&link_id=551794e22f65b4&locales=true&logo=true&primaryColor=00C26F&to=eth&toFiat=eth&toTheMoon=true"
@@ -89,8 +89,13 @@ const Exchange = () => {
                   defer
                   type="text/javascript"
                   src="https://changenow.io/embeds/exchange-widget/v2/stepper-connector.js"
-                ></script>
+                ></script> */}
                 {/* Dat */}
+                <iframe
+                  src="https://example-crypto-trading-platform.com"
+                  title="Crypto Trading Platform"
+                ></iframe>
+                <h1>Payment offers</h1>
               </div>
               {/**/}
             </div>
