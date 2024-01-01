@@ -62,14 +62,19 @@ const LineChart = ({ data }) => {
   const purpleLine = {
     label: "BTC Price",
     data: data?.datasets?.[0]?.data || [],
-    borderWidth: 1,
-    borderColor: "white",
-    backgroundColor: data?.datasets?.[0]?.data.map((value, index, array) => {
-      if (index > 0) {
-        return value > array[index - 1] ? "green" : "red";
-      }
-      return "rgba(0,0,0,0.2)";
-    }),
+    borderWidth: 2,
+    borderColor: "#231c8a",
+    backgroundColor: (context) => {
+      const gradient = context.chart.ctx.createLinearGradient(
+        0,
+        0,
+        0,
+        context.chart.height
+      );
+      gradient.addColorStop(0, "rgba(35, 28, 138, 1)"); // Blue
+      gradient.addColorStop(1, "rgba(0, 0, 0, 1)"); // Black
+      return gradient;
+    },
     fill: true,
     pointRadius: 0,
     pointHoverRadius: 0,

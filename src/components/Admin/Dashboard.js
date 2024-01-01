@@ -151,6 +151,32 @@ const Dashboard = () => {
     } finally {
     }
   };
+  let format = [
+    "header",
+    "font",
+    "size",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "code-block",
+    "list",
+    "bullet",
+    "script",
+    "indent",
+    "direction",
+    "color",
+    "background",
+    "align",
+    "link",
+    "image",
+    "video",
+    "formula",
+    "clean",
+    "html",
+  ];
+
   useEffect(() => {
     getAllUsers();
     getTransactions();
@@ -383,24 +409,19 @@ const Dashboard = () => {
                 className="htmlcode"
                 value={newDescription}
                 onChange={handleQuillChange}
+                formats={format}
                 modules={{
                   toolbar: [
                     [{ link: "link" }],
                     ["bold", "italic", "underline", "strike"],
-                    ["blockquote", "code"],
 
                     [{ header: 1 }, { header: 2 }],
                     [{ list: "ordered" }, { list: "bullet" }],
                     [{ script: "sub" }, { script: "super" }],
-                    [{ indent: "-1" }, { indent: "+1" }],
-                    [{ direction: "rtl" }],
 
-                    [{ size: ["small", false, "large", "huge"] }],
                     [{ header: [1, 2, 3, 4, 5, 6, false] }],
 
                     [{ color: [] }, { background: [] }],
-
-                    [{ align: [] }],
 
                     ["clean"],
                   ],

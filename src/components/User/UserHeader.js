@@ -9,9 +9,9 @@ const UserHeader = () => {
   let AuthUse = useAuthUser();
   let signOut = useSignOut();
   const [isUser, setIsUser] = useState({});
+  let Navigate = useNavigate();
   const [drop, setdrop] = useState(false);
 
-  let Navigate = useNavigate();
   let toggleDrop = () => {
     drop ? setdrop(false) : setdrop(true);
   };
@@ -126,8 +126,8 @@ const UserHeader = () => {
           </nav>
         </div>
         <div className="ms-auto" />
-        <div className="verified-btn me-2">
-          {isUser && isUser.status === "pending" ? (
+        {isUser.submitDoc && isUser.submitDoc.status === "pending" ? (
+          <div className="verified-btn me-2">
             <Link
               data-v-71bb21a6="true"
               disabled=""
@@ -136,10 +136,10 @@ const UserHeader = () => {
             >
               <span>Start KYC</span>
             </Link>
-          ) : (
-            ""
-          )}
-        </div>
+          </div>
+        ) : (
+          ""
+        )}
         <div className="verified-btn me-2">
           <p
             onClick={isLoginOrLogout}

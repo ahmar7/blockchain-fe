@@ -43,6 +43,13 @@ input[type="number"] {
   top: 13px;
   z-index: 58;
 }
+.flex-wraps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: start;
+  justify-content: center;
+  gap: 50px;
+}
 .fluxb li:hover {
   background-color: rgb(237 233 254);
   color: rgb(76 29 149);

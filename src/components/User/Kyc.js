@@ -23,12 +23,63 @@ const Kyc = () => {
   const [newSlider2, setNewSlider2] = useState();
   const [isUser, setIsUser] = useState(true);
   let changeBanner1 = (e) => {
-    setNewSlider1(e.target.files[0]);
-    setSlide1(URL.createObjectURL(e.target.files[0]));
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      const fileSize = file.size;
+
+      const maxSize = 500 * 1024;
+
+      if (fileSize > maxSize) {
+        setNewSlider1("");
+        setSlide1(""); // Clear the input field
+        toast.error(
+          "File size exceeds 500KB limit. Please choose a smaller file."
+        );
+        return;
+      }
+      reader.onloadend = () => {
+        // reader.result contains the base64 representation of the image
+        setNewSlider1(reader.result);
+        setSlide1(URL.createObjectURL(file));
+      };
+
+      // Read the file as data URL
+      reader.readAsDataURL(file);
+    } else {
+      setNewSlider1("");
+      setSlide1("");
+    }
   };
   let changeBanner2 = (e) => {
-    setNewSlider2(e.target.files[0]);
-    setSlide2(URL.createObjectURL(e.target.files[0]));
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      const fileSize = file.size;
+
+      // Limit file size to
+      const maxSize = 500 * 1024;
+
+      if (fileSize > maxSize) {
+        toast.error(
+          "File size exceeds 500KB limit. Please choose a smaller file."
+        );
+        setNewSlider2("");
+        setSlide2(""); // Clear the input field
+        return;
+      }
+      reader.onloadend = () => {
+        // reader.result contains the base64 representation of the image
+        setNewSlider2(reader.result);
+        setSlide2(URL.createObjectURL(file));
+      };
+
+      // Read the file as data URL
+      reader.readAsDataURL(file);
+    } else {
+      setNewSlider2("");
+      setSlide2("");
+    }
   };
   const getsignUser = async () => {
     try {
@@ -38,7 +89,7 @@ const Kyc = () => {
 
       if (userCoins.success) {
         setIsUser(userCoins.signleUser);
-        if (userCoins.signleUser.status === "completed") {
+        if (userCoins.signleUser.submitDoc.status === "completed") {
           Navigate("/dashboard");
           return;
         }
@@ -270,6 +321,9 @@ const Kyc = () => {
                                       (e.g., passport, national ID, or driver's
                                       license).
                                     </p>
+                                    <p lassName="font-alt text-xs font-normal leading-snug text-muted-500 dark:text-muted-400">
+                                      *max size should be 500KB
+                                    </p>
                                   </div>
                                   <div className="child absolute end-2 top-3 opacity-0">
                                     <svg
@@ -332,6 +386,9 @@ const Kyc = () => {
                                       utility bill (e.g., electricity, water, or
                                       gas bill) in your name.
                                     </p>
+                                    <p lassName="font-alt text-xs font-normal leading-snug text-muted-500 dark:text-muted-400">
+                                      *max size should be 500KB
+                                    </p>
                                   </div>
                                   <div className="child absolute end-2 top-3 opacity-0">
                                     <svg
@@ -370,10 +427,9 @@ const Kyc = () => {
                             </div>
                           </div>
                           <div className="mx-auto flex flex-col items-center">
-                            <a
+                            <button
                               onClick={verifyUser}
                               data-v-71bb21a6
-                              href="#"
                               className="is-button rounded-xl bg-primary-500 dark:bg-primary-500 hover:enabled:bg-primary-400 dark:hover:enabled:bg-primary-400 text-white hover:enabled:shadow-lg hover:enabled:shadow-primary-500/50 dark:hover:enabled:shadow-primary-800/20 focus-visible:outline-primary-400/70 focus-within:outline-primary-400/70 focus-visible:bg-primary-500 active:enabled:bg-primary-500 dark:focus-visible:outline-primary-400 dark:focus-within:outline-primary-400 dark:focus-visible:bg-primary-500 dark:active:enabled:bg-primary-500 !h-12 w-48"
                               disabled={isDisable}
                             >
@@ -384,7 +440,7 @@ const Kyc = () => {
                               ) : (
                                 "Continue"
                               )}
-                            </a>
+                            </button>
                           </div>
                         </div>
                       </div>

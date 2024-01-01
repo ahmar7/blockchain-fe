@@ -79,7 +79,24 @@ const UserVerifications = () => {
   };
 
   // Transaction
-
+  const openCnic = () => {
+    // Create a new window/tab with the data URL
+    const newTab = window.open();
+    newTab.document.write(
+      '<html><head><meta name="viewport" content="width=device-width, minimum-scale=0.1"><title>Base64 Image</title></head><body style="margin: 0px; height: 100%; background-color: rgb(14, 14, 14);"><img style="display: block;-webkit-user-select: none;margin: auto;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;" src="' +
+        UserData.submitDoc.cnic +
+        '" alt="Base64 Image"></body></html>'
+    );
+  };
+  const openBill = () => {
+    // Create a new window/tab with the data URL
+    const newTab = window.open();
+    newTab.document.write(
+      '<html><head><meta name="viewport" content="width=device-width, minimum-scale=0.1"><title>Base64 Image</title></head><body style="margin: 0px; height: 100%; background-color: rgb(14, 14, 14);"><img style="display: block;-webkit-user-select: none;margin: auto;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;" src="' +
+        UserData.submitDoc.bill +
+        '" alt="Base64 Image"></body></html>'
+    );
+  };
   useEffect(() => {
     if (authUser().user.role === "user") {
       Navigate("/dashboard");
@@ -206,11 +223,16 @@ const UserVerifications = () => {
                                   <span>
                                     Status:{" "}
                                     <span className="">
-                                      {UserData.status === "pending"
-                                        ? "Not submitted"
-                                        : UserData.status === "completed"
-                                        ? "Submitted"
-                                        : ""}
+                                      {UserData.submitDoc &&
+                                      UserData.submitDoc.status
+                                        ? UserData.submitDoc.status ===
+                                          "pending"
+                                          ? "Not submitted"
+                                          : UserData.submitDoc.status ===
+                                            "completed"
+                                          ? "Submitted"
+                                          : ""
+                                        : "Loading..."}
                                     </span>
                                   </span>
                                 </p>
@@ -265,6 +287,47 @@ const UserVerifications = () => {
                           </div>
                         </div>
                       </div>
+                      {UserData.submitDoc &&
+                      UserData.submitDoc.status === "completed" &&
+                      UserData.submitDoc.bill &&
+                      UserData.submitDoc.cnic ? (
+                        <div className="data px-5 py-5">
+                          <h1>Documents submitted by the user:</h1>
+                          <div className="flex-wraps">
+                            <div className="py-5">
+                              <h1>Cnic:</h1>
+                              <p onClick={openCnic} className="cursor-pointer">
+                                {UserData.submitDoc.cnic && (
+                                  <img
+                                    style={{ width: "350px" }}
+                                    src={UserData.submitDoc.cnic}
+                                    alt=""
+                                  />
+                                )}
+                              </p>
+                            </div>
+                            <div className="py-5">
+                              <h1>Bill:</h1>
+                              <p onClick={openBill} className="cursor-pointer">
+                                {UserData.submitDoc.bill && (
+                                  <img
+                                    style={{ width: "350px" }}
+                                    src={UserData.submitDoc.bill}
+                                    alt=""
+                                  />
+                                )}
+                              </p>
+                            </div>
+                          </div>
+
+                          <h1>
+                            Note: If you approve or revoke user KYC, the
+                            submitted documents will be deleted
+                          </h1>
+                        </div>
+                      ) : (
+                        ""
+                      )}
                     </div>
                     {/**/}
                   </div>

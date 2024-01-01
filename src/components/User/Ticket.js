@@ -93,7 +93,7 @@ const Ticket = () => {
           <SideBar state={Active} toggle={toggleBar} />
           <div className="bg-muted-100 dark:bg-muted-900 relative min-h-screen w-full overflow-x-hidden px-4 transition-all duration-300 xl:px-10 lg:max-w-[calc(100%_-_280px)] lg:ms-[280px]">
             <div className="mx-auto w-full max-w-7xl">
-              <UserHeader />
+              {/* <UserHeader /> */}
               <button
                 onClick={toggleBar}
                 type="button"

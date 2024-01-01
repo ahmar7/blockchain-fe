@@ -632,11 +632,12 @@ const General = () => {
                                       htmlFor="ninja-input-19"
                                       className="nui-label pb-1 text-[0.825rem]"
                                     >
-                                      Note
+                                      Note:
                                     </label>
                                     <div className="group/nui-textarea relative flex flex-col">
                                       <ReactQuill
                                         className="htmlcode"
+                                        placeholder="Enter something to show to the user on his dashboard..."
                                         value={newDescription}
                                         onChange={handleQuillChange}
                                         modules={{
@@ -648,7 +649,6 @@ const General = () => {
                                               "underline",
                                               "strike",
                                             ],
-                                            ["blockquote"],
 
                                             [{ header: 1 }, { header: 2 }],
                                             [
@@ -659,22 +659,7 @@ const General = () => {
                                               { script: "sub" },
                                               { script: "super" },
                                             ],
-                                            [
-                                              { indent: "-1" },
-                                              { indent: "+1" },
-                                            ],
-                                            [{ direction: "rtl" }],
 
-                                            [
-                                              {
-                                                size: [
-                                                  "small",
-                                                  false,
-                                                  "large",
-                                                  "huge",
-                                                ],
-                                              },
-                                            ],
                                             [
                                               {
                                                 header: [
@@ -690,8 +675,6 @@ const General = () => {
                                             ],
 
                                             [{ color: [] }, { background: [] }],
-
-                                            [{ align: [] }],
 
                                             ["clean"],
                                           ],

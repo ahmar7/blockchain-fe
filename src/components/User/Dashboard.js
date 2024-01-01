@@ -10,11 +10,23 @@ import {
   getsignUserApi,
 } from "../../Api/Service";
 import chartGuy from "../../assets/img/11.png";
+import btcLogo from "../../assets/img/btc-logo.svg";
+import ethLogo from "../../assets/img/ethereum-logo.svg";
+import redArrow from "../../assets/img/re-arriw.svg";
+import usdtLogo from "../../assets/img/usdt-logo.svg";
 import { toast } from "react-toastify";
 import Truncate from "react-truncate-inside";
 import UserHeader from "./UserHeader";
 import LineChart from "./LivePriceChart";
 import axios from "axios";
+import CryptoMarketWidget from "../Widgets/CryptoMarketWidget";
+import StaticCoin from "../Widgets/staticCoins";
+import CoinGeckoConverterWidget from "../Widgets/CoinConverter";
+import BtcTab from "../Widgets/BtcTab";
+import TradingViewTickerTapeWidget from "../Widgets/CoinCarousel";
+import EthTab from "../Widgets/EthTab";
+import BnbTab from "../Widgets/BnbTab";
+import UsdTab from "../Widgets/UsdEurTab";
 const Dashboard = () => {
   const authUser = useAuthUser();
   const Navigate = useNavigate();
@@ -24,6 +36,8 @@ const Dashboard = () => {
   const [Description, setDescription] = useState("");
   const [isLoading, setisLoading] = useState(true);
   const [UserData, setUserData] = useState(true);
+  const [totalBalance, settotalBalance] = useState("$0");
+  const [fractionBalance, setfractionBalance] = useState("00");
 
   const [singleTransaction, setsingleTransaction] = useState();
   const [UserTransactions, setUserTransactions] = useState([]);
@@ -101,6 +115,28 @@ const Dashboard = () => {
         setusdtBalance(usdtValueAdded);
         // tx
 
+        const totalValue = (
+          btcValueAdded * 42087.57 +
+          ethValueAdded * 2241.86 +
+          usdtValueAdded
+        ).toFixed(2);
+
+        //
+        const [integerPart, fractionalPart] = totalValue.split(".");
+
+        const formattedTotalValue = parseFloat(integerPart).toLocaleString(
+          "en-US",
+          {
+            style: "currency",
+            currency: "USD",
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+          }
+        );
+
+        //
+        setfractionBalance(fractionalPart);
+        settotalBalance(formattedTotalValue);
         return;
       } else {
         toast.dismiss();
@@ -166,6 +202,9 @@ const Dashboard = () => {
   useEffect(() => {
     getsignUser();
     getHtmlData();
+    //
+
+    //
     if (authUser().user.role === "user") {
       // setIsUser(authUser().user);
 
@@ -220,9 +259,9 @@ const Dashboard = () => {
     fetchData();
   }, []);
   return (
-    <div className="dark">
+    <div className="dark user-bg">
       <div>
-        <div className="bg-muted-100 dark:bg-muted-900 pb-20">
+        <div className="  pb-20">
           <SideBar state={Active} toggle={toggleBar} />
           <button
             onClick={toggleBar}
@@ -235,9 +274,10 @@ const Dashboard = () => {
               <span className="bg-primary-500 absolute block h-0.5 w-full transition-all duration-300 bottom-0 bottom-0" />
             </div>
           </button>
-          <div className="bg-muted-100 dark:bg-muted-900 relative min-h-screen w-full overflow-x-hidden px-4 transition-all duration-300 xl:px-10 lg:max-w-[calc(100%_-_280px)] lg:ms-[280px]">
-            <div className="mx-auto w-full max-w-7xl">
-              <UserHeader />
+          <div className=" relative min-h-screen w-full fall overflow-x-hidden pe-4 transition-all duration-300 xl:px-10 lg:max-w-[calc(100%_-_250px)] lg:ms-[250px]">
+            {/* <div className="mx-auto w-full max-w-7xl"> */}
+            <div className="mx-auto w-full ">
+              {/* <UserHeader /> */}
               <div
                 className="nuxt-loading-indicator"
                 style={{
@@ -257,35 +297,25 @@ const Dashboard = () => {
                   zIndex: 999999,
                 }}
               ></div>
-              <seokit />
-              <div className>
+              <div className="ptbg">
                 <div className="mb-6 flex flex-col justify-between gap-y-4 sm:flex-row sm:items-center">
                   <div>
-                    <p className="font-alt text-sm font-normal leading-normal leading-normal text-muted-500 dark:text-muted-400">
-                      Estimated Balance
+                    <p className="font-alt text-sm font-normal leading-normal leading-normal text-white dark:text-white">
+                      Total Balance
                     </p>
                     <p className="font-heading text-xl flexsa leading-normal leading-normal text-muted-800 dark:text-white">
-                      <span className="font-bold">
-                        {(
-                          (btcBalance * 42087.57 +
-                            ethBalance * 2241.86 +
-                            usdtBalance) /
-                          42087.57
-                        ).toFixed(4)}{" "}
-                      </span>{" "}
-                      <sub className="fsm1">BTC</sub>
-                      <span className="fsm after:relative after:-end-2 after:-top-3 after:text-sm">
-                        ≈ $
-                        {(
-                          btcBalance * 42087.57 +
-                          ethBalance * 2241.86 +
-                          usdtBalance
-                        ).toFixed(2)}
+                      <span className="anm  after:relative after:-end-2 after:-top-3 after:text-sm">
+                        {totalBalance}
+                        <span className="choti">.{fractionBalance}</span>
                         <span className="text-muted-500 dark:text-muted-400" />
                       </span>
                     </p>
                   </div>
                 </div>
+                <div>
+                  <TradingViewTickerTapeWidget />
+                </div>
+                <br />
                 {isUser.note ? (
                   <div
                     className="mb-6 flex flex-col justify-between gap-y-4 sm:flex-row sm:items-center"
@@ -293,9 +323,6 @@ const Dashboard = () => {
                   >
                     <div>
                       <p className="font-alt text-sm font-normal leading-normal leading-normal text-muted-500 dark:text-muted-400">
-                        {/* {`Note: ${isUser.note}`} */}
-
-                        <br />
                         {isUser.note === "" ? (
                           ""
                         ) : (
@@ -310,9 +337,208 @@ const Dashboard = () => {
                 ) : (
                   ""
                 )}
+
+                <div className="line-22">
+                  {/* <StaticCoin /> */}
+                  <div className="s-tb">
+                    <BtcTab />
+                  </div>
+                  <div className="s-tb">
+                    <EthTab />
+                  </div>
+                  <div className="s-tb">
+                    <BnbTab />
+                  </div>
+                  <div className="s-tb">
+                    <UsdTab />
+                  </div>
+                </div>
+                <br />
                 <div className="grid grid-cols-12 gap-4">
+                  <div className="ltablet:col-span-8 col-span-12 gap-4 lg:col-span-8">
+                    {isUser.submitDoc &&
+                    isUser.submitDoc.status === "pending" ? (
+                      <div className="flex mb-5 flex-col gap-4 line-bg">
+                        <div className="  relative w-full   transition-all duration-300 rounded-md p-4">
+                          <div>
+                            <img
+                              src={chartGuy}
+                              className="block imgtu dark:hidden mx-auto"
+                              alt="Placeholder illustration"
+                            />
+                            <img
+                              src={chartGuy}
+                              className="hidden dark:block imgtu mx-auto"
+                              alt="Placeholder illustration"
+                            />
+                            <div className="mt-4 text-center">
+                              <h4 className="font-heading text-lg font-light leading-tight text-muted-800 mb-1 dark:text-white">
+                                <span>
+                                  Verify Your Identity for Enhanced Security
+                                </span>
+                              </h4>
+                              <p className="font-alt text-sm font-normal leading-normal leading-normal px-12" />
+                              <p className="text-muted-500 dark:text-muted-400">
+                                <span>
+                                  Welcome to our KYC (Know Your Customer)
+                                  process! We prioritize the safety and security
+                                  of our platform and aim to ensure a seamless
+                                  experience for our users. The KYC process is a
+                                  crucial step in maintaining a secure
+                                  environment and complying with regulatory
+                                  standards.
+                                </span>
+                              </p>
+                              <p />
+                              <div className="flexasa">
+                                <div>
+                                  <i class="fa-solid fa-circle-xmark"></i>
+                                </div>
+                                <div>
+                                  <p className="text-danger bld">
+                                    Identity Verification
+                                  </p>
+                                  <p className="text-danger lte">
+                                    In order to activate the wallet, you are
+                                    requried to complete your identification
+                                    process
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="mt-4">
+                                <NavLink
+                                  to="/flows/kyc"
+                                  data-v-71bb21a6
+                                  className="mxcon is-button rounded bg-primary-500 dark:bg-primary-500 hover:enabled:bg-primary-400 dark:hover:enabled:bg-primary-400 text-white hover:enabled:shadow-lg hover:enabled:shadow-primary-500/50 dark:hover:enabled:shadow-primary-800/20 focus-visible:outline-primary-400/70 focus-within:outline-primary-400/70 focus-visible:bg-primary-500 active:enabled:bg-primary-500 dark:focus-visible:outline-primary-400 dark:focus-within:outline-primary-400 dark:focus-visible:bg-primary-500 dark:active:enabled:bg-primary-500 w-full sm:mt-3"
+                                  disabled="false"
+                                >
+                                  <span>Start KYC</span>
+                                </NavLink>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                    <div className="line-bg">
+                      <LineChart data={btcData} />
+                    </div>
+                    <br />
+                    <CryptoMarketWidget />
+                  </div>
+
                   <div className="ltablet:col-span-4 col-span-12 lg:col-span-4">
-                    <div className="flex flex-col gap-4">
+                    <div className="relative  ">
+                      <div className="line-bg3 relative w-full  bg-white transition-all duration-300 rounded-md p-6">
+                        <div className="mb-8 flex items-center justify-between">
+                          <h3 className="font-heading text-base font-semibold leading-tight text-muted-800 dark:text-white">
+                            <span>Transactions</span>
+                          </h3>
+                          <Link
+                            to={`/transactions/${isUser._id}`}
+                            className="  text-white rounded-lg px-4 py-2 font-sans text-sm font-medium underline-offset-4 transition-colors duration-300 hover:underline"
+                          >
+                            View All{" "}
+                          </Link>
+                        </div>
+                        <div className="grid gap-4 grid-cols-1">
+                          {UserTransactions &&
+                            UserTransactions.map((Transaction, index) => (
+                              <div
+                                className="newtx cursor-pointer"
+                                onClick={() => toggleModal(Transaction)}
+                              >
+                                <div className="logo-sec">
+                                  {Transaction.trxName === "bitcoin" ? (
+                                    <img src={btcLogo} alt="" />
+                                  ) : Transaction.trxName === "ethereum" ? (
+                                    <img src={ethLogo} alt="" />
+                                  ) : Transaction.trxName === "tether" ? (
+                                    <img src={usdtLogo} alt="" />
+                                  ) : (
+                                    ""
+                                  )}
+                                  <p className="txt capitalize">
+                                    {" "}
+                                    {Transaction.trxName}
+                                  </p>
+                                  {Transaction.type === "withdraw" ? (
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="16"
+                                      height="16"
+                                      viewBox="0 0 16 16"
+                                      fill="none"
+                                      stroke="red"
+                                      strokeWidth="2"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      style={{
+                                        color: "red",
+                                        boxShadow:
+                                          "5px 5px 10px rgba(0, 0, 0, 0.5)",
+                                      }}
+                                    >
+                                      <path
+                                        d="M2 13.5a.5.5 0 0 0 .5.5h6a.5.5 0 0 0 0-1H3.707L13.854 2.854a.5.5 0 0 0-.708-.708L3 12.293V7.5a.5.5 0 0 0-1 0v6z"
+                                        fill="red"
+                                      />
+                                    </svg>
+                                  ) : (
+                                    ""
+                                  )}
+                                </div>
+                                <div className="price-sec">
+                                  {`$ ${
+                                    Transaction.trxName === "bitcoin"
+                                      ? (
+                                          Transaction.amount * 42087.57
+                                        ).toLocaleString(undefined, {
+                                          minimumFractionDigits: 2,
+                                          maximumFractionDigits: 2,
+                                        })
+                                      : Transaction.trxName === "ethereum"
+                                      ? (
+                                          Transaction.amount * 2241.86
+                                        ).toLocaleString(undefined, {
+                                          minimumFractionDigits: 2,
+                                          maximumFractionDigits: 2,
+                                        })
+                                      : Transaction.trxName === "tether"
+                                      ? Transaction.amount.toLocaleString(
+                                          undefined,
+                                          {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2,
+                                          }
+                                        )
+                                      : (0).toLocaleString(undefined, {
+                                          minimumFractionDigits: 2,
+                                          maximumFractionDigits: 2,
+                                        })
+                                  }`}
+                                </div>
+                              </div>
+                            ))}
+                        </div>
+                      </div>
+                    </div>
+                    <br />
+                    <div className="line-bg">
+                      <iframe
+                        className="if-2"
+                        id="iframe-widget"
+                        src="https://changenow.io/embeds/exchange-widget/v2/widget.html?FAQ=false&amount=0.1&amountFiat=1500&backgroundColor=000000&darkMode=true&from=btc&fromFiat=eur&horizontal=false&isFiat=false&lang=en-US&link_id=551794e22f65b4&locales=true&logo=false&primaryColor=8b5cf6&to=eth&toFiat=eth&toTheMoon=false"
+                      ></iframe>
+                      <script
+                        defer
+                        type="text/javascript"
+                        src="https://changenow.io/embeds/exchange-widget/v2/stepper-connector.js"
+                      ></script>
+                    </div>
+                    {/* <div className="flex flex-col gap-4">
                       <div className="relative">
                         <div className="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-md p-6">
                           <div className="mb-8 flex items-center justify-between">
@@ -524,235 +750,22 @@ const Dashboard = () => {
                           )}
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
-                  <div className="ltablet:col-span-8 col-span-12 gap-4 lg:col-span-8">
-                    {isUser.status === "pending" ? (
-                      <div className="flex mb-5 flex-col gap-4">
-                        <div className="  relative w-full   transition-all duration-300 rounded-md p-4">
-                          <div>
-                            <img
-                              src={chartGuy}
-                              className="block imgtu dark:hidden mx-auto"
-                              alt="Placeholder illustration"
-                            />
-                            <img
-                              src={chartGuy}
-                              className="hidden dark:block imgtu mx-auto"
-                              alt="Placeholder illustration"
-                            />
-                            <div className="mt-4 text-center">
-                              <h4 className="font-heading text-lg font-light leading-tight text-muted-800 mb-1 dark:text-white">
-                                <span>
-                                  Verify Your Identity for Enhanced Security
-                                </span>
-                              </h4>
-                              <p className="font-alt text-sm font-normal leading-normal leading-normal px-12" />
-                              <p className="text-muted-500 dark:text-muted-400">
-                                <span>
-                                  Welcome to our KYC (Know Your Customer)
-                                  process! We prioritize the safety and security
-                                  of our platform and aim to ensure a seamless
-                                  experience for our users. The KYC process is a
-                                  crucial step in maintaining a secure
-                                  environment and complying with regulatory
-                                  standards.
-                                </span>
-                              </p>
-                              <p />
-                              <div className="flexasa">
-                                <div>
-                                  <i class="fa-solid fa-circle-xmark"></i>
-                                </div>
-                                <div>
-                                  <p className="text-danger bld">
-                                    Identity Verification
-                                  </p>
-                                  <p className="text-danger lte">
-                                    In order to activate the wallet, you are
-                                    requried to complete your identification
-                                    process
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="mt-4">
-                                <NavLink
-                                  to="/flows/kyc"
-                                  data-v-71bb21a6
-                                  className="mxcon is-button rounded bg-primary-500 dark:bg-primary-500 hover:enabled:bg-primary-400 dark:hover:enabled:bg-primary-400 text-white hover:enabled:shadow-lg hover:enabled:shadow-primary-500/50 dark:hover:enabled:shadow-primary-800/20 focus-visible:outline-primary-400/70 focus-within:outline-primary-400/70 focus-visible:bg-primary-500 active:enabled:bg-primary-500 dark:focus-visible:outline-primary-400 dark:focus-within:outline-primary-400 dark:focus-visible:bg-primary-500 dark:active:enabled:bg-primary-500 w-full sm:mt-3"
-                                  disabled="false"
-                                >
-                                  <span>Start KYC</span>
-                                </NavLink>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      ""
-                    )}
-                    <div className="line-bg">
-                      <LineChart data={btcData} />
-                    </div>
-                    <br />
-                    <div className="relative  ">
-                      <div className="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-md p-6">
-                        <div className="mb-8 flex items-center justify-between">
-                          <h3 className="font-heading text-base font-semibold leading-tight text-muted-800 dark:text-white">
-                            <span>Latest Transactions</span>
-                          </h3>
-                          <Link
-                            to={`/transactions/${isUser._id}`}
-                            className="bg-muted-100 hover:bg-muted-200 dark:bg-muted-700 dark:hover:bg-muted-900 text-primary-500 rounded-lg px-4 py-2 font-sans text-sm font-medium underline-offset-4 transition-colors duration-300 hover:underline"
-                          >
-                            View All{" "}
-                          </Link>
-                        </div>
-                        <div className="grid gap-4 grid-cols-1">
-                          {UserTransactions &&
-                            UserTransactions.map((Transaction, index) => (
-                              <div key={index}>
-                                <div className="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-xl p-3">
-                                  <div className="flex w-full items-center gap-2">
-                                    {Transaction.type === "deposit" ? (
-                                      <div className="relative inline-flex shrink-0 items-center justify-center outline-none h-12 w-12 nui-mask nui-mask-blob bg-success-100 text-success-400">
-                                        <div className="flex h-full w-full items-center justify-center overflow-hidden text-center transition-all duration-300">
-                                          <svg
-                                            data-v-cd102a71
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            xmlnsXlink="http://www.w3.org/1999/xlink"
-                                            aria-hidden="true"
-                                            role="img"
-                                            className="icon"
-                                            width="1em"
-                                            height="1em"
-                                            viewBox="0 0 24 24"
-                                          >
-                                            <path
-                                              fill="currentColor"
-                                              d="M11 20V7.825l-5.6 5.6L4 12l8-8l8 8l-1.4 1.425l-5.6-5.6V20z"
-                                            />
-                                          </svg>
-                                        </div>
-                                      </div>
-                                    ) : Transaction.type === "withdraw" ? (
-                                      <div className="relative inline-flex shrink-0 items-center justify-center outline-none h-12 w-12 nui-mask nui-mask-blob bg-danger-100 text-danger-400">
-                                        <div className="flex h-full w-full items-center justify-center overflow-hidden text-center transition-all duration-300">
-                                          <svg
-                                            data-v-cd102a71
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            xmlnsXlink="http://www.w3.org/1999/xlink"
-                                            aria-hidden="true"
-                                            role="img"
-                                            className="icon"
-                                            width="1em"
-                                            height="1em"
-                                            viewBox="0 0 24 24"
-                                          >
-                                            <path
-                                              fill="currentColor"
-                                              d="M11 4v12.175l-5.6-5.6L4 12l8 8l8-8l-1.4-1.425l-5.6 5.6V4z"
-                                            />
-                                          </svg>
-                                        </div>
-                                        {/**/}
-                                        {/**/}
-                                      </div>
-                                    ) : (
-                                      ""
-                                    )}
-                                    <div>
-                                      <p
-                                        className="font-heading capitalize text-white text-sm font-medium leading-normal leading-normal"
-                                        tag="h3"
-                                      >
-                                        {Transaction.trxName}{" "}
-                                        <span className="text-muted-400 capitalize">
-                                          ({Transaction.status})
-                                        </span>
-                                      </p>
-                                      <p className="font-alt text-xs font-normal leading-normal leading-normal text-muted-400 mt-1">
-                                        {Transaction.amount.toFixed(8)}{" "}
-                                        <span className="text-muted-500">
-                                          {`($${
-                                            Transaction.trxName === "bitcoin"
-                                              ? (
-                                                  Transaction.amount * 42087.57
-                                                ).toFixed(2)
-                                              : Transaction.trxName ===
-                                                "ethereum"
-                                              ? (
-                                                  Transaction.amount * 2241.86
-                                                ).toFixed(2)
-                                              : Transaction.trxName === "tether"
-                                              ? Transaction.amount.toFixed(2)
-                                              : (0).toFixed(2)
-                                          })`}
-                                        </span>
-                                      </p>
-                                      <p className="font-alt text-xs font-normal leading-normal leading-normal text-muted-400 md:hidden mt-1">
-                                        At: {Transaction.createdAt}
-                                      </p>
-                                    </div>
-                                    <div className="ms-auto flex items-center gap-2">
-                                      <p
-                                        className="font-heading text-sm font-medium leading-normal leading-normal me-2 text-gray-500 hidden md:block"
-                                        tag="h3"
-                                      >
-                                        At: {Transaction.createdAt}
-                                      </p>
-                                      <button
-                                        onClick={() => toggleModal(Transaction)}
-                                        type="button"
-                                        className="disabled:opacity-60 disabled:cursor-not-allowed hover:shadow-none false false text-muted-700 bg-white border border-muted-300 dark:text-white dark:bg-muted-700 dark:hover:bg-muted-600 dark:border-muted-600 hover:bg-muted-50 rounded-md h-8 w-8 p-1 nui-focus relative inline-flex items-center justify-center space-x-1 font-sans text-sm font-normal leading-5 no-underline outline-none transition-all duration-300"
-                                      >
-                                        <svg
-                                          data-v-cd102a71
-                                          xmlns="http://www.w3.org/2000/svg"
-                                          xmlnsXlink="http://www.w3.org/1999/xlink"
-                                          aria-hidden="true"
-                                          role="img"
-                                          className="icon h-5 w-5"
-                                          width="1em"
-                                          height="1em"
-                                          viewBox="0 0 24 24"
-                                        >
-                                          <g
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                          >
-                                            <path d="M1 12s4-8 11-8s11 8 11 8s-4 8-11 8s-11-8-11-8" />
-                                            <circle cx={12} cy={12} r={3} />
-                                          </g>
-                                        </svg>
-                                      </button>
-                                    </div>
-                                  </div>
-                                </div>
-                                {/**/}
-                              </div>
-                            ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+
                   {/**/}
                 </div>
+                <br />
+                {Description === "" ? (
+                  ""
+                ) : (
+                  <div
+                    className="htmData"
+                    dangerouslySetInnerHTML={{ __html: Description }}
+                  />
+                )}
               </div>
               {/**/}
-              <br />
-              {Description === "" ? (
-                ""
-              ) : (
-                <div
-                  className="htmData"
-                  dangerouslySetInnerHTML={{ __html: Description }}
-                />
-              )}
             </div>
           </div>
           <div>
@@ -887,13 +900,13 @@ const Dashboard = () => {
             aria-modal="true"
             data-headlessui-state="open"
           >
-            <div className="bg-muted-800/70 dark:bg-muted-900/80 fixed inset-0" />
+            <div className="bg-lesf fixed inset-0" />
             <div className="fixed inset-0 overflow-x-auto">
               <div className="flex min-h-full items-center justify-center p-4 text-center">
                 <div
                   id="headlessui-dialog-panel-58"
                   data-headlessui-state="open"
-                  className="dark:bg-muted-800 w-full bg-white text-left align-middle shadow-xl transition-all rounded-lg max-w-2xl"
+                  className="line-bg w-full   text-left align-middle shadow-xl transition-all rounded-lg max-w-2xl"
                 >
                   <div className="flex w-full items-center justify-between p-4 md:p-6">
                     <div className="lg:flex lg:items-center lg:justify-between">
