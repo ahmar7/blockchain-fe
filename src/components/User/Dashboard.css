@@ -248,11 +248,7 @@
 .bg-lesf {
   background-color: rgba(0, 0, 0, 0.646);
 }
-@media (max-width: 768px) {
-  .line-bg {
-    padding: 0px !important;
-  }
-}
+
 @media (max-width: 500px) {
   .ptbg {
     padding: 20px 10px;
@@ -289,6 +285,15 @@
   }
   .fall {
     padding-inline: 1rem !important;
+  }
+}
+@media (max-width: 768px) {
+  .wci_overview_widget_div.line-bgs iframe,
+  .line-22 {
+    padding: 10px !important;
+  }
+  .line-bg {
+    padding: 15px !important;
   }
 }
 @media (max-width: 524px) {
