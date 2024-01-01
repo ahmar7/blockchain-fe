@@ -675,7 +675,7 @@ const General = () => {
                                             ],
 
                                             [{ color: [] }, { background: [] }],
-
+                                            ["image"],
                                             ["clean"],
                                           ],
                                         }}
