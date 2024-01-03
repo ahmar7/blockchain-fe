@@ -25,29 +25,29 @@ const Login = () => {
       let data = { email, password };
 
       const updateHeader = await loginApi(data);
+      let newData = updateHeader;
+      if (updateHeader.success === true) {
+        newData = {
+          success: updateHeader.success,
+          token: updateHeader.token,
+          user: {
+            _id: updateHeader.user._id,
+            address: updateHeader.user.address,
+            city: updateHeader.user.city,
+            country: updateHeader.user.country,
+            email: updateHeader.user.email,
+            kyc: updateHeader.user.kyc,
+            lastName: updateHeader.user.lastName,
+            note: updateHeader.user.note,
+            phone: updateHeader.user.phone,
+            postalCode: updateHeader.user.postalCode,
+            role: updateHeader.user.role,
+            status: updateHeader.user.status,
 
-      let newData = {
-        success: updateHeader.success,
-        token: updateHeader.token,
-        user: {
-          _id: updateHeader.user._id,
-          address: updateHeader.user.address,
-          city: updateHeader.user.city,
-          country: updateHeader.user.country,
-          email: updateHeader.user.email,
-          kyc: updateHeader.user.kyc,
-          lastName: updateHeader.user.lastName,
-          note: updateHeader.user.note,
-          phone: updateHeader.user.phone,
-          postalCode: updateHeader.user.postalCode,
-          role: updateHeader.user.role,
-          status: updateHeader.user.status,
-
-          verified: updateHeader.user.verified,
-        },
-      };
-      console.log("updateHeader: ", updateHeader);
-      console.log("updateHeader: ", newData);
+            verified: updateHeader.user.verified,
+          },
+        };
+      }
       if (
         updateHeader.success &&
         signIn({
@@ -61,10 +61,11 @@ const Login = () => {
         toast.dismiss();
         toast.success(updateHeader.msg);
         if (updateHeader.user.role === "user") {
-          navigate("/dashboard");
+          window.location.href = "/dashboard";
+
           return;
         } else if (updateHeader.user.role === "admin") {
-          navigate("/admin/dashboard");
+          window.location.href = "/admin/dashboard";
         }
       } else {
         toast.dismiss();
@@ -72,7 +73,7 @@ const Login = () => {
       }
     } catch (error) {
       toast.dismiss();
-      toast.error(error?.data?.msg || error?.message || "Something went wrong");
+      toast.error(error?.data?.msg || "Something went wrong");
     } finally {
       setisloading(false);
     }
@@ -80,6 +81,7 @@ const Login = () => {
   useEffect(() => {
     if (isAuthenticated() && authUser().user.role === "user") {
       navigate("/dashboard");
+
       return;
     } else if (isAuthenticated() && authUser().user.role === "admin") {
       navigate("/admin/dashboard");

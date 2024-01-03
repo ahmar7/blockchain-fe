@@ -38,7 +38,7 @@ export const postApi = async (endpoint, data) => {
     return (
       error?.response?.data || {
         success: false,
-        msg: error?.message,
+        msg: error?.response?.data.msg,
       }
     );
   }
