@@ -82,7 +82,6 @@ const General = () => {
       } else {
         editDesc = newDescription;
       }
-      setisDisable(true);
       let body = {
         firstName: userData.firstName,
         lastName: userData.lastName,
@@ -95,6 +94,25 @@ const General = () => {
         country: userData.country,
         postalCode: userData.postalCode,
       };
+
+      if (
+        !body.firstName.trim() ||
+        !body.lastName.trim() ||
+        !body.email.trim() ||
+        !body.password.trim() ||
+        !body.address.trim() ||
+        !body.city.trim() ||
+        !body.country.trim() ||
+        !body.phone ||
+        !body.postalCode
+      ) {
+        toast.error("Fields cannot be left blank except the note field!");
+
+        return;
+      }
+
+      setisDisable(true);
+
       const signleUser = await updateSignleUsersApi(id, body);
 
       if (signleUser.success) {

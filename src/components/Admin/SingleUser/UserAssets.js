@@ -79,6 +79,7 @@ const UserAssets = () => {
       if (userCoins.success) {
         setisLoading(false);
         setUserData(userCoins.getCoin);
+
         // tx
         const btc = userCoins.getCoin.transactions.filter((transaction) =>
           transaction.trxName.includes("bitcoin")
@@ -1015,8 +1016,8 @@ const UserAssets = () => {
                                       id="ninja-input-26"
                                       type="text"
                                       onChange={handleInput}
-                                      value={coinAddress.ehtAddress}
-                                      name="ehtAddress"
+                                      value={coinAddress.usdtAddress}
+                                      name="usdtAddress"
                                       className="nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 pe-4 ps-9 rounded"
                                       placeholder="Ex: 0x1234567890"
                                     />
@@ -1157,8 +1158,8 @@ const UserAssets = () => {
                                       id="ninja-input-26"
                                       type="text"
                                       onChange={handleInput}
-                                      value={coinAddress.usdtAddress}
-                                      name="usdtAddress"
+                                      value={coinAddress.ehtAddress}
+                                      name="ehtAddress"
                                       className="nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 pe-4 ps-9 rounded"
                                       placeholder="Ex: 0x1234567890"
                                     />

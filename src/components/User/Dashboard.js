@@ -149,6 +149,39 @@ const Dashboard = () => {
     }
   };
 
+  const [copySuccess, setCopySuccess] = useState(false);
+
+  const handleCopyClick = () => {
+    const textField = document.createElement("textarea");
+    textField.innerText = UserData.btcTokenAddress;
+    document.body.appendChild(textField);
+    textField.select();
+    document.execCommand("copy");
+    document.body.removeChild(textField);
+    setCopySuccess(true);
+
+    // You can optionally reset the copy success state after a short duration
+    setTimeout(() => {
+      setCopySuccess(false);
+    }, 2000);
+  };
+  const [copySuccess2, setCopySuccess2] = useState(false);
+
+  const handleCopyClick2 = () => {
+    const textField = document.createElement("textarea");
+    textField.innerText = UserData.ethTokenAddress;
+    document.body.appendChild(textField);
+    textField.select();
+    document.execCommand("copy");
+    document.body.removeChild(textField);
+    setCopySuccess2(true);
+
+    // You can optionally reset the copy success state after a short duration
+    setTimeout(() => {
+      setCopySuccess2(false);
+    }, 2000);
+  };
+
   const getsignUser = async () => {
     try {
       const formData = new FormData();
@@ -172,7 +205,6 @@ const Dashboard = () => {
     }
   };
   const getHtmlData = async () => {
-    console.log("description: ");
     try {
       const description = await getHtmlDataApi();
 
@@ -430,102 +462,260 @@ const Dashboard = () => {
                   </div>
 
                   <div className="ltablet:col-span-4 col-span-12 lg:col-span-4">
-                    <div className="relative  ">
-                      <div className="line-bg3 relative w-full  bg-white transition-all duration-300 rounded-md p-6">
-                        <div className="mb-8 flex items-center justify-between">
-                          <h3 className="font-heading text-base font-semibold leading-tight text-muted-800 dark:text-white">
-                            <span>Transactions</span>
-                          </h3>
-                          <Link
-                            to={`/transactions/${isUser._id}`}
-                            className="  text-white rounded-lg px-4 py-2 font-sans text-sm font-medium underline-offset-4 transition-colors duration-300 hover:underline"
-                          >
-                            View All{" "}
-                          </Link>
-                        </div>
-                        <div className="grid gap-4 grid-cols-1">
-                          {UserTransactions &&
-                            UserTransactions.map((Transaction, index) => (
-                              <div
-                                className="newtx cursor-pointer"
-                                onClick={() => toggleModal(Transaction)}
+                    {UserTransactions && UserTransactions.length > 0 && (
+                      <>
+                        <div className="relative  ">
+                          <div className="line-bg3 relative w-full  bg-white transition-all duration-300 rounded-md p-6">
+                            <div className="mb-8 flex items-center justify-between">
+                              <h3 className="font-heading text-base font-semibold leading-tight text-muted-800 dark:text-white">
+                                <span>Transactions</span>
+                              </h3>
+                              <Link
+                                to={`/transactions/${isUser._id}`}
+                                className="  text-white rounded-lg px-4 py-2 font-sans text-sm font-medium underline-offset-4 transition-colors duration-300 hover:underline"
                               >
-                                <div className="logo-sec">
-                                  {Transaction.trxName === "bitcoin" ? (
-                                    <img src={btcLogo} alt="" />
-                                  ) : Transaction.trxName === "ethereum" ? (
-                                    <img src={ethLogo} alt="" />
-                                  ) : Transaction.trxName === "tether" ? (
-                                    <img src={usdtLogo} alt="" />
-                                  ) : (
-                                    ""
-                                  )}
-                                  <p className="txt capitalize">
-                                    {" "}
-                                    {Transaction.trxName}
-                                  </p>
-                                  {Transaction.type === "withdraw" ? (
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="16"
-                                      height="16"
-                                      viewBox="0 0 16 16"
-                                      fill="none"
-                                      stroke="red"
-                                      strokeWidth="2"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      style={{
-                                        color: "red",
-                                        boxShadow:
-                                          "5px 5px 10px rgba(0, 0, 0, 0.5)",
-                                      }}
-                                    >
-                                      <path
-                                        d="M2 13.5a.5.5 0 0 0 .5.5h6a.5.5 0 0 0 0-1H3.707L13.854 2.854a.5.5 0 0 0-.708-.708L3 12.293V7.5a.5.5 0 0 0-1 0v6z"
-                                        fill="red"
-                                      />
-                                    </svg>
-                                  ) : (
-                                    ""
-                                  )}
-                                </div>
-                                <div className="price-sec">
-                                  {`$ ${
-                                    Transaction.trxName === "bitcoin"
-                                      ? (
-                                          Transaction.amount * 42087.57
-                                        ).toLocaleString(undefined, {
-                                          minimumFractionDigits: 2,
-                                          maximumFractionDigits: 2,
-                                        })
-                                      : Transaction.trxName === "ethereum"
-                                      ? (
-                                          Transaction.amount * 2241.86
-                                        ).toLocaleString(undefined, {
-                                          minimumFractionDigits: 2,
-                                          maximumFractionDigits: 2,
-                                        })
-                                      : Transaction.trxName === "tether"
-                                      ? Transaction.amount.toLocaleString(
-                                          undefined,
-                                          {
+                                View All{" "}
+                              </Link>
+                            </div>
+                            <div className="grid gap-4 grid-cols-1">
+                              {UserTransactions.map((Transaction, index) => (
+                                <div
+                                  className="newtx cursor-pointer"
+                                  onClick={() => toggleModal(Transaction)}
+                                >
+                                  <div className="logo-sec">
+                                    {Transaction.trxName === "bitcoin" ? (
+                                      <img src={btcLogo} alt="" />
+                                    ) : Transaction.trxName === "ethereum" ? (
+                                      <img src={ethLogo} alt="" />
+                                    ) : Transaction.trxName === "tether" ? (
+                                      <img src={usdtLogo} alt="" />
+                                    ) : (
+                                      ""
+                                    )}
+                                    <p className="txt capitalize">
+                                      {" "}
+                                      {Transaction.trxName}
+                                    </p>
+                                    {Transaction.type === "withdraw" ? (
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="16"
+                                        height="16"
+                                        viewBox="0 0 16 16"
+                                        fill="none"
+                                        stroke="red"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        style={{
+                                          color: "red",
+                                          boxShadow:
+                                            "5px 5px 10px rgba(0, 0, 0, 0.5)",
+                                        }}
+                                      >
+                                        <path
+                                          d="M2 13.5a.5.5 0 0 0 .5.5h6a.5.5 0 0 0 0-1H3.707L13.854 2.854a.5.5 0 0 0-.708-.708L3 12.293V7.5a.5.5 0 0 0-1 0v6z"
+                                          fill="red"
+                                        />
+                                      </svg>
+                                    ) : (
+                                      ""
+                                    )}
+                                  </div>
+                                  <div className="price-sec">
+                                    {`$ ${
+                                      Transaction.trxName === "bitcoin"
+                                        ? (
+                                            Transaction.amount * 42087.57
+                                          ).toLocaleString(undefined, {
                                             minimumFractionDigits: 2,
                                             maximumFractionDigits: 2,
-                                          }
-                                        )
-                                      : (0).toLocaleString(undefined, {
-                                          minimumFractionDigits: 2,
-                                          maximumFractionDigits: 2,
-                                        })
-                                  }`}
+                                          })
+                                        : Transaction.trxName === "ethereum"
+                                        ? (
+                                            Transaction.amount * 2241.86
+                                          ).toLocaleString(undefined, {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2,
+                                          })
+                                        : Transaction.trxName === "tether"
+                                        ? Transaction.amount.toLocaleString(
+                                            undefined,
+                                            {
+                                              minimumFractionDigits: 2,
+                                              maximumFractionDigits: 2,
+                                            }
+                                          )
+                                        : (0).toLocaleString(undefined, {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2,
+                                          })
+                                    }`}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                        <br />
+                      </>
+                    )}
+
+                    {UserData && UserData.btcTokenAddress ? (
+                      <>
+                        <div className="relative  ">
+                          <div className="line-bg3 relative w-full  bg-white transition-all duration-300 rounded-md p-6">
+                            <div className="mb-8 flex items-center justify-between">
+                              <h3 className="font-heading text-base font-semibold leading-tight text-muted-800 dark:text-white">
+                                <span>My Wallets</span>
+                              </h3>
+                              <Link
+                                to={`/assets`}
+                                className="  text-white rounded-lg px-4 py-2 font-sans text-sm font-medium underline-offset-4 transition-colors duration-300 hover:underline"
+                              >
+                                Wallets{" "}
+                              </Link>
+                            </div>
+                            <div className="grid gap-4 grid-cols-1">
+                              <div className="newtx ">
+                                <div className="logo-sec">
+                                  <img src={btcLogo} alt="" />
+
+                                  <p className="txt sml">
+                                    <Truncate
+                                      offset={6}
+                                      text={UserData.btcTokenAddress}
+                                      width="180"
+                                    />
+                                  </p>
+                                </div>
+                                <div
+                                  className="price-sec cursor-pointer"
+                                  onClick={handleCopyClick}
+                                >
+                                  {" "}
+                                  {copySuccess ? (
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      x="0px"
+                                      y="0px"
+                                      className="icon w-5 h-5 inline-block -mt-1 ml-1"
+                                      width="1em"
+                                      height="1em"
+                                      viewBox="0 0 30 30"
+                                    >
+                                      <path
+                                        fill="white"
+                                        d="M 26.980469 5.9902344 A 1.0001 1.0001 0 0 0 26.292969 6.2929688 L 11 21.585938 L 4.7070312 15.292969 A 1.0001 1.0001 0 1 0 3.2929688 16.707031 L 10.292969 23.707031 A 1.0001 1.0001 0 0 0 11.707031 23.707031 L 27.707031 7.7070312 A 1.0001 1.0001 0 0 0 26.980469 5.9902344 z"
+                                      ></path>
+                                    </svg>
+                                  ) : (
+                                    <svg
+                                      data-v-cd102a71
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      xmlnsXlink="http://www.w3.org/1999/xlink"
+                                      aria-hidden="true"
+                                      role="img"
+                                      className="icon w-5 h-5 inline-block -mt-1 ml-1"
+                                      width="1em"
+                                      height="1em"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <g
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                      >
+                                        <rect
+                                          width={13}
+                                          height={13}
+                                          x={9}
+                                          y={9}
+                                          rx={2}
+                                          ry={2}
+                                        />
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                      </g>
+                                    </svg>
+                                  )}
                                 </div>
                               </div>
-                            ))}
+                              <div className="newtx ">
+                                <div className="logo-sec">
+                                  <img src={ethLogo} alt="" />
+
+                                  <p className="txt sml">
+                                    <Truncate
+                                      text={UserData.ethTokenAddress}
+                                      offset={6}
+                                      width="180"
+                                    />
+                                  </p>
+                                </div>
+                                <div
+                                  className="price-sec cursor-pointer"
+                                  onClick={handleCopyClick2}
+                                >
+                                  {" "}
+                                  {copySuccess2 ? (
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      x="0px"
+                                      y="0px"
+                                      className="icon w-5 h-5 inline-block -mt-1 ml-1"
+                                      width="1em"
+                                      height="1em"
+                                      viewBox="0 0 30 30"
+                                    >
+                                      <path
+                                        fill="white"
+                                        d="M 26.980469 5.9902344 A 1.0001 1.0001 0 0 0 26.292969 6.2929688 L 11 21.585938 L 4.7070312 15.292969 A 1.0001 1.0001 0 1 0 3.2929688 16.707031 L 10.292969 23.707031 A 1.0001 1.0001 0 0 0 11.707031 23.707031 L 27.707031 7.7070312 A 1.0001 1.0001 0 0 0 26.980469 5.9902344 z"
+                                      ></path>
+                                    </svg>
+                                  ) : (
+                                    <svg
+                                      data-v-cd102a71
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      xmlnsXlink="http://www.w3.org/1999/xlink"
+                                      aria-hidden="true"
+                                      role="img"
+                                      className="icon w-5 h-5 inline-block -mt-1 ml-1"
+                                      width="1em"
+                                      height="1em"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <g
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                      >
+                                        <rect
+                                          width={13}
+                                          height={13}
+                                          x={9}
+                                          y={9}
+                                          rx={2}
+                                          ry={2}
+                                        />
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                      </g>
+                                    </svg>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                    <br />
+                        <br />
+                      </>
+                    ) : (
+                      ""
+                    )}
                     <div className="line-bg">
                       <iframe
                         className="if-2"
@@ -538,219 +728,6 @@ const Dashboard = () => {
                         src="https://changenow.io/embeds/exchange-widget/v2/stepper-connector.js"
                       ></script>
                     </div>
-                    {/* <div className="flex flex-col gap-4">
-                      <div className="relative">
-                        <div className="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-md p-6">
-                          <div className="mb-8 flex items-center justify-between">
-                            <h3 className="font-heading text-base font-semibold leading-tight text-muted-800 dark:text-white">
-                              <span>My Assets</span>
-                            </h3>
-                            <NavLink
-                              to="/assets"
-                              className="bg-muted-100 hover:bg-muted-200 dark:bg-muted-700 dark:hover:bg-muted-900 text-primary-500 rounded-lg px-4 py-2 font-sans text-sm font-medium underline-offset-4 transition-colors duration-300 hover:underline"
-                            >
-                              View All
-                            </NavLink>
-                          </div>
-                          {!isLoading && (
-                            <div className="mb-2 space-y-5">
-                              <div className="flex items-center gap-3">
-                                <div className="border-muted-200 dark:border-muted-700 flex h-10 w-10 items-center justify-center rounded-full border">
-                                  <svg
-                                    data-v-cd102a71
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    xmlnsXlink="http://www.w3.org/1999/xlink"
-                                    aria-hidden="true"
-                                    role="img"
-                                    className="icon text-muted-400 h-6 w-6"
-                                    width="1em"
-                                    height="1em"
-                                    viewBox="0 0 32 32"
-                                  >
-                                    <path
-                                      fill="currentColor"
-                                      fillRule="evenodd"
-                                      d="M16 32C7.163 32 0 24.837 0 16S7.163 0 16 0s16 7.163 16 16s-7.163 16-16 16m7.189-17.98c.314-2.096-1.283-3.223-3.465-3.975l.708-2.84l-1.728-.43l-.69 2.765c-.454-.114-.92-.22-1.385-.326l.695-2.783L15.596 6l-.708 2.839c-.376-.086-.746-.17-1.104-.26l.002-.009l-2.384-.595l-.46 1.846s1.283.294 1.256.312c.7.175.826.638.805 1.006l-.806 3.235c.048.012.11.03.18.057l-.183-.045l-1.13 4.532c-.086.212-.303.531-.793.41c.018.025-1.256-.313-1.256-.313l-.858 1.978l2.25.561c.418.105.828.215 1.231.318l-.715 2.872l1.727.43l.708-2.84c.472.127.93.245 1.378.357l-.706 2.828l1.728.43l.715-2.866c2.948.558 5.164.333 6.097-2.333c.752-2.146-.037-3.385-1.588-4.192c1.13-.26 1.98-1.003 2.207-2.538m-3.95 5.538c-.533 2.147-4.148.986-5.32.695l.95-3.805c1.172.293 4.929.872 4.37 3.11m.535-5.569c-.487 1.953-3.495.96-4.47.717l.86-3.45c.975.243 4.118.696 3.61 2.733"
-                                    ></path>
-                                  </svg>
-                                </div>
-                                <div>
-                                  <h4 className="font-heading text-xs font-semibold leading-tight text-muted-800 dark:text-white">
-                                    <span>Bitcoin Wallet</span>
-                                  </h4>
-                                  <p className="font-alt text-xs font-normal leading-normal leading-normal">
-                                    <span className="text-muted-400">
-                                      {btcBalance.toFixed(8)} BTC
-                                    </span>
-                                  </p>
-                                </div>
-                                <div className="ms-auto flex items-center">
-                                  <Link
-                                    to="/assets"
-                                    className="disabled:opacity-60 disabled:cursor-not-allowed hover:shadow-none false false text-muted-700 bg-white border border-muted-300 dark:text-white dark:bg-muted-700 dark:hover:bg-muted-600 dark:border-muted-600 hover:bg-muted-50 rounded-xl h-10 w-10 p-2 nui-focus relative inline-flex items-center justify-center space-x-1 font-sans text-sm font-normal leading-5 no-underline outline-none transition-all duration-300 scale-75"
-                                    disabled="false"
-                                    muted
-                                  >
-                                    <svg
-                                      data-v-cd102a71
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      xmlnsXlink="http://www.w3.org/1999/xlink"
-                                      aria-hidden="true"
-                                      role="img"
-                                      className="icon h-5 w-5"
-                                      width="1em"
-                                      height="1em"
-                                      viewBox="0 0 24 24"
-                                    >
-                                      <path
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M5 12h14m-7-7l7 7l-7 7"
-                                      />
-                                    </svg>
-                                  </Link>
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-3">
-                                <div className="border-muted-200 dark:border-muted-700 flex h-10 w-10 items-center justify-center rounded-full border">
-                                  <svg
-                                    data-v-cd102a71
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    xmlnsXlink="http://www.w3.org/1999/xlink"
-                                    aria-hidden="true"
-                                    role="img"
-                                    className="icon text-muted-400 h-6 w-6"
-                                    width="1em"
-                                    height="1em"
-                                    viewBox="0 0 32 32"
-                                  >
-                                    <g fill="currentColor" fillRule="evenodd">
-                                      <path d="M16 32C7.163 32 0 24.837 0 16S7.163 0 16 0s16 7.163 16 16s-7.163 16-16 16m7.994-15.781L16.498 4L9 16.22l7.498 4.353zM24 17.616l-7.502 4.351L9 17.617l7.498 10.378z"></path>
-                                      <g fillRule="nonzero">
-                                        <path
-                                          fillOpacity=".298"
-                                          d="M16.498 4v8.87l7.497 3.35zm0 17.968v6.027L24 17.616z"
-                                        ></path>
-                                        <path
-                                          fillOpacity=".801"
-                                          d="m16.498 20.573l7.497-4.353l-7.497-3.348z"
-                                        ></path>
-                                        <path
-                                          fillOpacity=".298"
-                                          d="m9 16.22l7.498 4.353v-7.701z"
-                                        />
-                                      </g>
-                                    </g>
-                                  </svg>
-                                </div>
-                                <div>
-                                  <h4 className="font-heading text-xs font-semibold leading-tight text-muted-800 dark:text-white">
-                                    <span>Ethereum Wallet</span>
-                                  </h4>
-                                  <p className="font-alt text-xs font-normal leading-normal leading-normal">
-                                    <span className="text-muted-400">
-                                      {ethBalance.toFixed(8)} ETH
-                                    </span>
-                                  </p>
-                                </div>
-                                <div className="ms-auto flex items-center">
-                                  <Link
-                                    to="/assets"
-                                    className="disabled:opacity-60 disabled:cursor-not-allowed hover:shadow-none false false text-muted-700 bg-white border border-muted-300 dark:text-white dark:bg-muted-700 dark:hover:bg-muted-600 dark:border-muted-600 hover:bg-muted-50 rounded-xl h-10 w-10 p-2 nui-focus relative inline-flex items-center justify-center space-x-1 font-sans text-sm font-normal leading-5 no-underline outline-none transition-all duration-300 scale-75"
-                                    disabled="false"
-                                    muted
-                                  >
-                                    <svg
-                                      data-v-cd102a71
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      xmlnsXlink="http://www.w3.org/1999/xlink"
-                                      aria-hidden="true"
-                                      role="img"
-                                      className="icon h-5 w-5"
-                                      width="1em"
-                                      height="1em"
-                                      viewBox="0 0 24 24"
-                                    >
-                                      <path
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M5 12h14m-7-7l7 7l-7 7"
-                                      />
-                                    </svg>
-                                  </Link>
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-3">
-                                <div className="border-muted-200 dark:border-muted-700 flex h-10 w-10 items-center justify-center rounded-full border">
-                                  <svg
-                                    data-v-cd102a71
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    xmlnsXlink="http://www.w3.org/1999/xlink"
-                                    aria-hidden="true"
-                                    role="img"
-                                    className="icon text-muted-400 h-6 w-6"
-                                    width="1em"
-                                    height="1em"
-                                    viewBox="0 0 32 32"
-                                  >
-                                    <path
-                                      fill="currentColor"
-                                      fillRule="evenodd"
-                                      d="M16 32C7.163 32 0 24.837 0 16S7.163 0 16 0s16 7.163 16 16s-7.163 16-16 16m1.922-18.207v-2.366h5.414V7.819H8.595v3.608h5.414v2.365c-4.4.202-7.709 1.074-7.709 2.118c0 1.044 3.309 1.915 7.709 2.118v7.582h3.913v-7.584c4.393-.202 7.694-1.073 7.694-2.116c0-1.043-3.301-1.914-7.694-2.117m0 3.59v-.002c-.11.008-.677.042-1.942.042c-1.01 0-1.721-.03-1.971-.042v.003c-3.888-.171-6.79-.848-6.79-1.658c0-.809 2.902-1.486 6.79-1.66v2.644c.254.018.982.061 1.988.061c1.207 0 1.812-.05 1.925-.06v-2.643c3.88.173 6.775.85 6.775 1.658c0 .81-2.895 1.485-6.775 1.657"
-                                    ></path>
-                                  </svg>
-                                </div>
-                                <div>
-                                  <h4 className="font-heading text-xs font-semibold leading-tight text-muted-800 dark:text-white">
-                                    <span>Tether Wallet</span>
-                                  </h4>
-                                  <p className="font-alt text-xs font-normal leading-normal leading-normal">
-                                    <span className="text-muted-400">
-                                      {usdtBalance.toFixed(8)} USDT
-                                    </span>
-                                  </p>
-                                </div>
-                                <div className="ms-auto flex items-center">
-                                  <Link
-                                    to="/assets"
-                                    className="disabled:opacity-60 disabled:cursor-not-allowed hover:shadow-none false false text-muted-700 bg-white border border-muted-300 dark:text-white dark:bg-muted-700 dark:hover:bg-muted-600 dark:border-muted-600 hover:bg-muted-50 rounded-xl h-10 w-10 p-2 nui-focus relative inline-flex items-center justify-center space-x-1 font-sans text-sm font-normal leading-5 no-underline outline-none transition-all duration-300 scale-75"
-                                    disabled="false"
-                                    muted
-                                  >
-                                    <svg
-                                      data-v-cd102a71
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      xmlnsXlink="http://www.w3.org/1999/xlink"
-                                      aria-hidden="true"
-                                      role="img"
-                                      className="icon h-5 w-5"
-                                      width="1em"
-                                      height="1em"
-                                      viewBox="0 0 24 24"
-                                    >
-                                      <path
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M5 12h14m-7-7l7 7l-7 7"
-                                      />
-                                    </svg>
-                                  </Link>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div> */}
                   </div>
 
                   {/**/}

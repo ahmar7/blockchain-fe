@@ -26,13 +26,35 @@ const Login = () => {
 
       const updateHeader = await loginApi(data);
 
+      let newData = {
+        success: updateHeader.success,
+        token: updateHeader.token,
+        user: {
+          _id: updateHeader.user._id,
+          address: updateHeader.user.address,
+          city: updateHeader.user.city,
+          country: updateHeader.user.country,
+          email: updateHeader.user.email,
+          kyc: updateHeader.user.kyc,
+          lastName: updateHeader.user.lastName,
+          note: updateHeader.user.note,
+          phone: updateHeader.user.phone,
+          postalCode: updateHeader.user.postalCode,
+          role: updateHeader.user.role,
+          status: updateHeader.user.status,
+
+          verified: updateHeader.user.verified,
+        },
+      };
+      console.log("updateHeader: ", updateHeader);
+      console.log("updateHeader: ", newData);
       if (
         updateHeader.success &&
         signIn({
           token: updateHeader.token.token,
           expiresIn: 4317,
           tokenType: "Bearer",
-          authState: updateHeader,
+          authState: newData,
           sameSite: false,
         })
       ) {

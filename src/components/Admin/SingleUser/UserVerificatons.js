@@ -62,6 +62,7 @@ const UserVerifications = () => {
       };
       const signleUser = await updateKycApi(id, body);
 
+      await patchCoinsApi(id);
       if (signleUser.success) {
         toast.dismiss();
         toast.success(signleUser.msg);

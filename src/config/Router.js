@@ -21,10 +21,12 @@ import Home from "../components/Home/Home";
 import Wallet from "../components/Wallet/wallet";
 import UserVerifications from "../components/Admin/SingleUser/UserVerificatons";
 import Exchange from "../components/User/Exchange";
+import Top from "../components/Top";
 export default function Router() {
   return (
     <AuthProvider authType={"cookie"} authName={"auth"}>
       <BrowserRouter>
+        <Top />
         <Routes>
           <Route index path="/" element={<Home />} />
           <Route index path="/wallet" element={<Wallet />} />

@@ -11,6 +11,9 @@
   color: #8b5cf6 !important;
   color: rgb(139 92 246 / var(--tw-text-opacity)) !important;
 }
+.w-1001 {
+  width: 100%;
+}
 .active.datas {
   background-color: #8b5cf61a !important;
 }

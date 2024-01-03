@@ -1,28 +1,10 @@
 import React from "react";
 import { Line } from "react-chartjs-2";
 
-const LineChart = ({ data }) => {
+const LineChart = React.memo(({ data }) => {
   const options = {
     responsive: true,
-    scales: {
-      x: [
-        {
-          type: "linear",
-          position: "bottom",
-        },
-      ],
-      y: [
-        {
-          type: "linear",
-          position: "right",
-          ticks: {
-            font: {
-              size: 14,
-            },
-          },
-        },
-      ],
-    },
+
     plugins: {
       legend: {
         display: true,
@@ -90,6 +72,6 @@ const LineChart = ({ data }) => {
       <Line data={purpleData} options={options} />
     </div>
   );
-};
+});
 
 export default LineChart;
