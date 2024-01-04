@@ -35,6 +35,13 @@
 .txt.sml {
   font-size: 13px;
 }
+.fulla {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .progress-container {
   width: 100%;
   background-color: #555;

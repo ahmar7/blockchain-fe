@@ -4,6 +4,7 @@ import success from "../assets/img/success.png";
 import styles from "./styles.module.css";
 import { verifyEmailApi } from "../Api/Service";
 import { toast } from "react-toastify";
+import Loading from "../assets/img/loading.gif";
 
 const EmailVerify = () => {
   const [validUrl, setValidUrl] = useState(false);
@@ -46,7 +47,23 @@ const EmailVerify = () => {
           </Link>
         </div>
       ) : (
-        <h1>{header}</h1>
+        <div>
+          {header ? (
+            <h1
+              style={{
+                fontSize: "25px",
+                marginLeft: "30px",
+                marginTop: "30px",
+              }}
+            >
+              {header}
+            </h1>
+          ) : (
+            <div className="fulla">
+              <img src={Loading} />
+            </div>
+          )}
+        </div>
       )}{" "}
     </>
   );
