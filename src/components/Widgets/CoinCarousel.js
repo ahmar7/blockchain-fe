@@ -34,7 +34,7 @@ const TradingViewTickerTapeWidget = () => {
           }
         ],
         "showSymbolLogo": true,
-        "isTransparent": false,
+        "isTransparent": true,
         "displayMode": "regular",
         "colorTheme": "dark",
         "locale": "en"

@@ -15,6 +15,9 @@
   border-radius: 20px !important;
   padding: 1rem !important;
 }
+.tradingview-widget-container iframe {
+  color-scheme: none !important;
+}
 
 .livecoinwatch-widget-1 {
   height: 210px !important;

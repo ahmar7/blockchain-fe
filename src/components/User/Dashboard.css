@@ -98,14 +98,17 @@
   width: 24%;
 }
 .line-22 {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   border: 1px solid gray;
-  flex-wrap: wrap;
   background-color: rgb(0, 0, 0) !important;
   border-radius: 20px !important;
   padding: 20px !important;
+}
+.linec {
+  row-gap: 20px;
+  flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 .line-bg-tb {
   width: max-content;

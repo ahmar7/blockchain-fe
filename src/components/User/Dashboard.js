@@ -413,18 +413,18 @@ const Dashboard = () => {
                 ) : (
                   ""
                 )}
-                <div className="line-22">
+                <div className="linec">
                   {/* <StaticCoin /> */}
-                  <div className="s-tb">
+                  <div className="s-tb line-22">
                     <BtcTab />
                   </div>
-                  <div className="s-tb">
+                  <div className="s-tb line-22">
                     <EthTab />
                   </div>
-                  <div className="s-tb">
+                  <div className="s-tb line-22">
                     <BnbTab />
                   </div>
-                  <div className="s-tb">
+                  <div className="s-tb line-22">
                     <UsdTab />
                   </div>
                 </div>
