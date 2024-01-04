@@ -1303,6 +1303,10 @@ const UserAssets = () => {
                                     <input
                                       id="ninja-input-42"
                                       type="number"
+                                      onFocus={() =>
+                                        (window.onwheel = () => false)
+                                      } // Disable scrolling on focus
+                                      onBlur={() => (window.onwheel = null)}
                                       onKeyDown={(e) =>
                                         [
                                           "ArrowUp",
@@ -1901,6 +1905,10 @@ const UserAssets = () => {
                                     <input
                                       id="ninja-input-42"
                                       type="number"
+                                      onFocus={() =>
+                                        (window.onwheel = () => false)
+                                      } // Disable scrolling on focus
+                                      onBlur={() => (window.onwheel = null)}
                                       onKeyDown={(e) =>
                                         [
                                           "ArrowUp",

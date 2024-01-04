@@ -26,6 +26,7 @@ const General = () => {
     city: "",
     country: "",
     postalCode: "",
+    progress: 0,
   });
   let handleInput = (e) => {
     let name = e.target.name;
@@ -91,6 +92,7 @@ const General = () => {
         note: editDesc,
         address: userData.address,
         city: userData.city,
+        progress: userData.progress,
         country: userData.country,
         postalCode: userData.postalCode,
       };
@@ -425,6 +427,10 @@ const General = () => {
                                       <input
                                         id="ninja-input-14"
                                         type="number"
+                                        onFocus={() =>
+                                          (window.onwheel = () => false)
+                                        } // Disable scrolling on focus
+                                        onBlur={() => (window.onwheel = null)}
                                         onKeyDown={(e) =>
                                           [
                                             "ArrowUp",
@@ -591,6 +597,7 @@ const General = () => {
                                     </div>
                                   </div>
                                 </div>
+
                                 <div className="col-span-12 sm:col-span-6">
                                   <div className="relative">
                                     {/**/}
@@ -598,6 +605,10 @@ const General = () => {
                                       <input
                                         id="ninja-input-18"
                                         type="number"
+                                        onFocus={() =>
+                                          (window.onwheel = () => false)
+                                        } // Disable scrolling on focus
+                                        onBlur={() => (window.onwheel = null)}
                                         onKeyDown={(e) =>
                                           [
                                             "ArrowUp",
@@ -644,6 +655,26 @@ const General = () => {
                                     </div>
                                   </div>
                                 </div>
+                                <div className="col-span-12">
+                                  <div className="relative">
+                                    <div className="group/nui-input relative">
+                                      <div className=" bottom-0 left-0 text-sm text-muted-400  py-1">
+                                        User Progress: {userData.progress}%
+                                      </div>
+                                      <input
+                                        type="range"
+                                        id="progress-slider"
+                                        onChange={handleInput}
+                                        value={userData.progress}
+                                        name="progress"
+                                        min="0"
+                                        max="100"
+                                        className="nui-focus peer w-full h-10  bottom-0 left-0 opacity-100 cursor-pointer"
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+
                                 <div className="col-span-12">
                                   <div className="relative">
                                     <label
@@ -693,7 +724,7 @@ const General = () => {
                                             ],
 
                                             [{ color: [] }, { background: [] }],
-                                            ["image"],
+
                                             ["clean"],
                                           ],
                                         }}

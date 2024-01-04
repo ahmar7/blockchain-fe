@@ -284,7 +284,13 @@ const Kyc = () => {
                   </div>
                 </div>
               </div>
-              <form action method="POST" noValidate>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  verifyUser();
+                }}
+                noValidate
+              >
                 <div className="pb-32 pt-24">
                   <div className="px-4 py-8">
                     <div className="mb-10 text-center">
@@ -441,6 +447,15 @@ const Kyc = () => {
                                 "Continue"
                               )}
                             </button>
+                          </div>
+                          <div className="mx-auto flex flex-col mt-2 items-center">
+                            <Link
+                              to="/dashboard"
+                              data-v-71bb21a6
+                              className="is-button rounded-xl   hover:enabled:bg-primary-400 dark:hover:enabled:bg-primary-400 dss hover:enabled:shadow-lg hover:enabled:shadow-primary-500/50 dark:hover:enabled:shadow-primary-800/20 focus-visible:outline-primary-400/70 focus-within:outline-primary-400/70 focus-visible:bg-primary-500 active:enabled:bg-primary-500 dark:focus-visible:outline-primary-400 dark:focus-within:outline-primary-400 dark:focus-visible:bg-primary-500 dark:active:enabled:bg-primary-500 !h-12 w-48"
+                            >
+                              Skip
+                            </Link>
                           </div>
                         </div>
                       </div>

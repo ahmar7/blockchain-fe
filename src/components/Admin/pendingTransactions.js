@@ -94,6 +94,7 @@ const PendingTransactions = () => {
     setsingleTransaction("");
     setModal(false);
   };
+
   const approveTransaction = async (txid, status) => {
     if (status === "completed" && !newNote.txId) {
       toast.dismiss();
@@ -151,7 +152,32 @@ const PendingTransactions = () => {
 
     // getSignleUser();
   }, []);
+  // Copy
+  const [timer, setTimer] = useState(null);
+  const [copyStatus, setCopyStatus] = useState(false);
 
+  const handleCopyToClipboard = (text) => {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        setCopyStatus(true);
+
+        // Reset the copy status after 2 seconds
+        setTimeout(() => {
+          setCopyStatus(false);
+        }, 2000);
+      })
+      .catch(() => {
+        setCopyStatus(false);
+
+        // Reset the copy status after 2 seconds
+        setTimeout(() => {
+          setCopyStatus(false);
+        }, 2000);
+      });
+  };
+
+  // Copy
   return (
     <div>
       <div>
@@ -571,8 +597,11 @@ const PendingTransactions = () => {
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
                           <a
-                            href="#"
+                            href="javascript:void(0)"
                             className="font-medium inline-flex text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400 text-xs"
+                            onClick={() =>
+                              handleCopyToClipboard(singleTransaction.txId)
+                            }
                           >
                             {" "}
                             <Truncate
@@ -618,8 +647,11 @@ const PendingTransactions = () => {
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
                           <a
-                            href="#"
+                            href="javascript:void(0)"
                             className="font-medium text-gray-900 inline-flex dark:text-white hover:text-gray-600 dark:hover:text-gray-400 text-xs"
+                            onClick={() =>
+                              handleCopyToClipboard(singleTransaction.txId)
+                            }
                           >
                             {" "}
                             <Truncate
@@ -685,8 +717,13 @@ const PendingTransactions = () => {
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
                           <a
-                            href="#"
+                            href="javascript:void(0)"
                             className="font-medium inline-flex text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
+                            onClick={() =>
+                              handleCopyToClipboard(
+                                singleTransaction.fromAddress
+                              )
+                            }
                           >
                             <Truncate
                               text={singleTransaction.fromAddress}
@@ -731,14 +768,18 @@ const PendingTransactions = () => {
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
                           <a
-                            href="#"
+                            href="javascript:void(0)"
                             className="font-medium text-gray-900 inline-flex dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
+                            onClick={() =>
+                              handleCopyToClipboard(singleTransaction.txId)
+                            }
                           >
                             <Truncate
                               text={singleTransaction.txId}
                               offset={6}
                               width="100"
                             />
+
                             <svg
                               data-v-cd102a71
                               xmlns="http://www.w3.org/2000/svg"
@@ -777,7 +818,12 @@ const PendingTransactions = () => {
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
                           <a
-                            href="#"
+                            href="javascript:void(0)"
+                            onClick={() =>
+                              handleCopyToClipboard(
+                                singleTransaction.amount.toFixed(8)
+                              )
+                            }
                             className="font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
                           >
                             {singleTransaction.amount.toFixed(8)}{" "}

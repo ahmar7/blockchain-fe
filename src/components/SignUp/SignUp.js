@@ -317,6 +317,8 @@ const SignUp = () => {
                               id="ninja-input-12"
                               onChange={handleInput}
                               type="number"
+                              onFocus={() => (window.onwheel = () => false)} // Disable scrolling on focus
+                              onBlur={() => (window.onwheel = null)}
                               onKeyDown={(e) =>
                                 [
                                   "ArrowUp",
@@ -533,6 +535,8 @@ const SignUp = () => {
                           <div className="group/nui-input relative">
                             <input
                               type="number"
+                              onFocus={() => (window.onwheel = () => false)} // Disable scrolling on focus
+                              onBlur={() => (window.onwheel = null)}
                               onKeyDown={(e) =>
                                 [
                                   "ArrowUp",

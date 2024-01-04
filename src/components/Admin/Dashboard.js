@@ -45,10 +45,8 @@ const Dashboard = () => {
       } else {
         toast.dismiss();
         toast.error(description.msg);
-        console.log("description: ", description);
       }
     } catch (error) {
-      console.log("description: ", error);
       toast.dismiss();
       toast.error(error);
     } finally {

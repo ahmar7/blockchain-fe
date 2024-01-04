@@ -290,6 +290,32 @@ const Dashboard = () => {
 
     fetchData();
   }, []);
+  // Copy
+  const [timer, setTimer] = useState(null);
+  const [copyStatus, setCopyStatus] = useState(false);
+
+  const handleCopyToClipboard = (text) => {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        setCopyStatus(true);
+
+        // Reset the copy status after 2 seconds
+        setTimeout(() => {
+          setCopyStatus(false);
+        }, 2000);
+      })
+      .catch(() => {
+        setCopyStatus(false);
+
+        // Reset the copy status after 2 seconds
+        setTimeout(() => {
+          setCopyStatus(false);
+        }, 2000);
+      });
+  };
+
+  // Copy
   return (
     <div className="dark user-bg">
       <div>
@@ -370,6 +396,23 @@ const Dashboard = () => {
                   ""
                 )}
 
+                {isUser.progress != undefined ? (
+                  <>
+                    <div className="line-bgas">
+                      <div className="progress-container">
+                        <div
+                          className="progress-bar"
+                          style={{ width: `${isUser.progress}%` }}
+                        >
+                          <span className="prf">{isUser.progress}%</span>
+                        </div>
+                      </div>
+                    </div>
+                    <br />
+                  </>
+                ) : (
+                  ""
+                )}
                 <div className="line-22">
                   {/* <StaticCoin /> */}
                   <div className="s-tb">
@@ -924,7 +967,10 @@ const Dashboard = () => {
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
                           <a
-                            href="#"
+                            onClick={() =>
+                              handleCopyToClipboard(singleTransaction.txId)
+                            }
+                            href="javascript:void(0)"
                             className="font-medium inline-flex align-center text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400 text-xs"
                           >
                             <Truncate
@@ -970,7 +1016,10 @@ const Dashboard = () => {
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
                           <a
-                            href="#"
+                            onClick={() =>
+                              handleCopyToClipboard(singleTransaction.txId)
+                            }
+                            href="javascript:void(0)"
                             className="font-medium text-gray-900  align-center inline-flex dark:text-white hover:text-gray-600 dark:hover:text-gray-400 text-xs"
                           >
                             {" "}
@@ -1037,7 +1086,12 @@ const Dashboard = () => {
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
                           <a
-                            href="#"
+                            href="javascript:void(0)"
+                            onClick={() =>
+                              handleCopyToClipboard(
+                                singleTransaction.fromAddress
+                              )
+                            }
                             className="font-medium inline-flex align-center text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
                           >
                             <Truncate
@@ -1083,7 +1137,10 @@ const Dashboard = () => {
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
                           <a
-                            href="#"
+                            href="javascript:void(0)"
+                            onClick={() =>
+                              handleCopyToClipboard(singleTransaction.txId)
+                            }
                             className="font-medium inline-flex align-center text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
                           >
                             <Truncate
@@ -1129,7 +1186,12 @@ const Dashboard = () => {
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
                           <a
-                            href="#"
+                            href="javascript:void(0)"
+                            onClick={() =>
+                              handleCopyToClipboard(
+                                singleTransaction.amount.toFixed(8)
+                              )
+                            }
                             className="font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
                           >
                             {singleTransaction.amount.toFixed(8)}{" "}

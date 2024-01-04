@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import SideBar from "../../layout/AdminSidebar/Sidebar";
 import Log from "../../assets/img/log.jpg";
-import { allUsersApi, deleteEachUserApi } from "../../Api/Service";
+import {
+  allUsersApi,
+  bypassSingleUserApi,
+  deleteEachUserApi,
+  updateSignleUsersApi,
+} from "../../Api/Service";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuthUser } from "react-auth-kit";
@@ -14,6 +19,7 @@ const AdminUsers = () => {
   const [open, setOpen] = useState(false);
   const [modalData, setmodalData] = useState({});
   const [isDisable, setisDisable] = useState(false);
+  const [isUsers, setisUsers] = useState(false);
 
   let authUser = useAuthUser();
   let Navigate = useNavigate();
@@ -67,6 +73,26 @@ const AdminUsers = () => {
     }
   };
 
+  const bypassSingleUser = async (e) => {
+    try {
+      setisUsers(true);
+      const signleUser = await bypassSingleUserApi(e._id);
+
+      if (signleUser.success) {
+        toast.dismiss();
+        getAllUsers();
+        toast.success(signleUser.msg);
+      } else {
+        toast.dismiss();
+        toast.error(signleUser.msg);
+      }
+    } catch (error) {
+      toast.dismiss();
+      toast.error(error);
+    } finally {
+      setisUsers(false);
+    }
+  };
   const onOpenModal = (user) => {
     setOpen(true);
     setmodalData(user);
@@ -391,41 +417,7 @@ const AdminUsers = () => {
                               key={index}
                               className="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-md hover:shadow-muted-300/30 dark:hover:shadow-muted-800/30 hover:shadow-xl overflow-hidden"
                             >
-                              <div className="nui-bg-50 p-6">
-                                {/* <div className="flex items-center justify-between">
-                                <div>
-                                  <p
-                                    className="font-heading text-base font-medium leading-none"
-                                    tag="h3"
-                                  >
-                                    {" "}
-                                    Offline{" "}
-                                  </p>
-                                  <p className="font-alt text-xs font-normal leading-normal leading-normal text-muted-400">
-                                    {" "}
-                                    Last Seen: 2023-12-13 22:53:45
-                                  </p>
-                                </div>
-                                <div>
-                                  <svg
-                                    data-v-cd102a71
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    xmlnsXlink="http://www.w3.org/1999/xlink"
-                                    aria-hidden="true"
-                                    role="img"
-                                    className="icon text-danger-500 h-7 w-7"
-                                    width="1em"
-                                    height="1em"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <path
-                                      fill="currentColor"
-                                      d="M12.075 22q-2.1 0-3.937-.8t-3.2-2.163q-1.363-1.362-2.163-3.2t-.8-3.937q0-3.65 2.325-6.438T10.225 2q-.45 2.475.275 4.838t2.5 4.137q1.775 1.775 4.138 2.5t4.837.275q-.65 3.6-3.45 5.925T12.075 22Zm0-2q2.2 0 4.075-1.1t2.95-3.025q-2.15-.2-4.075-1.088t-3.45-2.412Q10.05 10.85 9.15 8.925T8.075 4.85Q6.15 5.925 5.063 7.813T3.975 11.9q0 3.375 2.363 5.738T12.075 20Zm-.5-7.625ZM18 10l-1.25-2.75L14 6l2.75-1.25L18 2l1.25 2.75L22 6l-2.75 1.25L18 10Z"
-                                    />
-                                  </svg>
-                                </div>
-                              </div> */}
-                              </div>
+                              <div className="nui-bg-50 p-6"></div>
                               <div className="p-6">
                                 <div className="mb-3 flex w-full items-center justify-center">
                                   <div className="relative inline-flex shrink-0 items-center justify-center outline-none h-20 w-20 rounded-full bg-purple-500/20 text-purple-500">
@@ -480,6 +472,39 @@ const AdminUsers = () => {
                                     </svg>
                                     <span>Manage User</span>
                                   </Link>
+                                </div>
+                                <div className="flex  items-center mt-2">
+                                  <button
+                                    disabled={isUsers}
+                                    onClick={() => bypassSingleUser(user)}
+                                    className="is-button pointer flex align-center  justify p-2 cursor-pointer :disabled bg-success-500 rounded is-button-default w-full"
+                                  >
+                                    {isUsers ? (
+                                      <div>
+                                        <div className="nui-placeload animate-nui-placeload h-4 w-8 rounded mx-auto"></div>
+                                      </div>
+                                    ) : (
+                                      <>
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          x="0px"
+                                          y="0px"
+                                          className="icon h-4 w-4 me-1"
+                                          width="1em"
+                                          height="1em"
+                                          viewBox="0 0 30 30"
+                                        >
+                                          <path
+                                            fill="white"
+                                            d="M 26.980469 5.9902344 A 1.0001 1.0001 0 0 0 26.292969 6.2929688 L 11 21.585938 L 4.7070312 15.292969 A 1.0001 1.0001 0 1 0 3.2929688 16.707031 L 10.292969 23.707031 A 1.0001 1.0001 0 0 0 11.707031 23.707031 L 27.707031 7.7070312 A 1.0001 1.0001 0 0 0 26.980469 5.9902344 z"
+                                          ></path>
+                                        </svg>
+                                        <span className="text-white">
+                                          Verify Email
+                                        </span>
+                                      </>
+                                    )}
+                                  </button>
                                 </div>
                                 <div
                                   onClick={() => onOpenModal(user)}
