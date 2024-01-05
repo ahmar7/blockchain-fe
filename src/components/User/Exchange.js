@@ -30,50 +30,29 @@ const Exchange = () => {
     }
   }, []);
   return (
-    <div className="dark">
+    <div className="dark user-bg">
       <div>
-        <div className="bg-muted-100 dark:bg-muted-900 pb-20">
+        <div className="pb-20">
           <SideBar state={Active} toggle={toggleBar} />
-          <div className="bg-muted-100 dark:bg-muted-900 relative min-h-screen w-full overflow-x-hidden px-4 transition-all duration-300 xl:px-10 lg:max-w-[calc(100%_-_280px)] lg:ms-[280px]">
+          <button
+            onClick={toggleBar}
+            type="button"
+            className="flex for-mbl h-10 w-10 items-center justify-center mb- -ms-3 abspain"
+          >
+            <div className="relative h-5 w-5">
+              <span className="bg-primary-500 absolute block h-0.5 w-full transition-all duration-300 top-0.5 top-0.5" />
+              <span className="bg-primary-500 absolute top-1/2 block h-0.5 w-full max-w-[50%] transition-all duration-300" />
+              <span className="bg-primary-500 absolute block h-0.5 w-full transition-all duration-300 bottom-0 bottom-0" />
+            </div>
+          </button>
+          <div className="relative min-h-screen w-full fall overflow-x-hidden pe-4 transition-all duration-300 xl:px-10 lg:max-w-[calc(100%_-_250px)] lg:ms-[250px]">
             <div className="mx-auto w-full max-w-7xl">
-              {/* <UserHeader /> */}
-              <button
-                onClick={toggleBar}
-                type="button"
-                className="flex for-mbl h-10 w-10 items-center justify-center mb- -ms-3 abspain"
-              >
-                <div className="relative h-5 w-5">
-                  <span className="bg-primary-500 absolute block h-0.5 w-full transition-all duration-300 top-0.5 top-0.5" />
-                  <span className="bg-primary-500 absolute top-1/2 block h-0.5 w-full max-w-[50%] transition-all duration-300" />
-                  <span className="bg-primary-500 absolute block h-0.5 w-full transition-all duration-300 bottom-0 bottom-0" />
-                </div>
-              </button>
-              <div
-                className="nuxt-loading-indicator"
-                style={{
-                  position: "fixed",
-                  top: "0px",
-                  right: "0px",
-                  left: "0px",
-                  pointerEvents: "none",
-                  width: "auto",
-                  height: "3px",
-                  opacity: 0,
-                  background: "var(--color-primary-500)",
-                  transform: "scaleX(0)",
-                  transformOrigin: "left center",
-                  transition:
-                    "transform 0.1s ease 0s, height 0.4s ease 0s, opacity 0.4s ease 0s",
-                  zIndex: 999999,
-                }}
-              ></div>
-              <seokit />
-              <div className="border-muted-200 bg-white  relative w-full border bg-white transition-all duration-300 rounded-md">
+              <div className=" ptbg  relative w-full    transition-all duration-300  ">
                 {/* Dat */}
                 <iframe
-                  className="ifnb"
+                  className="ifnb asmrej"
                   id="iframe-widget"
-                  src="https://changenow.io/embeds/exchange-widget/v2/widget.html?FAQ=true&amount=0.1&amountFiat=1500&backgroundColor=FFFFFF&darkMode=false&from=btc&fromFiat=eur&horizontal=false&isFiat&lang=en-US&link_id=6994be294e5ff6&locales=true&logo=false&primaryColor=00C26F&to=eth&toFiat=eth&toTheMoon=true"
+                  src="https://changenow.io/embeds/exchange-widget/v2/widget.html?FAQ=true&amount=0.1&amountFiat=1500&backgroundColor=000000&darkMode=true&from=btc&fromFiat=eur&horizontal=false&isFiat&lang=en-US&link_id=6994be294e5ff6&locales=true&logo=false&primaryColor=8b5cf6&to=eth&toFiat=eth&toTheMoon=true"
                 ></iframe>
                 <script
                   defer

@@ -27,6 +27,7 @@ import TradingViewTickerTapeWidget from "../Widgets/CoinCarousel";
 import EthTab from "../Widgets/EthTab";
 import BnbTab from "../Widgets/BnbTab";
 import UsdTab from "../Widgets/UsdEurTab";
+import LiveCoins from "../Widgets/LiveCoins";
 const Dashboard = () => {
   const authUser = useAuthUser();
   const Navigate = useNavigate();
@@ -501,7 +502,9 @@ const Dashboard = () => {
                       <LineChart data={btcData} />
                     </div>
                     <br />
-                    <CryptoMarketWidget />
+                    <div className="line-bgasasd">
+                      <LiveCoins />
+                    </div>
                   </div>
 
                   <div className="ltablet:col-span-4 col-span-12 lg:col-span-4">
@@ -759,7 +762,7 @@ const Dashboard = () => {
                     ) : (
                       ""
                     )}
-                    <div className="line-bg">
+                    <div className="">
                       <iframe
                         className="if-2"
                         id="iframe-widget"

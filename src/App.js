@@ -7,7 +7,7 @@ import "./assets/css/font-sheet.css";
 
 function App() {
   return (
-    <div className="App dark">
+    <div className="App">
       <Router />
     </div>
   );
