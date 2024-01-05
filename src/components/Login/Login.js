@@ -70,8 +70,12 @@ const Login = () => {
       } else {
         toast.dismiss();
         toast.info(updateHeader.msg);
+        setEmail("");
+        setPassword("");
       }
     } catch (error) {
+      setEmail("");
+      setPassword("");
       toast.dismiss();
       toast.error(error?.data?.msg || "Something went wrong");
     } finally {
