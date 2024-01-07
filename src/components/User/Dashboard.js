@@ -843,18 +843,7 @@ const Dashboard = () => {
                   </span>
                 </label>
               </div>
-              <div className="absolute right-[0.2em] top-[0.2em] z-20 flex items-center justify-center transition-all duration-300 translate-x-0 translate-y-0">
-                <button
-                  type="button"
-                  className="bg-primary-700 flex h-9 w-9 items-center justify-center rounded-full transition-all duration-300"
-                >
-                  <img
-                    className="h-7 w-7 rounded-full"
-                    src="https://app.encryptwallet.io/img/langs/en.svg"
-                    alt="flag icon"
-                  />
-                </button>
-              </div>
+
               <div className="absolute right-[0.2em] top-[0.2em] z-20 flex items-center justify-center transition-all duration-300 translate-x-0 translate-y-0">
                 <a
                   aria-current="page"
@@ -1080,7 +1069,9 @@ const Dashboard = () => {
                           Timestamp
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
-                          {singleTransaction.createdAt}
+                          {new Date(
+                            singleTransaction.createdAt
+                          ).toLocaleString()}
                         </dd>
                       </div>
                       <div className="sm:col-span-1">

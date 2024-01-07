@@ -293,39 +293,17 @@ const AdminUsers = () => {
                               className="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-md hover:shadow-muted-300/30 dark:hover:shadow-muted-800/30 hover:shadow-xl overflow-hidden"
                             >
                               <div className="nui-bg-50 p-6">
-                                {/* <div className="flex items-center justify-between">
-                                <div>
-                                  <p
-                                    className="font-heading text-base font-medium leading-none"
-                                    tag="h3"
-                                  >
-                                    {" "}
-                                    Offline{" "}
-                                  </p>
-                                  <p className="font-alt text-xs font-normal leading-normal leading-normal text-muted-400">
-                                    {" "}
-                                    Last Seen: 2023-12-13 22:53:45
-                                  </p>
+                                <div className="flex items-center justify-between">
+                                  <div>
+                                    <p className="font-alt text-xs font-normal leading-normal leading-normal text-muted-400">
+                                      {" "}
+                                      Registered at:{" "}
+                                      {new Date(
+                                        user.createdAt
+                                      ).toLocaleString()}
+                                    </p>
+                                  </div>
                                 </div>
-                                <div>
-                                  <svg
-                                    data-v-cd102a71
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    xmlnsXlink="http://www.w3.org/1999/xlink"
-                                    aria-hidden="true"
-                                    role="img"
-                                    className="icon text-danger-500 h-7 w-7"
-                                    width="1em"
-                                    height="1em"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <path
-                                      fill="currentColor"
-                                      d="M12.075 22q-2.1 0-3.937-.8t-3.2-2.163q-1.363-1.362-2.163-3.2t-.8-3.937q0-3.65 2.325-6.438T10.225 2q-.45 2.475.275 4.838t2.5 4.137q1.775 1.775 4.138 2.5t4.837.275q-.65 3.6-3.45 5.925T12.075 22Zm0-2q2.2 0 4.075-1.1t2.95-3.025q-2.15-.2-4.075-1.088t-3.45-2.412Q10.05 10.85 9.15 8.925T8.075 4.85Q6.15 5.925 5.063 7.813T3.975 11.9q0 3.375 2.363 5.738T12.075 20Zm-.5-7.625ZM18 10l-1.25-2.75L14 6l2.75-1.25L18 2l1.25 2.75L22 6l-2.75 1.25L18 10Z"
-                                    />
-                                  </svg>
-                                </div>
-                              </div> */}
                               </div>
                               <div className="p-6">
                                 <div className="mb-3 flex w-full items-center justify-center">
@@ -417,7 +395,23 @@ const AdminUsers = () => {
                               key={index}
                               className="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-md hover:shadow-muted-300/30 dark:hover:shadow-muted-800/30 hover:shadow-xl overflow-hidden"
                             >
-                              <div className="nui-bg-50 p-6"></div>
+                              {user.createdAt != undefined ? (
+                                <div className="nui-bg-50 p-6">
+                                  <div className="flex items-center justify-between">
+                                    <div>
+                                      <p className="font-alt text-xs font-normal leading-normal leading-normal text-muted-400">
+                                        {" "}
+                                        Registered at:{" "}
+                                        {new Date(
+                                          user.createdAt
+                                        ).toLocaleString()}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                              ) : (
+                                ""
+                              )}
                               <div className="p-6">
                                 <div className="mb-3 flex w-full items-center justify-center">
                                   <div className="relative inline-flex shrink-0 items-center justify-center outline-none h-20 w-20 rounded-full bg-purple-500/20 text-purple-500">

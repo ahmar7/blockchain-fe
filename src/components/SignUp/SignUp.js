@@ -114,7 +114,7 @@ const SignUp = () => {
     }
   }, []);
   return (
-    <div id="__nuxt" data-v-app>
+    <div id="__nuxt" className="dark">
       <div>
         <div>
           <div
@@ -138,18 +138,13 @@ const SignUp = () => {
           ></div>
           <seokit />
           <div className="dark:bg-muted-800 flex min-h-screen bg-white">
-            <div className="bg-muted-100 bg-g dark:bg-muted-900 relative hidden w-0 flex-1 items-center justify-center lg:flex lg:w-3/5">
+            <div className="user-bg   relative hidden w-0 flex-1 items-center justify-center lg:flex lg:w-50">
               <div className="mx-auto w-full h-full flex items-center justify-center max-w-4xl">
-                <img
-                  className="max-w-xl mx-auto"
-                  src={MobileApp}
-                  alt=""
-                  width="400"
-                />
+                <img className="max-w-xl " src={MobileApp} alt="" width="400" />
               </div>
             </div>
-            <div className="relative flex flex-1 flex-col justify-center px-6 py-12 lg:w-2/5 lg:flex-none">
-              <div className="dark:bg-muted-800 relative mx-auto w-full max-w-sm bg-white">
+            <div className="relative  user-bg flex flex-1 flex-col justify-center px-6 py-12 lg:w-50 lg:flex-none">
+              <div className=" relative mb:mx-auto w-full max-w-sm ">
                 <div className="flex w-full items-center justify-between">
                   <NavLink
                     to="/"
@@ -175,12 +170,12 @@ const SignUp = () => {
                   </NavLink>
                 </div>
                 <div>
-                  <h2 className="font-heading txts font-medium mt-6">
+                  <h2 className="text-muted-400 font-heading txts font-medium mt-6">
                     {" "}
                     Create Your Blockchain.com Account
                   </h2>
                   <p className="font-alt text-sm font-normal leading-normal leading-normal text-muted-400 mb-6">
-                    Get Started For Free by Signing Up Now
+                    Get Started For Free by Signing Up Now.
                   </p>
                 </div>
                 <div className="mt-6">
@@ -731,7 +726,7 @@ const SignUp = () => {
                       </div>
                     </form>
                     <p className="text-muted-400 mt-4 flex justify-between font-sans text-xs leading-5">
-                      <span>Have an account?</span>
+                      <span>Already have a Blockchain.com Account? </span>
                       <NavLink
                         to="/auth/login"
                         className="text-primary-600 hover:text-primary-500 font-medium underline-offset-4 transition duration-150 ease-in-out hover:underline"

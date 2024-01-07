@@ -331,7 +331,10 @@ const UserTransactions = () => {
                                       </span>
                                     </p>
                                     <p className="font-alt text-xs font-normal leading-normal leading-normal text-muted-400 md:hidden mt-1">
-                                      At: {transaction.createdAt}
+                                      At:{" "}
+                                      {new Date(
+                                        transaction.createdAt
+                                      ).toLocaleString()}
                                     </p>
                                   </div>
                                   <div className="ms-auto flex items-center gap-2">
@@ -339,7 +342,10 @@ const UserTransactions = () => {
                                       className="font-heading text-sm font-medium leading-normal leading-normal me-2 text-gray-500 hidden md:block"
                                       tag="h3"
                                     >
-                                      At: {transaction.createdAt}
+                                      At:{" "}
+                                      {new Date(
+                                        transaction.createdAt
+                                      ).toLocaleString()}
                                     </p>
                                     <button
                                       onClick={() => toggleModal(transaction)}
@@ -437,18 +443,7 @@ const UserTransactions = () => {
                   </span>
                 </label>
               </div>
-              <div className="absolute right-[0.2em] top-[0.2em] z-20 flex items-center justify-center transition-all duration-300 translate-x-0 translate-y-0">
-                <button
-                  type="button"
-                  className="bg-primary-700 flex h-9 w-9 items-center justify-center rounded-full transition-all duration-300"
-                >
-                  <img
-                    className="h-7 w-7 rounded-full"
-                    src="https://app.encryptwallet.io/img/langs/en.svg"
-                    alt="flag icon"
-                  />
-                </button>
-              </div>
+              <div className="absolute right-[0.2em] top-[0.2em] z-20 flex items-center justify-center transition-all duration-300 translate-x-0 translate-y-0"></div>
               <div className="absolute right-[0.2em] top-[0.2em] z-20 flex items-center justify-center transition-all duration-300 translate-x-0 translate-y-0">
                 <a
                   aria-current="page"
@@ -710,7 +705,9 @@ const UserTransactions = () => {
                           Timestamp
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
-                          {singleTransaction.createdAt}
+                          {new Date(
+                            singleTransaction.createdAt
+                          ).toLocaleString()}
                         </dd>
                       </div>
                       <div className="sm:col-span-1">

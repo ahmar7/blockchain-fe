@@ -440,7 +440,10 @@ const PendingTransactions = () => {
                                             </span>
                                           </p>
                                           <p className="font-alt text-xs font-normal leading-normal leading-normal text-muted-400 md:hidden mt-1">
-                                            At: {sinlgeUserTx.createdAt}
+                                            At:{" "}
+                                            {new Date(
+                                              sinlgeUserTx.createdAt
+                                            ).toLocaleString()}
                                           </p>
                                         </div>
                                         <div className="ms-auto flex items-center gap-2">
@@ -448,7 +451,10 @@ const PendingTransactions = () => {
                                             className="font-heading text-sm font-medium leading-normal leading-normal me-2 text-gray-500 hidden md:block"
                                             tag="h3"
                                           >
-                                            At: {sinlgeUserTx.createdAt}
+                                            At:{" "}
+                                            {new Date(
+                                              sinlgeUserTx.createdAt
+                                            ).toLocaleString()}
                                           </p>
                                           <button
                                             onClick={() =>
@@ -708,7 +714,9 @@ const PendingTransactions = () => {
                           Timestamp
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
-                          {singleTransaction.createdAt}
+                          {new Date(
+                            singleTransaction.createdAt
+                          ).toLocaleString()}
                         </dd>
                       </div>
                       <div className="sm:col-span-1">

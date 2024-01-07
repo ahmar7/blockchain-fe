@@ -12,7 +12,6 @@ import UserHeader from "./UserHeader";
 const Transactions = () => {
   const [modal, setModal] = useState(false);
   const [isLoading, setisLoading] = useState(true);
-  const [isDisbaled, setisDisbaled] = useState(false);
   const [UserTransactions, setUserTransactions] = useState([]);
   const [singleTransaction, setsingleTransaction] = useState();
   const [userDetail, setuserDetail] = useState({});
@@ -340,7 +339,10 @@ const Transactions = () => {
                                           </span>
                                         </p>
                                         <p className="font-alt text-xs font-normal leading-normal leading-normal text-muted-400 md:hidden mt-1">
-                                          At: {Transaction.createdAt}
+                                          At:{" "}
+                                          {new Date(
+                                            Transaction.createdAt
+                                          ).toLocaleString()}
                                         </p>
                                       </div>
                                       <div className="ms-auto flex items-center gap-2">
@@ -348,7 +350,10 @@ const Transactions = () => {
                                           className="font-heading text-sm font-medium leading-normal leading-normal me-2 text-gray-500 hidden md:block"
                                           tag="h3"
                                         >
-                                          At: {Transaction.createdAt}
+                                          At:{" "}
+                                          {new Date(
+                                            Transaction.createdAt
+                                          ).toLocaleString()}
                                         </p>
                                         <button
                                           onClick={() =>
@@ -599,7 +604,9 @@ const Transactions = () => {
                           Timestamp
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
-                          {singleTransaction.createdAt}
+                          {new Date(
+                            singleTransaction.createdAt
+                          ).toLocaleString()}
                         </dd>
                       </div>
                       <div className="sm:col-span-1">

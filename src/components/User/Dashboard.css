@@ -328,9 +328,29 @@
   background-color: black !important;
   padding: 20px !important;
 }
+.text-white {
+  color: white;
+}
+.w-200 {
+  width: 470px;
+  margin: auto;
+  margin-top: 15px;
+}
+.wen {
+  width: 120px !important;
+  height: auto !important;
+}
+.is-button.wen {
+  padding-block: 10px !important;
+}
 @media (max-width: 500px) {
   .ptbg {
     padding: 20px 10px;
+  }
+  .w-200 {
+    width: 300px;
+    margin: auto;
+    margin-top: 15px;
   }
 }
 @media (max-width: 375px) {
@@ -356,6 +376,9 @@
 }
 
 @media (max-width: 1024px) {
+  .mb\:mx-auto {
+    margin: auto !important;
+  }
   .s-tb {
     width: 49%;
   }

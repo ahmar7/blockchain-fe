@@ -45,6 +45,7 @@ const UserVerifications = () => {
       toast.dismiss();
       toast.error(error);
     } finally {
+      setisDisable(false);
     }
   };
   const updateKyc = async (e) => {
@@ -70,12 +71,13 @@ const UserVerifications = () => {
       } else {
         toast.dismiss();
         toast.error(signleUser.msg);
+        setisDisable(false);
       }
     } catch (error) {
       toast.dismiss();
       toast.error(error);
-    } finally {
       setisDisable(false);
+    } finally {
     }
   };
 
