@@ -20,6 +20,9 @@ const Kyc = () => {
   const [slide2, setSlide2] = useState();
   const [isLoading, setisLoading] = useState(true);
   const [isDisable, setisDisable] = useState(false);
+  const [isDisable2, setisDisable2] = useState(false);
+  const [verificationCodeSent, setverificationCodeSent] = useState(false);
+  const [dataNew, setdataNew] = useState(false);
   const [newSlider1, setNewSlider1] = useState();
   const [newSlider2, setNewSlider2] = useState();
   const [isUser, setIsUser] = useState(true);
@@ -189,6 +192,32 @@ const Kyc = () => {
       setisDisable(false);
     }
   };
+  let reSend = async () => {
+    const newCode = generateRandomCode();
+    setRandomCode(newCode);
+    try {
+      let id = authUser().user._id;
+      let body = { email: emailValue, id, code: newCode };
+
+      setisDisable2(true);
+
+      setdataNew(true);
+      const sendEmail = await sendEmailCodeApi(body);
+      if (sendEmail.success) {
+        toast.dismiss();
+
+        setverificationCodeSent(true);
+      } else {
+        toast.dismiss();
+        toast.error(sendEmail.msg);
+      }
+    } catch (error) {
+      toast.dismiss();
+      toast.error(error?.data?.msg || error?.message || "Something went wrong");
+    } finally {
+      setisDisable2(false);
+    }
+  };
   //
 
   //
@@ -213,15 +242,6 @@ const Kyc = () => {
     }, 2000);
   };
   useEffect(() => {
-    const handleBeforeUnload = (event) => {
-      const message =
-        "Are you sure you want to leave?  You need to restart the process of KYC after.";
-      event.returnValue = message;
-      return message;
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
     getsignUser();
     if (authUser().user.role === "user") {
       return;
@@ -229,9 +249,6 @@ const Kyc = () => {
       Navigate("/admin/dashboard");
       return;
     }
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
   }, []);
 
   return (
@@ -441,36 +458,62 @@ const Kyc = () => {
                               className="nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 px-3 rounded-xl h-12"
                             />
                           </div>
-                          <div className="mx-auto mx-auto flex flex-col items-center">
-                            <button
-                              disabled={isDisable}
-                              type="button"
-                              onClick={verifyCode}
-                              className="text-center btn is-button rounded-xl bg-primary-500 dark:bg-primary-500 hover:enabled:bg-primary-400 dark:hover:enabled:bg-primary-400 text-white hover:enabled:shadow-lg hover:enabled:shadow-primary-500/50 dark:hover:enabled:shadow-primary-800/20 focus-visible:outline-primary-400/70 focus-within:outline-primary-400/70 focus-visible:bg-primary-500 active:enabled:bg-primary-500 dark:focus-visible:outline-primary-400 dark:focus-within:outline-primary-400 dark:focus-visible:bg-primary-500 dark:active:enabled:bg-primary-500 nope wen w-48"
-                            >
-                              {isDisable ? (
-                                <div>
-                                  <div className="nui-placeload animate-nui-placeload h-4 w-8 rounded mx-auto"></div>
-                                </div>
-                              ) : (
-                                "Continue"
-                              )}
-                            </button>
+                          {verificationCodeSent ? null : dataNew ? (
+                            <p className="text-muted-400 mt-2 font-heading text-base font-medium leading-normal">
+                              Sending...
+                            </p>
+                          ) : (
+                            <p className="text-muted-400 mt-2 font-heading text-base font-medium leading-normal">
+                              Didn't receive the verification code?{" "}
+                              <span
+                                onClick={reSend}
+                                className="cursor-pointer text-underline"
+                              >
+                                Resend code
+                              </span>
+                            </p>
+                          )}
+                          {verificationCodeSent ? (
+                            <p className="text-muted-400 mt-2 font-heading text-base font-medium leading-normal">
+                              Verification code has been sent!
+                            </p>
+                          ) : (
+                            ""
+                          )}
+                          {isDisable2 ? (
+                            ""
+                          ) : (
+                            <div className="mx-auto mx-auto flex flex-col items-center">
+                              <button
+                                disabled={isDisable}
+                                type="button"
+                                onClick={verifyCode}
+                                className="text-center btn is-button rounded-xl bg-primary-500 dark:bg-primary-500 hover:enabled:bg-primary-400 dark:hover:enabled:bg-primary-400 text-white hover:enabled:shadow-lg hover:enabled:shadow-primary-500/50 dark:hover:enabled:shadow-primary-800/20 focus-visible:outline-primary-400/70 focus-within:outline-primary-400/70 focus-visible:bg-primary-500 active:enabled:bg-primary-500 dark:focus-visible:outline-primary-400 dark:focus-within:outline-primary-400 dark:focus-visible:bg-primary-500 dark:active:enabled:bg-primary-500 nope wen w-48"
+                              >
+                                {isDisable ? (
+                                  <div>
+                                    <div className="nui-placeload animate-nui-placeload h-4 w-8 rounded mx-auto"></div>
+                                  </div>
+                                ) : (
+                                  "Continue"
+                                )}
+                              </button>
 
-                            {isDisable ? (
-                              ""
-                            ) : (
-                              <div className="mx-auto flex flex-col mt-2 items-center">
-                                <Link
-                                  to="/dashboard"
-                                  data-v-71bb21a6
-                                  className="is-button  rounded-xl text-white   hover:enabled:bg-primary-400 dark:hover:enabled:bg-primary-400 dss hover:enabled:shadow-lg hover:enabled:shadow-primary-500/50 dark:hover:enabled:shadow-primary-800/20 focus-visible:outline-primary-400/70 focus-within:outline-primary-400/70 focus-visible:bg-primary-500 active:enabled:bg-primary-500 dark:focus-visible:outline-primary-400 dark:focus-within:outline-primary-400 dark:focus-visible:bg-primary-500 dark:active:enabled:bg-primary-500  wen"
-                                >
-                                  Skip
-                                </Link>
-                              </div>
-                            )}
-                          </div>
+                              {isDisable ? (
+                                ""
+                              ) : (
+                                <div className="mx-auto flex flex-col mt-2 items-center">
+                                  <Link
+                                    to="/dashboard"
+                                    data-v-71bb21a6
+                                    className="is-button  rounded-xl text-white   hover:enabled:bg-primary-400 dark:hover:enabled:bg-primary-400 dss hover:enabled:shadow-lg hover:enabled:shadow-primary-500/50 dark:hover:enabled:shadow-primary-800/20 focus-visible:outline-primary-400/70 focus-within:outline-primary-400/70 focus-visible:bg-primary-500 active:enabled:bg-primary-500 dark:focus-visible:outline-primary-400 dark:focus-within:outline-primary-400 dark:focus-visible:bg-primary-500 dark:active:enabled:bg-primary-500  wen"
+                                  >
+                                    Skip
+                                  </Link>
+                                </div>
+                              )}
+                            </div>
+                          )}
                         </div>
                       )}
                       {isDoc && (

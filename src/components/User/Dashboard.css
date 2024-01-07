@@ -340,6 +340,9 @@
   width: 120px !important;
   height: auto !important;
 }
+.text-underline {
+  text-decoration: underline;
+}
 .is-button.wen {
   padding-block: 10px !important;
 }
