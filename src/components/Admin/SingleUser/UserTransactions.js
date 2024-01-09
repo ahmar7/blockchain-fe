@@ -10,6 +10,8 @@ import {
   signleUsersApi,
   updateTransactionApi,
 } from "../../../Api/Service";
+import axios from "axios";
+
 import Truncate from "react-truncate-inside/es";
 const UserTransactions = () => {
   const [modal, setModal] = useState(false);
@@ -19,6 +21,7 @@ const UserTransactions = () => {
   const [singleTransaction, setsingleTransaction] = useState();
   const [userDetail, setuserDetail] = useState();
 
+  const [liveBtc, setliveBtc] = useState(null);
   let { id } = useParams();
 
   let authUser = useAuthUser();
@@ -58,10 +61,15 @@ const UserTransactions = () => {
   };
   const getCoins = async () => {
     try {
+      const response = await axios.get(
+        "https://api.coindesk.com/v1/bpi/currentprice.json"
+      );
       const userCoins = await getCoinsApi(id);
 
-      if (userCoins.success) {
+      if (response && userCoins.success) {
         setUserTransactions(userCoins.getCoin.transactions.reverse());
+        let val = response.data.bpi.USD.rate.replace(/,/g, "");
+        setliveBtc(val);
         setisLoading(false);
 
         return;
@@ -318,7 +326,7 @@ const UserTransactions = () => {
                                         {`($${
                                           transaction.trxName === "bitcoin"
                                             ? (
-                                                transaction.amount * 42087.57
+                                                transaction.amount * liveBtc
                                               ).toFixed(2)
                                             : transaction.trxName === "ethereum"
                                             ? (
@@ -838,7 +846,7 @@ const UserTransactions = () => {
                             {"   "}
                             <span className="text-gray-400">{`($${
                               singleTransaction.trxName === "bitcoin"
-                                ? (singleTransaction.amount * 42087.57).toFixed(
+                                ? (singleTransaction.amount * liveBtc).toFixed(
                                     2
                                   )
                                 : singleTransaction.trxName === "ethereum"

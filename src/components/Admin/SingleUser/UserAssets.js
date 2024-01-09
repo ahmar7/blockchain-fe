@@ -11,6 +11,7 @@ import {
   updateCoinAddressApi,
 } from "../../../Api/Service";
 import { toast } from "react-toastify";
+import axios from "axios";
 const UserAssets = () => {
   const [modal1, setModal1] = useState(false);
   const [modal2, setModal2] = useState(false);
@@ -21,6 +22,7 @@ const UserAssets = () => {
   const [isLoading, setisLoading] = useState(true);
   const [allCoins, setallCoins] = useState("");
   const [userData, setUserData] = useState("");
+
   const [status, setStatus] = useState("");
   const [btcBalance, setbtcBalance] = useState(0);
   const [ethBalance, setethBalance] = useState(0);
@@ -63,6 +65,8 @@ const UserAssets = () => {
     setusdtAddressModal(false);
     setethAddressModal(false);
   };
+
+  const [liveBtc, setliveBtc] = useState(null);
   const [Active, setActive] = useState(false);
   const [User, setUser] = useState("");
   let toggleBar = () => {
@@ -74,11 +78,15 @@ const UserAssets = () => {
   };
   const getCoins = async () => {
     try {
+      const response = await axios.get(
+        "https://api.coindesk.com/v1/bpi/currentprice.json"
+      );
       const userCoins = await getCoinsApi(id);
-
-      if (userCoins.success) {
+      if (response && userCoins.success) {
         setisLoading(false);
         setUserData(userCoins.getCoin);
+        let val = response.data.bpi.USD.rate.replace(/,/g, "");
+        setliveBtc(val);
 
         // tx
         const btc = userCoins.getCoin.transactions.filter((transaction) =>
@@ -393,7 +401,7 @@ const UserAssets = () => {
                         </div>
                       </div>
                       {isLoading ? (
-                        ""
+                        <div className="  p-5">Loading Assets...</div>
                       ) : (
                         <div className="pt-6">
                           <div className="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 relative px-2 py-6 sm:py-4 top-px first:rounded-t-lg last:rounded-b-lg [&:not(:first-child)]:border-t-0">
@@ -440,7 +448,7 @@ const UserAssets = () => {
                                   </span>
                                   <span className="text-muted-500 dark:text-muted-400 font-sans text-sm">
                                     {`${btcBalance.toFixed(8)} (${(
-                                      btcBalance * 42087.57
+                                      btcBalance * liveBtc
                                     ).toFixed(2)} USD)`}
                                   </span>
                                 </div>

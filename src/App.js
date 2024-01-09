@@ -4,12 +4,15 @@ import "./assets/css/styles.css";
 import "./assets/css/main.css";
 import "react-toastify/dist/ReactToastify.css";
 import "./assets/css/font-sheet.css";
+import { BitcoinProvider } from "./contextApi/BtcPrice";
 
 function App() {
   return (
-    <div className="App">
-      <Router />
-    </div>
+    <BitcoinProvider>
+      <div className="App">
+        <Router />
+      </div>
+    </BitcoinProvider>
   );
 }
 

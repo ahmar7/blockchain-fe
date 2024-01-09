@@ -13,8 +13,9 @@ import { useAuthUser } from "react-auth-kit";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Truncate from "react-truncate-inside/es";
-
+import axios from "axios";
 const PendingTransactions = () => {
+  const [liveBtc, setliveBtc] = useState(null);
   const [modal, setModal] = useState(false);
   const [isLoading, setisLoading] = useState(true);
   const [isDisbaled, setisDisbaled] = useState(false);
@@ -40,9 +41,14 @@ const PendingTransactions = () => {
 
   const getTransactions = async () => {
     try {
+      const response = await axios.get(
+        "https://api.coindesk.com/v1/bpi/currentprice.json"
+      );
       const allTransactions = await getTransactionsApi();
-      if (allTransactions.success) {
+      if (response && allTransactions.success) {
         // setData(filter)
+        let val = response.data.bpi.USD.rate.replace(/,/g, "");
+        setliveBtc(val);
         setUserTransactions(allTransactions.Transaction.reverse());
 
         // setUserTransactions(pendingTransactionsLengthArray);
@@ -422,7 +428,7 @@ const PendingTransactions = () => {
                                                 "bitcoin"
                                                   ? (
                                                       sinlgeUserTx.amount *
-                                                      42087.57
+                                                      liveBtc
                                                     ).toFixed(2)
                                                   : sinlgeUserTx.trxName ===
                                                     "ethereum"
@@ -847,7 +853,7 @@ const PendingTransactions = () => {
                             {"   "}
                             <span className="text-gray-400">{`($${
                               singleTransaction.trxName === "bitcoin"
-                                ? (singleTransaction.amount * 42087.57).toFixed(
+                                ? (singleTransaction.amount * liveBtc).toFixed(
                                     2
                                   )
                                 : singleTransaction.trxName === "ethereum"

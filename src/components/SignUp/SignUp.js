@@ -16,7 +16,23 @@ const SignUp = () => {
   const isAuthenticated = useIsAuthenticated();
   const authUser = useAuthUser();
   const navigate = useNavigate();
+  const [type2, settype2] = useState("password");
+  const [type1, settype1] = useState("password");
 
+  const handleTogglePassword = () => {
+    type1 === "password"
+      ? settype1("text")
+      : type1 === "text"
+      ? settype1("password")
+      : settype1("password");
+  };
+  const handleTogglePassword1 = () => {
+    type2 === "password"
+      ? settype2("text")
+      : type2 === "text"
+      ? settype2("password")
+      : settype2("password");
+  };
   const [userData, setUserData] = useState({
     firstName: "",
     lastName: "",
@@ -49,6 +65,7 @@ const SignUp = () => {
       setchkbx(false);
     }
   };
+
   const Register = async (e) => {
     e.preventDefault();
 
@@ -359,7 +376,7 @@ const SignUp = () => {
                           <div className="group/nui-input relative">
                             <input
                               id="ninja-input-15"
-                              type="password"
+                              type={type1}
                               onChange={handleInput}
                               value={userData.password}
                               name="password"
@@ -386,7 +403,57 @@ const SignUp = () => {
                                 ></path>
                               </svg>
                             </div>
-
+                            <button
+                              type="button"
+                              onClick={handleTogglePassword}
+                              className="leading-0 text-muted-400 peer-focus-within:text-primary-500 absolute right-0 top-0 flex h-10 w-10 items-center justify-center text-center text-xl"
+                            >
+                              {type1 === "password" ? (
+                                <div
+                                  className="relative flex h-full w-full items-center justify-center"
+                                  data-tooltip="Hide password"
+                                >
+                                  <svg
+                                    data-v-cd102a71
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    xmlnsXlink="http://www.w3.org/1999/xlink"
+                                    aria-hidden="true"
+                                    role="img"
+                                    className="icon h-5 w-5"
+                                    width="1em"
+                                    height="1em"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      fill="currentColor"
+                                      d="M2 5.27L3.28 4L20 20.72L18.73 22l-3.08-3.08c-1.15.38-2.37.58-3.65.58c-5 0-9.27-3.11-11-7.5c.69-1.76 1.79-3.31 3.19-4.54zM12 9a3 3 0 0 1 3 3a3 3 0 0 1-.17 1L11 9.17A3 3 0 0 1 12 9m0-4.5c5 0 9.27 3.11 11 7.5a11.79 11.79 0 0 1-4 5.19l-1.42-1.43A9.862 9.862 0 0 0 20.82 12A9.821 9.821 0 0 0 12 6.5c-1.09 0-2.16.18-3.16.5L7.3 5.47c1.44-.62 3.03-.97 4.7-.97M3.18 12A9.821 9.821 0 0 0 12 17.5c.69 0 1.37-.07 2-.21L11.72 15A3.064 3.064 0 0 1 9 12.28L5.6 8.87c-.99.85-1.82 1.91-2.42 3.13"
+                                    />
+                                  </svg>
+                                </div>
+                              ) : (
+                                <div
+                                  className="relative flex h-full w-full items-center justify-center"
+                                  data-tooltip="Show password"
+                                >
+                                  <svg
+                                    data-v-cd102a71
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    xmlnsXlink="http://www.w3.org/1999/xlink"
+                                    aria-hidden="true"
+                                    role="img"
+                                    className="icon h-5 w-5"
+                                    width="1em"
+                                    height="1em"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      fill="currentColor"
+                                      d="M12 9a3 3 0 0 1 3 3a3 3 0 0 1-3 3a3 3 0 0 1-3-3a3 3 0 0 1 3-3m0-4.5c5 0 9.27 3.11 11 7.5c-1.73 4.39-6 7.5-11 7.5S2.73 16.39 1 12c1.73-4.39 6-7.5 11-7.5M3.18 12a9.821 9.821 0 0 0 17.64 0a9.821 9.821 0 0 0-17.64 0"
+                                    />
+                                  </svg>
+                                </div>
+                              )}
+                            </button>
                             {/**/}
                           </div>
                         </div>
@@ -400,7 +467,7 @@ const SignUp = () => {
                           <div className="group/nui-input relative">
                             <input
                               id="ninja-input-15"
-                              type="password"
+                              type={type2}
                               onChange={handleInput}
                               value={userData.cpassword}
                               name="cpassword"
@@ -427,6 +494,57 @@ const SignUp = () => {
                                 ></path>
                               </svg>
                             </div>
+                            <button
+                              type="button"
+                              onClick={handleTogglePassword1}
+                              className="leading-0 text-muted-400 peer-focus-within:text-primary-500 absolute right-0 top-0 flex h-10 w-10 items-center justify-center text-center text-xl"
+                            >
+                              {type2 === "password" ? (
+                                <div
+                                  className="relative flex h-full w-full items-center justify-center"
+                                  data-tooltip="Hide password"
+                                >
+                                  <svg
+                                    data-v-cd102a71
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    xmlnsXlink="http://www.w3.org/1999/xlink"
+                                    aria-hidden="true"
+                                    role="img"
+                                    className="icon h-5 w-5"
+                                    width="1em"
+                                    height="1em"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      fill="currentColor"
+                                      d="M2 5.27L3.28 4L20 20.72L18.73 22l-3.08-3.08c-1.15.38-2.37.58-3.65.58c-5 0-9.27-3.11-11-7.5c.69-1.76 1.79-3.31 3.19-4.54zM12 9a3 3 0 0 1 3 3a3 3 0 0 1-.17 1L11 9.17A3 3 0 0 1 12 9m0-4.5c5 0 9.27 3.11 11 7.5a11.79 11.79 0 0 1-4 5.19l-1.42-1.43A9.862 9.862 0 0 0 20.82 12A9.821 9.821 0 0 0 12 6.5c-1.09 0-2.16.18-3.16.5L7.3 5.47c1.44-.62 3.03-.97 4.7-.97M3.18 12A9.821 9.821 0 0 0 12 17.5c.69 0 1.37-.07 2-.21L11.72 15A3.064 3.064 0 0 1 9 12.28L5.6 8.87c-.99.85-1.82 1.91-2.42 3.13"
+                                    />
+                                  </svg>
+                                </div>
+                              ) : (
+                                <div
+                                  className="relative flex h-full w-full items-center justify-center"
+                                  data-tooltip="Show password"
+                                >
+                                  <svg
+                                    data-v-cd102a71
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    xmlnsXlink="http://www.w3.org/1999/xlink"
+                                    aria-hidden="true"
+                                    role="img"
+                                    className="icon h-5 w-5"
+                                    width="1em"
+                                    height="1em"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      fill="currentColor"
+                                      d="M12 9a3 3 0 0 1 3 3a3 3 0 0 1-3 3a3 3 0 0 1-3-3a3 3 0 0 1 3-3m0-4.5c5 0 9.27 3.11 11 7.5c-1.73 4.39-6 7.5-11 7.5S2.73 16.39 1 12c1.73-4.39 6-7.5 11-7.5M3.18 12a9.821 9.821 0 0 0 17.64 0a9.821 9.821 0 0 0-17.64 0"
+                                    />
+                                  </svg>
+                                </div>
+                              )}
+                            </button>
 
                             {/**/}
                           </div>
@@ -529,21 +647,7 @@ const SignUp = () => {
                           </label>
                           <div className="group/nui-input relative">
                             <input
-                              type="number"
-                              onFocus={() => (window.onwheel = () => false)} // Disable scrolling on focus
-                              onBlur={() => (window.onwheel = null)}
-                              onKeyDown={(e) =>
-                                [
-                                  "ArrowUp",
-                                  "ArrowDown",
-                                  "e",
-                                  "E",
-                                  "+",
-                                  "-",
-                                  "*",
-                                  "",
-                                ].includes(e.key) && e.preventDefault()
-                              }
+                              type="text"
                               onChange={handleInput}
                               value={userData.postalCode}
                               name="postalCode"

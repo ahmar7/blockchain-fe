@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { useAuthUser } from "react-auth-kit";
 import { useNavigate, Link, NavLink } from "react-router-dom";
 import UserHeader from "./UserHeader";
+import axios from "axios";
 const Assets = () => {
   const [Active, setActive] = useState(false);
   const [isLoading, setisLoading] = useState(true);
@@ -22,6 +23,8 @@ const Assets = () => {
       setActive(true);
     }
   };
+
+  const [liveBtc, setliveBtc] = useState(null);
 
   const authUser = useAuthUser();
   const Navigate = useNavigate();
@@ -50,12 +53,16 @@ const Assets = () => {
   const getCoins = async (data) => {
     let id = data._id;
     try {
+      const response = await axios.get(
+        "https://api.coindesk.com/v1/bpi/currentprice.json"
+      );
       const userCoins = await getCoinsUserApi(id);
 
-      if (userCoins.success) {
+      if (response && userCoins.success) {
         setUserData(userCoins.getCoin);
         // setUserTransactions;
-
+        let val = response.data.bpi.USD.rate.replace(/,/g, "");
+        setliveBtc(val);
         setisLoading(false);
         // tx
         const btc = userCoins.getCoin.transactions.filter((transaction) =>
@@ -107,7 +114,7 @@ const Assets = () => {
         // tx
 
         const totalValue = (
-          btcValueAdded * 42087.57 +
+          btcValueAdded * liveBtc +
           ethValueAdded * 2241.86 +
           usdtValueAdded
         ).toFixed(2);
@@ -323,7 +330,7 @@ const Assets = () => {
                             </span>
                             <span className="text-muted-500 dark:text-muted-400 font-sans text-sm">
                               {`${btcBalance.toFixed(8)} (${(
-                                btcBalance * 42087.57
+                                btcBalance * liveBtc
                               ).toFixed(2)} USD)`}
                             </span>
                           </div>
