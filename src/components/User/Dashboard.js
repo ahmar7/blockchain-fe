@@ -1200,57 +1200,61 @@ const Dashboard = () => {
                           ).toLocaleString()}
                         </dd>
                       </div>
-                      <div className="sm:col-span-1">
-                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                          From
-                        </dt>
-                        <dd className="mt-1 text-sm text-gray-900 dark:text-white">
-                          <a
-                            href="javascript:void(0)"
-                            onClick={() =>
-                              handleCopyToClipboard(
-                                singleTransaction.fromAddress
-                              )
-                            }
-                            className="font-medium inline-flex align-center text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
-                          >
-                            <Truncate
-                              text={singleTransaction.fromAddress}
-                              offset={6}
-                              width="100"
-                            />
-                            <svg
-                              data-v-cd102a71
-                              xmlns="http://www.w3.org/2000/svg"
-                              xmlnsXlink="http://www.w3.org/1999/xlink"
-                              aria-hidden="true"
-                              role="img"
-                              className="icon w-5 h-5 inline-block -mt-1 ml-1"
-                              width="1em"
-                              height="1em"
-                              viewBox="0 0 24 24"
+                      {singleTransaction.fromAddress ? (
+                        <div className="sm:col-span-1">
+                          <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                            From
+                          </dt>
+                          <dd className="mt-1 text-sm text-gray-900 dark:text-white">
+                            <a
+                              href="javascript:void(0)"
+                              onClick={() =>
+                                handleCopyToClipboard(
+                                  singleTransaction.fromAddress
+                                )
+                              }
+                              className="font-medium inline-flex text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
                             >
-                              <g
-                                fill="none"
-                                stroke="currentColor"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
+                              <Truncate
+                                text={singleTransaction.fromAddress}
+                                offset={6}
+                                width="100"
+                              />
+                              <svg
+                                data-v-cd102a71
+                                xmlns="http://www.w3.org/2000/svg"
+                                xmlnsXlink="http://www.w3.org/1999/xlink"
+                                aria-hidden="true"
+                                role="img"
+                                className="icon w-5 h-5 inline-block -mt-1 ml-1"
+                                width="1em"
+                                height="1em"
+                                viewBox="0 0 24 24"
                               >
-                                <rect
-                                  width={13}
-                                  height={13}
-                                  x={9}
-                                  y={9}
-                                  rx={2}
-                                  ry={2}
-                                />
-                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                              </g>
-                            </svg>
-                          </a>
-                        </dd>
-                      </div>
+                                <g
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                >
+                                  <rect
+                                    width={13}
+                                    height={13}
+                                    x={9}
+                                    y={9}
+                                    rx={2}
+                                    ry={2}
+                                  />
+                                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                </g>
+                              </svg>
+                            </a>
+                          </dd>
+                        </div>
+                      ) : (
+                        ""
+                      )}
                       <div className="sm:col-span-1">
                         <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
                           to
