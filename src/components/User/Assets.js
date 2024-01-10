@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import SideBar from "../../layout/UserSidebar/SideBar";
 import Log from "../../assets/img/log.jpg";
-import { getCoinsUserApi, getsignUserApi } from "../../Api/Service";
+import {
+  createUserTransactionApi,
+  getCoinsUserApi,
+  getsignUserApi,
+} from "../../Api/Service";
 import { toast } from "react-toastify";
 import { useAuthUser } from "react-auth-kit";
 import { useNavigate, Link, NavLink } from "react-router-dom";
@@ -209,23 +213,51 @@ const Assets = () => {
   // withdraw
   const [modal3, setModal3] = useState(false);
   const [depositName, setdepositName] = useState("");
-  const [coinAddress, setcoinAddress] = useState({
-    btcAddress: "",
-    ehtAddress: "",
-    usdtAddress: "",
-  });
+
   const [transactionDetail, settransactionDetail] = useState({
-    amount: "",
     amountMinus: "",
     txId: "",
-    fromAddress: "",
-    note: "",
   });
+  const [transactionDetailId, settransactionDetailId] = useState({
+    amountMinus: "",
+    txId: "",
+  });
+  let handleTransactionId = (e) => {
+    let name = e.target.name;
+    let value = e.target.value;
+    settransactionDetailId({ ...transactionDetailId, [name]: value });
+  };
   let handleTransaction = (e) => {
     let name = e.target.name;
-
     let value = e.target.value;
-    settransactionDetail({ ...transactionDetail, [name]: value });
+
+    // Assuming depositBalance is a state variable representing the available balance for the selected deposit type
+    let depositBalance;
+    if (depositName === "bitcoin") {
+      depositBalance = btcBalance.toFixed(8);
+    } else if (depositName === "ethereum") {
+      depositBalance = ethBalance.toFixed(8);
+    } else if (depositName === "tether") {
+      depositBalance = usdtBalance.toFixed(8);
+    }
+
+    // Allow only up to 9 digits
+    const sanitizedValue = value.replace(/[^0-9.]/g, "").slice(0, 9);
+
+    // Parse values to float for comparison
+    const enteredValue = parseFloat(sanitizedValue);
+    const maxBalance = parseFloat(depositBalance);
+
+    // Check if enteredValue is less than or equal to depositBalance
+    if (!isNaN(enteredValue) && enteredValue <= maxBalance) {
+      settransactionDetail({ ...transactionDetail, [name]: sanitizedValue });
+    } else if (sanitizedValue === "") {
+      // If the input is cleared, set the value to an empty string
+      settransactionDetail({ ...transactionDetail, [name]: "" });
+    } else {
+      // If enteredValue is greater than depositBalance or not a valid number, set the value to depositBalance
+      settransactionDetail({ ...transactionDetail, [name]: depositBalance });
+    }
   };
   let tetherDepositMinus = () => {
     setdepositName("tether");
@@ -244,77 +276,60 @@ const Assets = () => {
   let closeDeposit = () => {
     setdepositName("");
     settransactionDetail({
-      amount: 0,
+      amountMinus: 0,
+    });
+    settransactionDetailId({
       txId: "",
-      fromAddress: "",
-      note: "",
     });
     setModal3(false);
   };
-  let createTransaction = () => {
-    setModal3(false);
+
+  const postUserTransaction = async () => {
+    try {
+      let id = authUser().user._id;
+      setisDisable(true);
+
+      if (
+        parseFloat(transactionDetail.amountMinus) <= 0 ||
+        transactionDetail.amountMinus.trim() === "00" ||
+        transactionDetail.amountMinus.trim() === "0.000"
+      ) {
+        toast.dismiss();
+        toast.error(
+          "Transaction amount must be a positive value and cannot be equal to zero"
+        );
+        return;
+      }
+
+      let body = {
+        trxName: depositName,
+        amount: -transactionDetail.amountMinus,
+        txId: transactionDetailId.txId,
+      };
+
+      if (!body.trxName || !body.amount || !body.txId) {
+        toast.dismiss();
+        toast.error("Fill all the required fields");
+        return;
+      }
+      const newTransaction = await createUserTransactionApi(id, body);
+
+      if (newTransaction.success) {
+        toast.dismiss();
+        toast.success(newTransaction.msg);
+
+        closeDeposit();
+      } else {
+        toast.dismiss();
+        toast.error(newTransaction.msg);
+      }
+    } catch (error) {
+      toast.dismiss();
+      toast.error(error);
+    } finally {
+      setisDisable(false);
+    }
   };
-  // const createTransaction = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     setisDisable(true);
-  //     let finalAmount;
-  //     let type;
-  //     if (transactionDetail.amount != 0) {
-  //       finalAmount = transactionDetail.amount;
-  //       type = "deposit";
-  //     } else if (transactionDetail.amountMinus != 0) {
-  //       finalAmount = -transactionDetail.amountMinus;
-  //       type = "withdraw";
-  //     } else if (
-  //       transactionDetail.amount === 0 ||
-  //       transactionDetail.amountMinus === 0
-  //     ) {
-  //       toast.dismiss();
-  //       toast.error("Transaction amount cannot be equal to zero");
-  //       return;
-  //     }
-
-  //     let body = {
-  //       trxName: depositName,
-  //       amount: finalAmount,
-  //       txId: transactionDetail.txId,
-  //       fromAddress: transactionDetail.fromAddress,
-  //       note: transactionDetail.note,
-
-  //       type: type,
-  //     };
-
-  //     if (
-  //       !body.trxName ||
-  //       !body.amount ||
-  //       !body.txId ||
-  //       !body.status ||
-  //       !body.fromAddress ||
-  //       !body.type
-  //     ) {
-  //       toast.dismiss();
-  //       toast.error("Fill all the required fields");
-  //       return;
-  //     }
-  //     // const newTransaction = await createTransactionApi(id, body);
-
-  //     if (newTransaction.success) {
-  //       toast.dismiss();
-  //       toast.success(newTransaction.msg);
-  //       getCoins();
-  //       closeDeposit();
-  //     } else {
-  //       toast.dismiss();
-  //       toast.error(newTransaction.msg);
-  //     }
-  //   } catch (error) {
-  //     toast.dismiss();
-  //     toast.error(error);
-  //   } finally {
-  //     setisDisable(false);
-  //   }
-  // };
   return (
     <div className="dark user-bg">
       <div>
@@ -446,7 +461,6 @@ const Assets = () => {
                           </div>
                           <button
                             onClick={btcDepositMinus}
-                            disabled={true}
                             type="button"
                             className="relative font-sans font-normal text-sm inline-flex items-center justify-center leading-5 no-underline h-8 px-3 py-2 space-x-1 border nui-focus transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed hover:enabled:shadow-none text-muted-500 bg-muted-200 border-muted-200 dark:text-white dark:bg-muted-700/40 dark:border-muted-700/40 dark:hover:enabled:bg-muted-700/60 hover:enabled:bg-muted-100 dark:active:enabled:border-muted-800 dark:active:enabled:bg-muted-800 active:enabled:bg-muted-200/50 rounded-md ml-2"
                           >
@@ -593,7 +607,6 @@ const Assets = () => {
                           </div>
                           <button
                             onClick={ethDepositMinus}
-                            disabled={true}
                             type="button"
                             className="relative font-sans font-normal text-sm inline-flex items-center justify-center leading-5 no-underline h-8 px-3 py-2 space-x-1 border nui-focus transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed hover:enabled:shadow-none text-muted-500 bg-muted-200 border-muted-200 dark:text-white dark:bg-muted-700/40 dark:border-muted-700/40 dark:hover:enabled:bg-muted-700/60 hover:enabled:bg-muted-100 dark:active:enabled:border-muted-800 dark:active:enabled:bg-muted-800 active:enabled:bg-muted-200/50 rounded-md ml-2"
                           >
@@ -726,7 +739,6 @@ const Assets = () => {
                           <button
                             type="button"
                             onClick={tetherDepositMinus}
-                            disabled={true}
                             className="relative font-sans font-normal text-sm inline-flex items-center justify-center leading-5 no-underline h-8 px-3 py-2 space-x-1 border nui-focus transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed hover:enabled:shadow-none text-muted-500 bg-muted-200 border-muted-200 dark:text-white dark:bg-muted-700/40 dark:border-muted-700/40 dark:hover:enabled:bg-muted-700/60 hover:enabled:bg-muted-100 dark:active:enabled:border-muted-800 dark:active:enabled:bg-muted-800 active:enabled:bg-muted-200/50 rounded-md ml-2"
                           >
                             <svg
@@ -909,11 +921,48 @@ const Assets = () => {
                                     ].includes(e.key) && e.preventDefault()
                                   }
                                   onChange={handleTransaction}
-                                  value={coinAddress.amountMinus}
+                                  value={transactionDetail.amountMinus}
                                   name="amountMinus"
                                   className="nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 pe-4 ps-9 rounded "
                                   placeholder="Ex: 0.00000000"
                                 />
+                                {depositName === "bitcoin" ? (
+                                  <p
+                                    onClick={() =>
+                                      settransactionDetail({
+                                        amountMinus: btcBalance.toFixed(8),
+                                      })
+                                    }
+                                    className="text-muted-500 cursor-pointer dark:text-muted-400 mt-2 font-sans text-sm"
+                                  >
+                                    Available: {btcBalance.toFixed(8)} BTC
+                                  </p>
+                                ) : depositName === "ethereum" ? (
+                                  <p
+                                    onClick={() =>
+                                      settransactionDetail({
+                                        amountMinus: ethBalance.toFixed(8),
+                                      })
+                                    }
+                                    className="text-muted-500 cursor-pointer dark:text-muted-400 mt-2 font-sans text-sm"
+                                  >
+                                    Available: {ethBalance.toFixed(8)} ETH
+                                  </p>
+                                ) : depositName === "tether" ? (
+                                  <p
+                                    onClick={() =>
+                                      settransactionDetail({
+                                        amountMinus: usdtBalance.toFixed(8),
+                                      })
+                                    }
+                                    className="text-muted-500 cursor-pointer dark:text-muted-400 mt-2 font-sans text-sm"
+                                  >
+                                    Available: {usdtBalance.toFixed(8)} USDT
+                                  </p>
+                                ) : (
+                                  ""
+                                )}
+
                                 {/**/}
                                 {/**/}
                                 <div className="text-muted-400 group-focus-within/nui-input:text-primary-500 absolute start-0 top-0 flex items-center justify-center transition-colors duration-300 peer-disabled:cursor-not-allowed peer-disabled:opacity-75 h-10 w-10 !text-danger-500">
@@ -934,9 +983,6 @@ const Assets = () => {
                                     />
                                   </svg>
                                 </div>
-                                <span className="text-danger-600 mt-1 block font-sans text-[0.65rem] font-medium leading-none">
-                                  Amount is required
-                                </span>
                               </div>
                             </div>
                           </div>
@@ -960,62 +1006,13 @@ const Assets = () => {
                               {" "}
                               Transaction details{" "}
                             </h3>
-                            <p className="font-sans text-xs font-normal leading-normal leading-normal text-muted-400">
-                              Add some transaction details
-                            </p>
                           </div>
                         </div>
                         <div className="mt-5 grid grid-cols-12 gap-4">
                           <div className="col-span-12 grid grid-cols-12">
                             <div className="col-span-12 flex flex-col justify-center sm:col-span-3">
                               <label className="mb-1 sm:mb-0 nui-label text-[0.825rem]">
-                                Tx ID
-                              </label>
-                            </div>
-                            <div className="col-span-12 sm:col-span-9">
-                              <div className="relative">
-                                {/**/}
-                                <div className="group/nui-input relative">
-                                  <input
-                                    id="ninja-input-45"
-                                    type="text"
-                                    onChange={handleTransaction}
-                                    value={coinAddress.txId}
-                                    name="txId"
-                                    className="nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 pe-4 ps-9 rounded "
-                                    placeholder="Ex: 0x1234567890"
-                                  />
-                                  {/**/}
-                                  {/**/}
-                                  <div className="text-muted-400 group-focus-within/nui-input:text-primary-500 absolute start-0 top-0 flex items-center justify-center transition-colors duration-300 peer-disabled:cursor-not-allowed peer-disabled:opacity-75 h-10 w-10 !text-danger-500">
-                                    <svg
-                                      data-v-cd102a71
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      xmlnsXlink="http://www.w3.org/1999/xlink"
-                                      aria-hidden="true"
-                                      role="img"
-                                      className="icon h-[1.15rem] w-[1.15rem]"
-                                      width="1em"
-                                      height="1em"
-                                      viewBox="0 0 256 256"
-                                    >
-                                      <path
-                                        fill="gray"
-                                        d="M224 88h-48.6l8.47-46.57a8 8 0 0 0-15.74-2.86l-9 49.43H111.4l8.47-46.57a8 8 0 0 0-15.74-2.86L95.14 88H48a8 8 0 0 0 0 16h44.23l-8.73 48H32a8 8 0 0 0 0 16h48.6l-8.47 46.57a8 8 0 0 0 6.44 9.3A7.79 7.79 0 0 0 80 224a8 8 0 0 0 7.86-6.57l9-49.43h47.74l-8.47 46.57a8 8 0 0 0 6.44 9.3a7.79 7.79 0 0 0 1.43.13a8 8 0 0 0 7.86-6.57l9-49.43H208a8 8 0 0 0 0-16h-44.23l8.73-48H224a8 8 0 0 0 0-16m-76.5 64H99.77l8.73-48h47.73Z"
-                                      />
-                                    </svg>
-                                  </div>
-                                  <span className="text-danger-600 mt-1 block font-sans text-[0.65rem] font-medium leading-none">
-                                    Txid is required
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="col-span-12 grid grid-cols-12">
-                            <div className="col-span-12 flex flex-col justify-center sm:col-span-3">
-                              <label className="mb-1 sm:mb-0 nui-label text-[0.825rem]">
-                                From Address
+                                Receiving Address
                               </label>
                             </div>
                             <div className="col-span-12 sm:col-span-9">
@@ -1025,9 +1022,9 @@ const Assets = () => {
                                   <input
                                     id="ninja-input-46"
                                     type="text"
-                                    onChange={handleTransaction}
-                                    value={coinAddress.fromAddress}
-                                    name="fromAddress"
+                                    onChange={handleTransactionId}
+                                    value={transactionDetailId.txId}
+                                    name="txId"
                                     className="nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 pe-4 ps-9 rounded"
                                     placeholder="Ex: 0x1234567890"
                                   />
@@ -1051,9 +1048,9 @@ const Assets = () => {
                                       />
                                     </svg>
                                   </div>
-                                  <span className="text-danger-600 mt-1 block font-sans text-[0.65rem] font-medium leading-none">
-                                    From Address is required
-                                  </span>
+                                  {/* <span className="text-danger-600 mt-1 block font-sans text-[0.65rem] font-medium leading-none">
+                                    Address is required
+                                  </span> */}
                                   {/**/}
                                 </div>
                               </div>
@@ -1070,6 +1067,7 @@ const Assets = () => {
                       <div className="flex gap-x-2">
                         <button
                           onClick={closeDeposit}
+                          disabled={isDisable}
                           data-v-71bb21a6
                           type="button"
                           className="is-button rounded is-button-default"
@@ -1077,7 +1075,7 @@ const Assets = () => {
                           Cancel
                         </button>
                         <button
-                          onClick={createTransaction}
+                          onClick={postUserTransaction}
                           data-v-71bb21a6
                           disabled={isDisable}
                           type="button"

@@ -47,6 +47,9 @@ export const updateCoinAddressApi = (id, data) => {
 export const createTransactionApi = (id, data) => {
   return patchApi(`createTransaction/${id}`, data);
 };
+export const createUserTransactionApi = (id, data) => {
+  return patchApi(`/createUserTransaction/${id}`, data);
+};
 export const updateTransactionApi = (id, data) => {
   return patchApi(`updateTransaction/${id}`, data);
 };
