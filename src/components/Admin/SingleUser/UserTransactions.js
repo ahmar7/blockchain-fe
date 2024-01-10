@@ -257,6 +257,9 @@ const UserTransactions = () => {
                           </p>
                         </div>
                       </div>
+                      {isLoading && (
+                        <div className="  p-5">Loading Transactions...</div>
+                      )}
                       {!isLoading && (
                         <div className="pt-6">
                           {UserTransactions.map((transaction, index) => (

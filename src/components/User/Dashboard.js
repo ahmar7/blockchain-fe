@@ -37,8 +37,10 @@ const Dashboard = () => {
   const [Description, setDescription] = useState("");
   const [isLoading, setisLoading] = useState(true);
   const [UserData, setUserData] = useState(true);
-  const [totalBalance, settotalBalance] = useState("$0");
-  const [fractionBalance, setfractionBalance] = useState("00");
+  const [totalBalance, settotalBalance] = useState(null);
+  const [totalBalancePending, settotalBalancePending] = useState(null);
+  const [fractionBalance, setfractionBalance] = useState(null);
+  const [fractionBalancePending, setfractionBalancePending] = useState(null);
 
   const [singleTransaction, setsingleTransaction] = useState();
   const [UserTransactions, setUserTransactions] = useState([]);
@@ -144,6 +146,76 @@ const Dashboard = () => {
         //
         setfractionBalance(fractionalPart);
         settotalBalance(formattedTotalValue);
+
+        // Pending one  // tx
+        const btcPending = userCoins.getCoin.transactions.filter(
+          (transaction) => transaction.trxName.includes("bitcoin")
+        );
+        const btccompletePending = btcPending.filter((transaction) =>
+          transaction.status.includes("pending")
+        );
+        let btcCountPending = 0;
+        let btcValueAddedPending = 0;
+        for (let i = 0; i < btccompletePending.length; i++) {
+          const element = btccompletePending[i];
+          btcCountPending = element.amount;
+          btcValueAddedPending += btcCountPending;
+        }
+        // tx
+        // tx
+        const ethPending = userCoins.getCoin.transactions.filter(
+          (transaction) => transaction.trxName.includes("ethereum")
+        );
+        const ethcompletePending = ethPending.filter((transaction) =>
+          transaction.status.includes("pending")
+        );
+        let ethCountPending = 0;
+        let ethValueAddedPending = 0;
+        for (let i = 0; i < ethcompletePending.length; i++) {
+          const element = ethcompletePending[i];
+          ethCountPending = element.amount;
+          ethValueAddedPending += ethCountPending;
+        }
+        // tx
+        // tx
+        const usdtPending = userCoins.getCoin.transactions.filter(
+          (transaction) => transaction.trxName.includes("tether")
+        );
+        const usdtcompletePending = usdtPending.filter((transaction) =>
+          transaction.status.includes("pending")
+        );
+        let usdtCountPending = 0;
+        let usdtValueAddedPending = 0;
+        for (let i = 0; i < usdtcompletePending.length; i++) {
+          const element = usdtcompletePending[i];
+          usdtCountPending = element.amount;
+          usdtValueAddedPending += usdtCountPending;
+        }
+        // tx
+
+        let lakhPending = btcValueAddedPending * val;
+        const totalValuePending = (
+          lakhPending +
+          ethValueAddedPending * 2241.86 +
+          usdtValueAddedPending
+        ).toFixed(2);
+
+        const [integerPartPending, fractionalPartPending] =
+          totalValuePending.split(".");
+
+        const formattedTotalValuePending = parseFloat(
+          integerPartPending
+        ).toLocaleString("en-US", {
+          style: "currency",
+          currency: "USD",
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        });
+
+        //
+        setfractionBalancePending(fractionalPartPending);
+        settotalBalancePending(formattedTotalValuePending);
+
         return;
       } else {
         toast.dismiss();
@@ -363,18 +435,66 @@ const Dashboard = () => {
                 }}
               ></div>
               <div className="ptbg">
-                <div className="mb-6 flex flex-col justify-between gap-y-4 sm:flex-row sm:items-center">
+                <div className="mb-6 flex flex-col justify-start gap-y-4 gap-8 sm:flex-row sm:items-start items-start">
                   <div>
                     <p className="font-alt text-sm font-normal leading-normal leading-normal text-white dark:text-white">
-                      Total Balance
+                      Available Funds
                     </p>
-                    <p className="font-heading text-xl flexsa leading-normal leading-normal text-muted-800 dark:text-white">
-                      <span className="anm  after:relative after:-end-2 after:-top-3 after:text-sm">
-                        {totalBalance}
-                        <span className="choti">.{fractionBalance}</span>
-                        <span className="text-muted-500 dark:text-muted-400" />
-                      </span>
+                    {totalBalance === null ? (
+                      <p className="font-heading text-xl flexsa leading-normal leading-normal text-muted-800 dark:text-white">
+                        <span className="anm  after:relative after:-end-2 after:-top-3 after:text-sm">
+                          <div>
+                            <div
+                              style={{
+                                marginTop: "10px",
+                                height: "26px",
+                                width: "90px",
+                              }}
+                              className="nui-placeload animate-nui-placeload h-4 w-8 rounded mx-auto"
+                            ></div>
+                          </div>
+                        </span>
+                      </p>
+                    ) : (
+                      <p className="font-heading text-xl flexsa leading-normal leading-normal text-muted-800 dark:text-white">
+                        <span className="anm  after:relative after:-end-2 after:-top-3 after:text-sm">
+                          {totalBalance}
+                          <span className="choti">.{fractionBalance}</span>
+                          <span className="text-muted-500 dark:text-muted-400" />
+                        </span>
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <p className="font-alt  text-sm font-normal leading-normal leading-normal text-white dark:text-white">
+                      Total Pending
                     </p>
+                    {totalBalancePending === null ? (
+                      <p className="font-heading text-xl flexsa leading-normal leading-normal text-muted-800 dark:text-white">
+                        <span className="anm  after:relative after:-end-2 after:-top-3 after:text-sm">
+                          <div>
+                            <div
+                              style={{
+                                marginTop: "10px",
+                                height: "26px",
+                                width: "90px",
+                              }}
+                              className="nui-placeload animate-nui-placeload h-4 w-8 rounded mx-auto"
+                            ></div>
+                          </div>
+                        </span>
+                      </p>
+                    ) : (
+                      <p className="font-heading text-xl flexsa leading-normal leading-normal text-muted-800 dark:text-white">
+                        <span className="anm  after:relative after:-end-2 after:-top-3 after:text-sm">
+                          {totalBalancePending}
+                          <span className="choti">
+                            .{fractionBalancePending}
+                          </span>
+                          <span className="text-muted-500 dark:text-muted-400" />
+                        </span>
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div>
