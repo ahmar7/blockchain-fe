@@ -19,6 +19,9 @@ export const getCoinsUserApi = (id) => {
 export const signleUsersApi = (id) => {
   return getApi(`singleUser/${id}`);
 };
+export const deleteTransactionApi = (userId, id) => {
+  return getApi(`deleteTransaction/${userId}/${id}`);
+};
 export const getHtmlDataApi = () => {
   return getApi(`getHtmlData`);
 };

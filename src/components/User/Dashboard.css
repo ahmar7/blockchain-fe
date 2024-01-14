@@ -336,6 +336,9 @@
   margin: auto;
   margin-top: 15px;
 }
+.bg-black {
+  background-color: black;
+}
 .wen {
   width: 120px !important;
   height: auto !important;

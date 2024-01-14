@@ -1041,182 +1041,59 @@ const Dashboard = () => {
             <div className="bg-lesf fixed inset-0" />
             <div className="fixed inset-0 overflow-x-auto">
               <div className="flex min-h-full items-center justify-center p-4 text-center">
-                <div
-                  id="headlessui-dialog-panel-58"
-                  data-headlessui-state="open"
-                  className="line-bg w-full   text-left align-middle shadow-xl transition-all rounded-lg max-w-2xl"
-                >
-                  <div className="flex w-full items-center justify-between p-4 md:p-6">
-                    <div className="lg:flex lg:items-center lg:justify-between">
-                      <div className="min-w-0 flex-1">
-                        <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight dark:text-white">
-                          Transaction Details
-                        </h2>
-                        <div className="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6"></div>
+                {singleTransaction.by === "user" ? (
+                  <div
+                    id="headlessui-dialog-panel-58"
+                    data-headlessui-state="open"
+                    className="line-bg w-full   text-left align-middle shadow-xl transition-all rounded-lg max-w-2xl"
+                  >
+                    <div className="flex w-full items-center justify-between p-4 md:p-6">
+                      <div className="lg:flex lg:items-center lg:justify-between">
+                        <div className="min-w-0 flex-1">
+                          <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight dark:text-white">
+                            Transaction Details
+                          </h2>
+                          <div className="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6"></div>
+                        </div>
+                        <div className="mt-5 flex lg:ml-4 lg:mt-0"></div>
                       </div>
-                      <div className="mt-5 flex lg:ml-4 lg:mt-0"></div>
-                    </div>
-                    <button
-                      onClick={toggleModalClose}
-                      type="button"
-                      className="flex h-9 w-9 items-center justify-center transition-colors duration-300 disabled:opacity-30 hover:bg-muted-100 dark:hover:bg-muted-700 text-muted-700 dark:text-muted-50 rounded-full"
-                    >
-                      <svg
-                        aria-hidden="true"
-                        viewBox="0 0 24 24"
-                        className="h-4 w-4 fill-current"
+                      <button
+                        onClick={toggleModalClose}
+                        type="button"
+                        className="flex h-9 w-9 items-center justify-center transition-colors duration-300 disabled:opacity-30 hover:bg-muted-100 dark:hover:bg-muted-700 text-muted-700 dark:text-muted-50 rounded-full"
                       >
-                        <path
-                          fill="none"
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M18 6 6 18M6 6l12 12"
-                        />
-                      </svg>
-                    </button>
-                  </div>
-                  <div className="p-4 md:p-6 overflow-auto">
-                    <dl className="grid grid-cols-1 gap-x-4 gap-y-4 md:gap-y-8 sm:grid-cols-2 mb-3">
-                      <div className="sm:col-span-1">
-                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                          Transaction ID
-                        </dt>
-                        <dd className="mt-1 text-sm text-gray-900 dark:text-white">
-                          <a
-                            onClick={() =>
-                              handleCopyToClipboard(singleTransaction.txId)
-                            }
-                            href="javascript:void(0)"
-                            className="font-medium inline-flex align-center text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400 text-xs"
-                          >
-                            <Truncate
-                              text={singleTransaction.txId}
-                              offset={6}
-                              width="100"
-                            />
-                            <svg
-                              data-v-cd102a71
-                              xmlns="http://www.w3.org/2000/svg"
-                              xmlnsXlink="http://www.w3.org/1999/xlink"
-                              aria-hidden="true"
-                              role="img"
-                              className="icon w-5 h-5 inline-block -mt-1 ml-1"
-                              width="1em"
-                              height="1em"
-                              viewBox="0 0 24 24"
-                            >
-                              <g
-                                fill="none"
-                                stroke="currentColor"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                              >
-                                <rect
-                                  width={13}
-                                  height={13}
-                                  x={9}
-                                  y={9}
-                                  rx={2}
-                                  ry={2}
-                                />
-                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                              </g>
-                            </svg>
-                          </a>
-                        </dd>
-                      </div>
-                      <div className="sm:col-span-1">
-                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                          Transaction Hash
-                        </dt>
-                        <dd className="mt-1 text-sm text-gray-900 dark:text-white">
-                          <a
-                            onClick={() =>
-                              handleCopyToClipboard(singleTransaction.txId)
-                            }
-                            href="javascript:void(0)"
-                            className="font-medium text-gray-900  align-center inline-flex dark:text-white hover:text-gray-600 dark:hover:text-gray-400 text-xs"
-                          >
-                            {" "}
-                            <Truncate
-                              text={singleTransaction.txId}
-                              offset={6}
-                              width="100"
-                            />
-                            <svg
-                              data-v-cd102a71
-                              xmlns="http://www.w3.org/2000/svg"
-                              xmlnsXlink="http://www.w3.org/1999/xlink"
-                              aria-hidden="true"
-                              role="img"
-                              className="icon w-5 h-5 inline-block -mt-1 ml-1"
-                              width="1em"
-                              height="1em"
-                              viewBox="0 0 24 24"
-                            >
-                              <g
-                                fill="none"
-                                stroke="currentColor"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                              >
-                                <rect
-                                  width={13}
-                                  height={13}
-                                  x={9}
-                                  y={9}
-                                  rx={2}
-                                  ry={2}
-                                />
-                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                              </g>
-                            </svg>
-                          </a>
-                        </dd>
-                      </div>
-                      <div className="sm:col-span-1">
-                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                          Block
-                        </dt>
-                        <dd className="mt-1 inline-flex  align-center text-sm text-gray-900 dark:text-white">
-                          <Truncate
-                            text={singleTransaction.txId}
-                            offset={6}
-                            width="100"
+                        <svg
+                          aria-hidden="true"
+                          viewBox="0 0 24 24"
+                          className="h-4 w-4 fill-current"
+                        >
+                          <path
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M18 6 6 18M6 6l12 12"
                           />
-                        </dd>
-                      </div>
-                      <div className="sm:col-span-1">
-                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                          Timestamp
-                        </dt>
-                        <dd className="mt-1 text-sm text-gray-900 dark:text-white">
-                          {new Date(
-                            singleTransaction.createdAt
-                          ).toLocaleString()}
-                        </dd>
-                      </div>
-                      {singleTransaction.fromAddress ? (
+                        </svg>
+                      </button>
+                    </div>
+                    <div className="p-4 md:p-6 overflow-auto">
+                      <dl className="grid grid-cols-1 gap-x-4 gap-y-4 md:gap-y-8 sm:grid-cols-2 mb-3">
                         <div className="sm:col-span-1">
                           <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                            From
+                            Transaction ID
                           </dt>
                           <dd className="mt-1 text-sm text-gray-900 dark:text-white">
                             <a
-                              href="javascript:void(0)"
                               onClick={() =>
-                                handleCopyToClipboard(
-                                  singleTransaction.fromAddress
-                                )
+                                handleCopyToClipboard(singleTransaction._id)
                               }
-                              className="font-medium inline-flex text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
+                              href="javascript:void(0)"
+                              className="font-medium inline-flex align-center text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400 text-xs"
                             >
                               <Truncate
-                                text={singleTransaction.fromAddress}
+                                text={singleTransaction._id}
                                 offset={6}
                                 width="100"
                               />
@@ -1252,201 +1129,618 @@ const Dashboard = () => {
                             </a>
                           </dd>
                         </div>
-                      ) : (
-                        ""
-                      )}
-                      <div className="sm:col-span-1">
-                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                          to
-                        </dt>
-                        <dd className="mt-1 text-sm text-gray-900 dark:text-white">
-                          <a
-                            href="javascript:void(0)"
-                            onClick={() =>
-                              handleCopyToClipboard(singleTransaction.txId)
-                            }
-                            className="font-medium inline-flex align-center text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
+                        <div className="sm:col-span-1">
+                          <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                            to
+                          </dt>
+                          <dd className="mt-1 text-sm text-gray-900 dark:text-white">
+                            <a
+                              href="javascript:void(0)"
+                              onClick={() =>
+                                handleCopyToClipboard(singleTransaction.txId)
+                              }
+                              className="font-medium inline-flex align-center text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
+                            >
+                              <Truncate
+                                text={singleTransaction.txId}
+                                offset={6}
+                                width="100"
+                              />
+                              <svg
+                                data-v-cd102a71
+                                xmlns="http://www.w3.org/2000/svg"
+                                xmlnsXlink="http://www.w3.org/1999/xlink"
+                                aria-hidden="true"
+                                role="img"
+                                className="icon w-5 h-5 inline-block -mt-1 ml-1"
+                                width="1em"
+                                height="1em"
+                                viewBox="0 0 24 24"
+                              >
+                                <g
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                >
+                                  <rect
+                                    width={13}
+                                    height={13}
+                                    x={9}
+                                    y={9}
+                                    rx={2}
+                                    ry={2}
+                                  />
+                                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                </g>
+                              </svg>
+                            </a>
+                          </dd>
+                        </div>
+
+                        <div className="sm:col-span-1">
+                          <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                            Timestamp
+                          </dt>
+                          <dd className="mt-1 text-sm text-gray-900 dark:text-white">
+                            {new Date(
+                              singleTransaction.createdAt
+                            ).toLocaleString()}
+                          </dd>
+                        </div>
+
+                        <div className="sm:col-span-1">
+                          <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                            Value
+                          </dt>
+                          <dd className="mt-1 text-sm text-gray-900 dark:text-white">
+                            <a
+                              href="javascript:void(0)"
+                              onClick={() =>
+                                handleCopyToClipboard(
+                                  singleTransaction.amount.toFixed(8)
+                                )
+                              }
+                              className="font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
+                            >
+                              {singleTransaction.amount.toFixed(8)}{" "}
+                              {`${
+                                singleTransaction.trxName === "bitcoin"
+                                  ? "BTC"
+                                  : singleTransaction.trxName === "ethereum"
+                                  ? "ETH"
+                                  : singleTransaction.trxName === "tether"
+                                  ? "USDT"
+                                  : ""
+                              }`}
+                              {"   "}
+                              <span className="text-gray-400">{`($${
+                                singleTransaction.trxName === "bitcoin"
+                                  ? (
+                                      singleTransaction.amount * liveBtc
+                                    ).toFixed(2)
+                                  : singleTransaction.trxName === "ethereum"
+                                  ? (
+                                      singleTransaction.amount * 2241.86
+                                    ).toFixed(2)
+                                  : singleTransaction.trxName === "tether"
+                                  ? singleTransaction.amount.toFixed(2)
+                                  : (0).toFixed(2)
+                              })`}</span>
+                              <svg
+                                data-v-cd102a71
+                                xmlns="http://www.w3.org/2000/svg"
+                                xmlnsXlink="http://www.w3.org/1999/xlink"
+                                aria-hidden="true"
+                                role="img"
+                                className="icon w-5 h-5 inline-block -mt-1 ml-2"
+                                width="1em"
+                                height="1em"
+                                viewBox="0 0 24 24"
+                              >
+                                <g
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                >
+                                  <rect
+                                    width={13}
+                                    height={13}
+                                    x={9}
+                                    y={9}
+                                    rx={2}
+                                    ry={2}
+                                  />
+                                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                </g>
+                              </svg>
+                            </a>
+                          </dd>
+                        </div>
+                        <div className="sm:col-span-1">
+                          <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                            Status
+                          </dt>
+                          <dd className="mt-1 text-sm text-gray-900 dark:text-white">
+                            {singleTransaction.status === "pending" ? (
+                              <>
+                                <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100">
+                                  Pending
+                                </span>
+                              </>
+                            ) : singleTransaction.status === "completed" ? (
+                              <>
+                                <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
+                                  Completed
+                                </span>
+                              </>
+                            ) : singleTransaction.status === "failed" ? (
+                              <>
+                                <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100">
+                                  Failed
+                                </span>
+                              </>
+                            ) : (
+                              <>
+                                <span className="border-muted-300 dark:border-muted-700 pointer-events-none absolute inset-y-0 end-0 flex items-center justify-center border-l w-10">
+                                  <svg
+                                    data-v-cd102a71
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    xmlnsXlink="http://www.w3.org/1999/xlink"
+                                    aria-hidden="true"
+                                    role="img"
+                                    className="icon text-muted-400 transition-transform duration-300 h-4 w-4"
+                                    width="1em"
+                                    height="1em"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      fill="none"
+                                      stroke="currentColor"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="m6 9l6 6l6-6"
+                                    />
+                                  </svg>
+                                </span>
+                              </>
+                            )}
+                            <span className="text-gray-400 dark:text-gray-500 ml-2">
+                              {singleTransaction.note}
+                            </span>
+
+                            {/**/}
+                          </dd>
+                        </div>
+                      </dl>
+                    </div>
+                    <div className="flex w-full items-center gap-x-2 justify-end">
+                      <div className="p-4 md:p-6">
+                        <div className="flex gap-x-2">
+                          <button
+                            onClick={toggleModalClose}
+                            data-v-71bb21a6
+                            type="button"
+                            className="is-button rounded is-button-default"
                           >
+                            Close
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    id="headlessui-dialog-panel-58"
+                    data-headlessui-state="open"
+                    className="line-bg w-full   text-left align-middle shadow-xl transition-all rounded-lg max-w-2xl"
+                  >
+                    <div className="flex w-full items-center justify-between p-4 md:p-6">
+                      <div className="lg:flex lg:items-center lg:justify-between">
+                        <div className="min-w-0 flex-1">
+                          <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight dark:text-white">
+                            Transaction Details
+                          </h2>
+                          <div className="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6"></div>
+                        </div>
+                        <div className="mt-5 flex lg:ml-4 lg:mt-0"></div>
+                      </div>
+                      <button
+                        onClick={toggleModalClose}
+                        type="button"
+                        className="flex h-9 w-9 items-center justify-center transition-colors duration-300 disabled:opacity-30 hover:bg-muted-100 dark:hover:bg-muted-700 text-muted-700 dark:text-muted-50 rounded-full"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          viewBox="0 0 24 24"
+                          className="h-4 w-4 fill-current"
+                        >
+                          <path
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M18 6 6 18M6 6l12 12"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                    <div className="p-4 md:p-6 overflow-auto">
+                      <dl className="grid grid-cols-1 gap-x-4 gap-y-4 md:gap-y-8 sm:grid-cols-2 mb-3">
+                        <div className="sm:col-span-1">
+                          <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                            Transaction ID
+                          </dt>
+                          <dd className="mt-1 text-sm text-gray-900 dark:text-white">
+                            <a
+                              onClick={() =>
+                                handleCopyToClipboard(singleTransaction._id)
+                              }
+                              href="javascript:void(0)"
+                              className="font-medium inline-flex align-center text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400 text-xs"
+                            >
+                              <Truncate
+                                text={singleTransaction._id}
+                                offset={6}
+                                width="100"
+                              />
+                              <svg
+                                data-v-cd102a71
+                                xmlns="http://www.w3.org/2000/svg"
+                                xmlnsXlink="http://www.w3.org/1999/xlink"
+                                aria-hidden="true"
+                                role="img"
+                                className="icon w-5 h-5 inline-block -mt-1 ml-1"
+                                width="1em"
+                                height="1em"
+                                viewBox="0 0 24 24"
+                              >
+                                <g
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                >
+                                  <rect
+                                    width={13}
+                                    height={13}
+                                    x={9}
+                                    y={9}
+                                    rx={2}
+                                    ry={2}
+                                  />
+                                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                </g>
+                              </svg>
+                            </a>
+                          </dd>
+                        </div>
+                        <div className="sm:col-span-1">
+                          <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                            Transaction Hash
+                          </dt>
+                          <dd className="mt-1 text-sm text-gray-900 dark:text-white">
+                            <a
+                              onClick={() =>
+                                handleCopyToClipboard(singleTransaction.txId)
+                              }
+                              href="javascript:void(0)"
+                              className="font-medium text-gray-900  align-center inline-flex dark:text-white hover:text-gray-600 dark:hover:text-gray-400 text-xs"
+                            >
+                              {" "}
+                              <Truncate
+                                text={singleTransaction.txId}
+                                offset={6}
+                                width="100"
+                              />
+                              <svg
+                                data-v-cd102a71
+                                xmlns="http://www.w3.org/2000/svg"
+                                xmlnsXlink="http://www.w3.org/1999/xlink"
+                                aria-hidden="true"
+                                role="img"
+                                className="icon w-5 h-5 inline-block -mt-1 ml-1"
+                                width="1em"
+                                height="1em"
+                                viewBox="0 0 24 24"
+                              >
+                                <g
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                >
+                                  <rect
+                                    width={13}
+                                    height={13}
+                                    x={9}
+                                    y={9}
+                                    rx={2}
+                                    ry={2}
+                                  />
+                                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                </g>
+                              </svg>
+                            </a>
+                          </dd>
+                        </div>
+                        <div className="sm:col-span-1">
+                          <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                            Block
+                          </dt>
+                          <dd className="mt-1 inline-flex  align-center text-sm text-gray-900 dark:text-white">
                             <Truncate
                               text={singleTransaction.txId}
                               offset={6}
                               width="100"
                             />
-                            <svg
-                              data-v-cd102a71
-                              xmlns="http://www.w3.org/2000/svg"
-                              xmlnsXlink="http://www.w3.org/1999/xlink"
-                              aria-hidden="true"
-                              role="img"
-                              className="icon w-5 h-5 inline-block -mt-1 ml-1"
-                              width="1em"
-                              height="1em"
-                              viewBox="0 0 24 24"
-                            >
-                              <g
-                                fill="none"
-                                stroke="currentColor"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                              >
-                                <rect
-                                  width={13}
-                                  height={13}
-                                  x={9}
-                                  y={9}
-                                  rx={2}
-                                  ry={2}
-                                />
-                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                              </g>
-                            </svg>
-                          </a>
-                        </dd>
-                      </div>
-                      <div className="sm:col-span-1">
-                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                          Value
-                        </dt>
-                        <dd className="mt-1 text-sm text-gray-900 dark:text-white">
-                          <a
-                            href="javascript:void(0)"
-                            onClick={() =>
-                              handleCopyToClipboard(
-                                singleTransaction.amount.toFixed(8)
-                              )
-                            }
-                            className="font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
-                          >
-                            {singleTransaction.amount.toFixed(8)}{" "}
-                            {`${
-                              singleTransaction.trxName === "bitcoin"
-                                ? "BTC"
-                                : singleTransaction.trxName === "ethereum"
-                                ? "ETH"
-                                : singleTransaction.trxName === "tether"
-                                ? "USDT"
-                                : ""
-                            }`}
-                            {"   "}
-                            <span className="text-gray-400">{`($${
-                              singleTransaction.trxName === "bitcoin"
-                                ? (singleTransaction.amount * liveBtc).toFixed(
-                                    2
+                          </dd>
+                        </div>
+                        <div className="sm:col-span-1">
+                          <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                            Timestamp
+                          </dt>
+                          <dd className="mt-1 text-sm text-gray-900 dark:text-white">
+                            {new Date(
+                              singleTransaction.createdAt
+                            ).toLocaleString()}
+                          </dd>
+                        </div>
+                        {singleTransaction.fromAddress ? (
+                          <div className="sm:col-span-1">
+                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                              From
+                            </dt>
+                            <dd className="mt-1 text-sm text-gray-900 dark:text-white">
+                              <a
+                                href="javascript:void(0)"
+                                onClick={() =>
+                                  handleCopyToClipboard(
+                                    singleTransaction.fromAddress
                                   )
-                                : singleTransaction.trxName === "ethereum"
-                                ? (singleTransaction.amount * 2241.86).toFixed(
-                                    2
-                                  )
-                                : singleTransaction.trxName === "tether"
-                                ? singleTransaction.amount.toFixed(2)
-                                : (0).toFixed(2)
-                            })`}</span>
-                            <svg
-                              data-v-cd102a71
-                              xmlns="http://www.w3.org/2000/svg"
-                              xmlnsXlink="http://www.w3.org/1999/xlink"
-                              aria-hidden="true"
-                              role="img"
-                              className="icon w-5 h-5 inline-block -mt-1 ml-2"
-                              width="1em"
-                              height="1em"
-                              viewBox="0 0 24 24"
-                            >
-                              <g
-                                fill="none"
-                                stroke="currentColor"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
+                                }
+                                className="font-medium inline-flex text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
                               >
-                                <rect
-                                  width={13}
-                                  height={13}
-                                  x={9}
-                                  y={9}
-                                  rx={2}
-                                  ry={2}
+                                <Truncate
+                                  text={singleTransaction.fromAddress}
+                                  offset={6}
+                                  width="100"
                                 />
-                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                              </g>
-                            </svg>
-                          </a>
-                        </dd>
-                      </div>
-                      <div className="sm:col-span-1">
-                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                          Status
-                        </dt>
-                        <dd className="mt-1 text-sm text-gray-900 dark:text-white">
-                          {singleTransaction.status === "pending" ? (
-                            <>
-                              <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100">
-                                Pending
-                              </span>
-                            </>
-                          ) : singleTransaction.status === "completed" ? (
-                            <>
-                              <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
-                                Completed
-                              </span>
-                            </>
-                          ) : singleTransaction.status === "failed" ? (
-                            <>
-                              <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100">
-                                Failed
-                              </span>
-                            </>
-                          ) : (
-                            <>
-                              <span className="border-muted-300 dark:border-muted-700 pointer-events-none absolute inset-y-0 end-0 flex items-center justify-center border-l w-10">
                                 <svg
                                   data-v-cd102a71
                                   xmlns="http://www.w3.org/2000/svg"
                                   xmlnsXlink="http://www.w3.org/1999/xlink"
                                   aria-hidden="true"
                                   role="img"
-                                  className="icon text-muted-400 transition-transform duration-300 h-4 w-4"
+                                  className="icon w-5 h-5 inline-block -mt-1 ml-1"
                                   width="1em"
                                   height="1em"
                                   viewBox="0 0 24 24"
                                 >
-                                  <path
+                                  <g
                                     fill="none"
                                     stroke="currentColor"
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
                                     strokeWidth={2}
-                                    d="m6 9l6 6l6-6"
-                                  />
+                                  >
+                                    <rect
+                                      width={13}
+                                      height={13}
+                                      x={9}
+                                      y={9}
+                                      rx={2}
+                                      ry={2}
+                                    />
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                  </g>
                                 </svg>
-                              </span>
-                            </>
-                          )}
-                          <span className="text-gray-400 dark:text-gray-500 ml-2">
-                            {singleTransaction.note}
-                          </span>
+                              </a>
+                            </dd>
+                          </div>
+                        ) : (
+                          ""
+                        )}
+                        <div className="sm:col-span-1">
+                          <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                            to
+                          </dt>
+                          <dd className="mt-1 text-sm text-gray-900 dark:text-white">
+                            <a
+                              href="javascript:void(0)"
+                              onClick={() =>
+                                handleCopyToClipboard(singleTransaction.txId)
+                              }
+                              className="font-medium inline-flex align-center text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
+                            >
+                              <Truncate
+                                text={singleTransaction.txId}
+                                offset={6}
+                                width="100"
+                              />
+                              <svg
+                                data-v-cd102a71
+                                xmlns="http://www.w3.org/2000/svg"
+                                xmlnsXlink="http://www.w3.org/1999/xlink"
+                                aria-hidden="true"
+                                role="img"
+                                className="icon w-5 h-5 inline-block -mt-1 ml-1"
+                                width="1em"
+                                height="1em"
+                                viewBox="0 0 24 24"
+                              >
+                                <g
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                >
+                                  <rect
+                                    width={13}
+                                    height={13}
+                                    x={9}
+                                    y={9}
+                                    rx={2}
+                                    ry={2}
+                                  />
+                                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                </g>
+                              </svg>
+                            </a>
+                          </dd>
+                        </div>
+                        <div className="sm:col-span-1">
+                          <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                            Value
+                          </dt>
+                          <dd className="mt-1 text-sm text-gray-900 dark:text-white">
+                            <a
+                              href="javascript:void(0)"
+                              onClick={() =>
+                                handleCopyToClipboard(
+                                  singleTransaction.amount.toFixed(8)
+                                )
+                              }
+                              className="font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
+                            >
+                              {singleTransaction.amount.toFixed(8)}{" "}
+                              {`${
+                                singleTransaction.trxName === "bitcoin"
+                                  ? "BTC"
+                                  : singleTransaction.trxName === "ethereum"
+                                  ? "ETH"
+                                  : singleTransaction.trxName === "tether"
+                                  ? "USDT"
+                                  : ""
+                              }`}
+                              {"   "}
+                              <span className="text-gray-400">{`($${
+                                singleTransaction.trxName === "bitcoin"
+                                  ? (
+                                      singleTransaction.amount * liveBtc
+                                    ).toFixed(2)
+                                  : singleTransaction.trxName === "ethereum"
+                                  ? (
+                                      singleTransaction.amount * 2241.86
+                                    ).toFixed(2)
+                                  : singleTransaction.trxName === "tether"
+                                  ? singleTransaction.amount.toFixed(2)
+                                  : (0).toFixed(2)
+                              })`}</span>
+                              <svg
+                                data-v-cd102a71
+                                xmlns="http://www.w3.org/2000/svg"
+                                xmlnsXlink="http://www.w3.org/1999/xlink"
+                                aria-hidden="true"
+                                role="img"
+                                className="icon w-5 h-5 inline-block -mt-1 ml-2"
+                                width="1em"
+                                height="1em"
+                                viewBox="0 0 24 24"
+                              >
+                                <g
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                >
+                                  <rect
+                                    width={13}
+                                    height={13}
+                                    x={9}
+                                    y={9}
+                                    rx={2}
+                                    ry={2}
+                                  />
+                                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                </g>
+                              </svg>
+                            </a>
+                          </dd>
+                        </div>
+                        <div className="sm:col-span-1">
+                          <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                            Status
+                          </dt>
+                          <dd className="mt-1 text-sm text-gray-900 dark:text-white">
+                            {singleTransaction.status === "pending" ? (
+                              <>
+                                <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100">
+                                  Pending
+                                </span>
+                              </>
+                            ) : singleTransaction.status === "completed" ? (
+                              <>
+                                <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
+                                  Completed
+                                </span>
+                              </>
+                            ) : singleTransaction.status === "failed" ? (
+                              <>
+                                <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100">
+                                  Failed
+                                </span>
+                              </>
+                            ) : (
+                              <>
+                                <span className="border-muted-300 dark:border-muted-700 pointer-events-none absolute inset-y-0 end-0 flex items-center justify-center border-l w-10">
+                                  <svg
+                                    data-v-cd102a71
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    xmlnsXlink="http://www.w3.org/1999/xlink"
+                                    aria-hidden="true"
+                                    role="img"
+                                    className="icon text-muted-400 transition-transform duration-300 h-4 w-4"
+                                    width="1em"
+                                    height="1em"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      fill="none"
+                                      stroke="currentColor"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="m6 9l6 6l6-6"
+                                    />
+                                  </svg>
+                                </span>
+                              </>
+                            )}
+                            <span className="text-gray-400 dark:text-gray-500 ml-2">
+                              {singleTransaction.note}
+                            </span>
 
-                          {/**/}
-                        </dd>
-                      </div>
-                    </dl>
-                  </div>
-                  <div className="flex w-full items-center gap-x-2 justify-end">
-                    <div className="p-4 md:p-6">
-                      <div className="flex gap-x-2">
-                        <button
-                          onClick={toggleModalClose}
-                          data-v-71bb21a6
-                          type="button"
-                          className="is-button rounded is-button-default"
-                        >
-                          Close
-                        </button>
+                            {/**/}
+                          </dd>
+                        </div>
+                      </dl>
+                    </div>
+                    <div className="flex w-full items-center gap-x-2 justify-end">
+                      <div className="p-4 md:p-6">
+                        <div className="flex gap-x-2">
+                          <button
+                            onClick={toggleModalClose}
+                            data-v-71bb21a6
+                            type="button"
+                            className="is-button rounded is-button-default"
+                          >
+                            Close
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>

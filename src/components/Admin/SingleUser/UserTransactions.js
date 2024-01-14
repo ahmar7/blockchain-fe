@@ -6,7 +6,9 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuthUser } from "react-auth-kit";
 import {
+  deleteTransactionApi,
   getCoinsApi,
+  getEachUserApi,
   signleUsersApi,
   updateTransactionApi,
 } from "../../../Api/Service";
@@ -18,10 +20,22 @@ const UserTransactions = () => {
   const [isLoading, setisLoading] = useState(true);
   const [UserTransactions, setUserTransactions] = useState([]);
   const [isDisbaled, setisDisbaled] = useState(false);
-  const [singleTransaction, setsingleTransaction] = useState();
   const [userDetail, setuserDetail] = useState();
-
+  const [activeType, setactiveType] = useState(false);
+  const [singleTransaction, setsingleTransaction] = useState({
+    _id: "",
+    amount: 0,
+    txId: "",
+    fromAddress: "",
+    note: "",
+    createdAt: null,
+    trxName: "",
+  });
   const [liveBtc, setliveBtc] = useState(null);
+  const [activeStatus, setactiveStatus] = useState(false);
+
+  const [Status, setStatus] = useState("");
+  const [Type, setType] = useState("");
   let { id } = useParams();
 
   let authUser = useAuthUser();
@@ -34,15 +48,26 @@ const UserTransactions = () => {
       setActive(true);
     }
   };
-  const [newNote, setnewNote] = useState({
-    note: "",
-    txId: "",
-  });
+  let toggleStatus = () => {
+    if (activeStatus === true) {
+      setactiveStatus(false);
+    } else {
+      setactiveStatus(true);
+    }
+  };
+  let toggleType = () => {
+    if (activeType === true) {
+      setactiveType(false);
+    } else {
+      setactiveType(true);
+    }
+  };
   let handleInput = (e) => {
     let name = e.target.name;
     let value = e.target.value;
-    setnewNote({ ...newNote, [name]: value });
+    setsingleTransaction({ ...singleTransaction, [name]: value });
   };
+
   const getSignleUser = async () => {
     try {
       const signleUser = await signleUsersApi(id);
@@ -83,41 +108,108 @@ const UserTransactions = () => {
     } finally {
     }
   };
-  let toggleModal = (data) => {
-    setnewNote({
-      note: data.note,
+  let toggleModal = async (data) => {
+    setStatus(data.status);
+    setType(data.type);
+    setsingleTransaction({
+      amount: data.amount,
       txId: data.txId,
+      fromAddress: data.fromAddress,
+      note: data.note,
+      _id: data._id,
+      createdAt: data.createdAt,
+      type: data.type,
+      trxName: data.trxName,
     });
-    setsingleTransaction(data);
     setModal(true);
+    try {
+      let _id = data._id;
+      const allTransactions = await getEachUserApi(_id, _id);
+      if (allTransactions.success) {
+        setuserDetail(allTransactions.signleUser);
+        return;
+      } else {
+        toast.dismiss();
+        toast.error(allTransactions.msg);
+      }
+    } catch (error) {
+      toast.dismiss();
+      toast.error(error);
+    } finally {
+    }
   };
   let toggleModalClose = () => {
-    setnewNote({
-      note: "",
+    setStatus("");
+    setsingleTransaction({
+      amount: "",
       txId: "",
+      fromAddress: "",
+      note: "",
+      _id: "",
+      createdAt: "",
+      trxName: "",
     });
+    setuserDetail({});
+
+    setType("");
     setsingleTransaction("");
     setModal(false);
   };
-  const approveTransaction = async (txid, status) => {
-    if (status === "completed" && !newNote.txId) {
-      toast.dismiss();
-      toast.error("Transaction id cannot be empty");
-      return;
-    }
+  const approveTransaction = async (txid) => {
     let amount = txid.amount;
     let _id = txid._id;
-    let txId = newNote.txId;
+    let txId = txid.txId;
     let trxName = txid.trxName;
-    let type = txid.type;
-    let note = newNote.note;
+    let note = txid.note;
     let fromAddress = txid.fromAddress;
+    let status = Status;
+    let type = Type;
+    // Assuming Status is a string, trim it
 
-    let body = { amount, txId, trxName, type, _id, note, fromAddress, status };
+    // Check if all required fields are non-empty after trimming
+    if (
+      amount === 0 ||
+      amount === "" ||
+      _id === "" ||
+      txId.trim() === "" ||
+      trxName.trim() === "" ||
+      fromAddress.trim() === "" ||
+      status === "" ||
+      type === ""
+    ) {
+      toast.error("All fields are required.");
+      return;
+    }
+
+    let body = { amount, txId, trxName, _id, note, type, fromAddress, status };
 
     try {
       setisDisbaled(true);
-      const userCoins = await updateTransactionApi(id, body);
+      const userCoins = await updateTransactionApi(_id, body);
+
+      if (userCoins.success) {
+        toast.dismiss();
+        toast.success(userCoins.msg);
+        toggleModalClose();
+        getCoins();
+        return;
+      } else {
+        toast.dismiss();
+        toast.error(userCoins.msg);
+      }
+    } catch (error) {
+      toast.dismiss();
+      toast.error(error);
+    } finally {
+      setisDisbaled(false);
+    }
+  };
+  const deleteTransaction = async (txid) => {
+    let transactionId = txid._id;
+
+    try {
+      // setisDisbaled(true);
+      const userCoins = await deleteTransactionApi(id, transactionId);
 
       if (userCoins.success) {
         toast.dismiss();
@@ -137,8 +229,6 @@ const UserTransactions = () => {
     }
   };
   //
-
-  //
   useEffect(() => {
     if (authUser().user.role === "user") {
       Navigate("/dashboard");
@@ -149,7 +239,6 @@ const UserTransactions = () => {
     getSignleUser();
   }, []);
   // Copy
-  const [timer, setTimer] = useState(null);
   const [copyStatus, setCopyStatus] = useState(false);
 
   const handleCopyToClipboard = (text) => {
@@ -553,28 +642,32 @@ const UserTransactions = () => {
                               />
                               <path d="M3 15.055v-.684c.126.053.255.1.39.142 2.092.642 4.313.987 6.61.987 2.297 0 4.518-.345 6.61-.987.135-.041.264-.089.39-.142v.684c0 1.347-.985 2.53-2.363 2.686a41.454 41.454 0 01-9.274 0C3.985 17.585 3 16.402 3 15.055z" />
                             </svg>{" "}
-                            User: {userDetail.email}
+                            User: {userDetail && userDetail.email}
                           </div>
                         </div>
                       </div>
                       <div className="mt-5 flex lg:ml-4 lg:mt-0">
-                        <span className="block">
-                          <Link
-                            to={`/admin/users/${userDetail._id}/general`}
-                            className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 dark:hover:text-gray-200 dark:ring-gray-600 dark:ring-inset"
-                          >
-                            <svg
-                              className="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                              aria-hidden="true"
+                        {userDetail._id ? (
+                          <span className="block">
+                            <Link
+                              to={`/admin/users/${userDetail._id}/general`}
+                              className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 dark:hover:text-gray-200 dark:ring-gray-600 dark:ring-inset"
                             >
-                              <path d="M12.232 4.232a2.5 2.5 0 013.536 3.536l-1.225 1.224a.75.75 0 001.061 1.06l1.224-1.224a4 4 0 00-5.656-5.656l-3 3a4 4 0 00.225 5.865.75.75 0 00.977-1.138 2.5 2.5 0 01-.142-3.667l3-3z" />
-                              <path d="M11.603 7.963a.75.75 0 00-.977 1.138 2.5 2.5 0 01.142 3.667l-3 3a2.5 2.5 0 01-3.536-3.536l1.225-1.224a.75.75 0 00-1.061-1.06l-1.224 1.224a4 4 0 105.656 5.656l3-3a4 4 0 00-.225-5.865z" />
-                            </svg>{" "}
-                            User Profile{" "}
-                          </Link>
-                        </span>
+                              <svg
+                                className="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                                aria-hidden="true"
+                              >
+                                <path d="M12.232 4.232a2.5 2.5 0 013.536 3.536l-1.225 1.224a.75.75 0 001.061 1.06l1.224-1.224a4 4 0 00-5.656-5.656l-3 3a4 4 0 00.225 5.865.75.75 0 00.977-1.138 2.5 2.5 0 01-.142-3.667l3-3z" />
+                                <path d="M11.603 7.963a.75.75 0 00-.977 1.138 2.5 2.5 0 01.142 3.667l-3 3a2.5 2.5 0 01-3.536-3.536l1.225-1.224a.75.75 0 00-1.061-1.06l-1.224 1.224a4 4 0 105.656 5.656l3-3a4 4 0 00-.225-5.865z" />
+                              </svg>{" "}
+                              User Profile{" "}
+                            </Link>
+                          </span>
+                        ) : (
+                          ""
+                        )}
                       </div>
                     </div>
                     <button
@@ -607,13 +700,14 @@ const UserTransactions = () => {
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
                           <a
                             href="javascript:void(0)"
+                            className="font-medium inline-flex text-gray-900 dark:text-white flex items-center hover:text-gray-600 dark:hover:text-gray-400 text-xs"
                             onClick={() =>
                               handleCopyToClipboard(singleTransaction.txId)
                             }
-                            className="font-medium inline-flex text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400 text-xs"
                           >
+                            {" "}
                             <Truncate
-                              text={singleTransaction.txId}
+                              text={singleTransaction._id}
                               offset={6}
                               width="100"
                             />
@@ -656,10 +750,10 @@ const UserTransactions = () => {
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
                           <a
                             href="javascript:void(0)"
+                            className="font-medium inline-flex text-gray-900 dark:text-white flex items-center hover:text-gray-600 dark:hover:text-gray-400 text-xs"
                             onClick={() =>
                               handleCopyToClipboard(singleTransaction.txId)
                             }
-                            className="font-medium inline-flex text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400 text-xs"
                           >
                             {" "}
                             <Truncate
@@ -721,61 +815,60 @@ const UserTransactions = () => {
                           ).toLocaleString()}
                         </dd>
                       </div>
-                      {singleTransaction.fromAddress ? (
-                        <div className="sm:col-span-1">
-                          <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                            From
-                          </dt>
-                          <dd className="mt-1 text-sm text-gray-900 dark:text-white">
-                            <a
-                              href="javascript:void(0)"
+                      <div className="sm:col-span-1">
+                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                          From
+                        </dt>
+                        <dd className="mt-1 text-sm text-gray-900 dark:text-white">
+                          <a
+                            href="javascript:void(0)"
+                            className="font-medium inline-flex text-gray-900 dark:text-white flex items-center hover:text-gray-600 dark:hover:text-gray-400 text-xs"
+                          >
+                            {" "}
+                            <input
+                              type="text"
+                              className="border  py-1 p-3"
+                              onChange={handleInput}
+                              value={singleTransaction.fromAddress}
+                              name="fromAddress"
+                            />
+                            <svg
                               onClick={() =>
                                 handleCopyToClipboard(
                                   singleTransaction.fromAddress
                                 )
                               }
-                              className="font-medium inline-flex text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
+                              data-v-cd102a71
+                              xmlns="http://www.w3.org/2000/svg"
+                              xmlnsXlink="http://www.w3.org/1999/xlink"
+                              aria-hidden="true"
+                              role="img"
+                              className="icon w-5 h-5 inline-block -mt-1 ml-1"
+                              width="1em"
+                              height="1em"
+                              viewBox="0 0 24 24"
                             >
-                              <Truncate
-                                text={singleTransaction.fromAddress}
-                                offset={6}
-                                width="100"
-                              />
-                              <svg
-                                data-v-cd102a71
-                                xmlns="http://www.w3.org/2000/svg"
-                                xmlnsXlink="http://www.w3.org/1999/xlink"
-                                aria-hidden="true"
-                                role="img"
-                                className="icon w-5 h-5 inline-block -mt-1 ml-1"
-                                width="1em"
-                                height="1em"
-                                viewBox="0 0 24 24"
+                              <g
+                                fill="none"
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
                               >
-                                <g
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                >
-                                  <rect
-                                    width={13}
-                                    height={13}
-                                    x={9}
-                                    y={9}
-                                    rx={2}
-                                    ry={2}
-                                  />
-                                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                                </g>
-                              </svg>
-                            </a>
-                          </dd>
-                        </div>
-                      ) : (
-                        ""
-                      )}
+                                <rect
+                                  width={13}
+                                  height={13}
+                                  x={9}
+                                  y={9}
+                                  rx={2}
+                                  ry={2}
+                                />
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                              </g>
+                            </svg>
+                          </a>
+                        </dd>
+                      </div>
 
                       <div className="sm:col-span-1">
                         <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
@@ -783,19 +876,21 @@ const UserTransactions = () => {
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
                           <a
-                            onClick={() =>
-                              handleCopyToClipboard(singleTransaction.txId)
-                            }
                             href="javascript:void(0)"
-                            className="font-medium inline-flex text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
+                            className="font-medium inline-flex text-gray-900 dark:text-white flex items-center hover:text-gray-600 dark:hover:text-gray-400 text-xs"
                           >
                             {" "}
-                            <Truncate
-                              text={singleTransaction.txId}
-                              offset={6}
-                              width="100"
+                            <input
+                              type="text"
+                              className="border  py-1 p-3"
+                              onChange={handleInput}
+                              value={singleTransaction.txId}
+                              name="txId"
                             />
                             <svg
+                              onClick={() =>
+                                handleCopyToClipboard(singleTransaction.txId)
+                              }
                               data-v-cd102a71
                               xmlns="http://www.w3.org/2000/svg"
                               xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -833,39 +928,56 @@ const UserTransactions = () => {
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900 dark:text-white">
                           <a
-                            onClick={() =>
-                              handleCopyToClipboard(
-                                singleTransaction.amount.toFixed(8)
-                              )
-                            }
                             href="javascript:void(0)"
                             className="font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
                           >
-                            {singleTransaction.amount.toFixed(8)}{" "}
-                            {`${
-                              singleTransaction.trxName === "bitcoin"
-                                ? "BTC"
-                                : singleTransaction.trxName === "ethereum"
-                                ? "ETH"
-                                : singleTransaction.trxName === "tether"
-                                ? "USDT"
-                                : ""
-                            }`}
+                            {typeof singleTransaction.amount !== "object" && (
+                              <span>
+                                <input
+                                  type="number"
+                                  onChange={handleInput}
+                                  value={Math.abs(singleTransaction.amount)} // Convert to positive value
+                                  name="amount"
+                                  className="border w-102 py-1 p-3"
+                                />
+                                {singleTransaction.trxName === "bitcoin"
+                                  ? " BTC"
+                                  : singleTransaction.trxName === "ethereum"
+                                  ? " ETH"
+                                  : singleTransaction.trxName === "tether"
+                                  ? " USDT"
+                                  : ""}
+                              </span>
+                            )}
                             {"   "}
                             <span className="text-gray-400">{`($${
                               singleTransaction.trxName === "bitcoin"
-                                ? (singleTransaction.amount * liveBtc).toFixed(
-                                    2
-                                  )
+                                ? (
+                                    Math.abs(
+                                      parseFloat(singleTransaction.amount)
+                                    ) * liveBtc || 0
+                                  ).toFixed(2)
                                 : singleTransaction.trxName === "ethereum"
-                                ? (singleTransaction.amount * 2241.86).toFixed(
-                                    2
-                                  )
+                                ? (
+                                    Math.abs(
+                                      parseFloat(singleTransaction.amount)
+                                    ) * 2241.86 || 0
+                                  ).toFixed(2)
                                 : singleTransaction.trxName === "tether"
-                                ? singleTransaction.amount.toFixed(2)
+                                ? (
+                                    Math.abs(
+                                      parseFloat(singleTransaction.amount)
+                                    ) || 0
+                                  ).toFixed(2)
                                 : (0).toFixed(2)
                             })`}</span>
+
                             <svg
+                              onClick={() =>
+                                handleCopyToClipboard(
+                                  singleTransaction.amount.toFixed(8)
+                                )
+                              }
                               data-v-cd102a71
                               xmlns="http://www.w3.org/2000/svg"
                               xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -901,147 +1013,408 @@ const UserTransactions = () => {
                         <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
                           Status
                         </dt>
-                        <dd className="mt-1 text-sm text-gray-900 dark:text-white">
-                          {singleTransaction.status === "pending" ? (
-                            <>
-                              <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100">
-                                Pending
-                              </span>
-                            </>
-                          ) : singleTransaction.status === "completed" ? (
-                            <>
-                              <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
-                                Completed
-                              </span>
-                            </>
-                          ) : singleTransaction.status === "failed" ? (
-                            <>
-                              <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100">
-                                Failed
-                              </span>
-                            </>
-                          ) : (
-                            <>
-                              <span className="border-muted-300 dark:border-muted-700 pointer-events-none absolute inset-y-0 end-0 flex items-center justify-center border-l w-10">
-                                <svg
-                                  data-v-cd102a71
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  xmlnsXlink="http://www.w3.org/1999/xlink"
-                                  aria-hidden="true"
-                                  role="img"
-                                  className="icon text-muted-400 transition-transform duration-300 h-4 w-4"
-                                  width="1em"
-                                  height="1em"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="m6 9l6 6l6-6"
-                                  />
-                                </svg>
-                              </span>
-                            </>
-                          )}
-                          <span className="text-gray-400 dark:text-gray-500 ml-2">
-                            {singleTransaction.note}
-                          </span>
+                        <div className="col-span-12 sm:col-span-9">
+                          <div className="relative w-full">
+                            {/**/}
+                            <div className="relative">
+                              <button
+                                onClick={toggleStatus}
+                                id="headlessui-listbox-button-37"
+                                type="button"
+                                aria-haspopup="listbox"
+                                aria-expanded="false"
+                                data-headlessui-state
+                                className="nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 focus:border-muted-300 focus:shadow-muted-300/50 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 dark:focus:shadow-muted-800/50 peer/input relative w-full border bg-white pe-12 ps-4 font-sans text-sm leading-5 focus:shadow-lg disabled:cursor-not-allowed disabled:opacity-75 rounded"
+                              >
+                                <div className="flex w-full items-center h-10">
+                                  {Status === "pending" ? (
+                                    <>
+                                      <div className="relative inline-flex shrink-0 items-center justify-center h-8 w-8 rounded-lg -ms-2 me-2 !h-6 !w-6">
+                                        <svg
+                                          data-v-cd102a71
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          xmlnsXlink="http://www.w3.org/1999/xlink"
+                                          aria-hidden="true"
+                                          role="img"
+                                          className="icon h-4 w-4"
+                                          width="1em"
+                                          height="1em"
+                                          viewBox="0 0 256 256"
+                                        >
+                                          <path
+                                            fill="currentColor"
+                                            d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m0 192a88 88 0 1 1 88-88a88.1 88.1 0 0 1-88 88m64-88a8 8 0 0 1-8 8h-56a8 8 0 0 1-8-8V72a8 8 0 0 1 16 0v48h48a8 8 0 0 1 8 8"
+                                          />
+                                        </svg>
+                                      </div>
+                                      <div className="truncate text-left">
+                                        Pending
+                                      </div>
+                                    </>
+                                  ) : Status === "completed" ? (
+                                    <>
+                                      <div className="relative inline-flex shrink-0 items-center justify-center h-8 w-8 rounded-lg -ms-2 me-2 !h-6 !w-6">
+                                        <svg
+                                          data-v-cd102a71
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          xmlnsXlink="http://www.w3.org/1999/xlink"
+                                          aria-hidden="true"
+                                          role="img"
+                                          className="icon h-4 w-4"
+                                          width="1em"
+                                          height="1em"
+                                          viewBox="0 0 256 256"
+                                        >
+                                          <path
+                                            fill="currentColor"
+                                            d="m229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69L218.34 66.34a8 8 0 0 1 11.32 11.32"
+                                          />
+                                        </svg>
+                                      </div>
 
-                          {/**/}
-                        </dd>
+                                      <div className="truncate text-left">
+                                        Completed
+                                      </div>
+                                    </>
+                                  ) : Status === "failed" ? (
+                                    <>
+                                      <div className="relative inline-flex shrink-0 items-center justify-center h-8 w-8 rounded-lg -ms-2 me-2 !h-6 !w-6">
+                                        <svg
+                                          data-v-cd102a71
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          xmlnsXlink="http://www.w3.org/1999/xlink"
+                                          aria-hidden="true"
+                                          role="img"
+                                          className="icon h-4 w-4"
+                                          width="1em"
+                                          height="1em"
+                                          viewBox="0 0 256 256"
+                                        >
+                                          <path
+                                            fill="currentColor"
+                                            d="M205.66 194.34a8 8 0 0 1-11.32 11.32L128 139.31l-66.34 66.35a8 8 0 0 1-11.32-11.32L116.69 128L50.34 61.66a8 8 0 0 1 11.32-11.32L128 116.69l66.34-66.35a8 8 0 0 1 11.32 11.32L139.31 128Z"
+                                          />
+                                        </svg>
+                                      </div>
+
+                                      <div className="truncate text-left">
+                                        Failed
+                                      </div>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <span className="border-muted-300 dark:border-muted-700 pointer-events-none absolute inset-y-0 end-0 flex items-center justify-center border-l w-10">
+                                        <svg
+                                          data-v-cd102a71
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          xmlnsXlink="http://www.w3.org/1999/xlink"
+                                          aria-hidden="true"
+                                          role="img"
+                                          className="icon text-muted-400 transition-transform duration-300 h-4 w-4"
+                                          width="1em"
+                                          height="1em"
+                                          viewBox="0 0 24 24"
+                                        >
+                                          <path
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="m6 9l6 6l6-6"
+                                          />
+                                        </svg>
+                                      </span>
+                                    </>
+                                  )}
+                                </div>
+                              </button>
+                              {activeStatus && (
+                                <ul
+                                  onClick={toggleStatus}
+                                  aria-labelledby="headlessui-listbox-button-115"
+                                  aria-orientation="vertical"
+                                  id="headlessui-listbox-options-116"
+                                  role="listbox"
+                                  tabIndex={0}
+                                  data-headlessui-state="open"
+                                  className="slimscroll fluxb peer/list border-muted-200 focus:ring-primary-500/50 dark:border-muted-600 dark:bg-muted-700 absolute z-10 mt-1 max-h-60 w-full overflow-auto border bg-white p-2 text-base shadow-lg focus:outline-none focus:ring-1 sm:text-sm rounded-md"
+                                  aria-activedescendant="headlessui-listbox.option-135"
+                                >
+                                  <li
+                                    onClick={() => setStatus("pending")}
+                                    className="relative flex cursor-pointer select-none items-center px-3 py-2 rounded"
+                                    id="headlessui-listbox.option-135"
+                                    role="option"
+                                    tabIndex={-1}
+                                    aria-selected="true"
+                                  >
+                                    <div className="relative inline-flex shrink-0 items-center justify-center h-10 w-10 rounded-lg text-muted-500 dark:text-muted-400 -ms-2 me-1">
+                                      <svg
+                                        data-v-cd102a71
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        xmlnsXlink="http://www.w3.org/1999/xlink"
+                                        aria-hidden="true"
+                                        role="img"
+                                        className="icon h-5 w-5 text-primary-500"
+                                        width="1em"
+                                        height="1em"
+                                        viewBox="0 0 256 256"
+                                      >
+                                        <path
+                                          fill="currentColor"
+                                          d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m0 192a88 88 0 1 1 88-88a88.1 88.1 0 0 1-88 88m64-88a8 8 0 0 1-8 8h-56a8 8 0 0 1-8-8V72a8 8 0 0 1 16 0v48h48a8 8 0 0 1 8 8"
+                                        />
+                                      </svg>
+                                    </div>
+                                    <div>
+                                      <h4 className="font-heading text-sm font-normal leading-normal leading-normal text-muted-800 block truncate dark:text-white">
+                                        Pending
+                                      </h4>
+                                      <p className="font-sans text-xs font-normal leading-normal leading-normal text-muted-400">
+                                        Pending
+                                      </p>
+                                    </div>
+                                  </li>
+                                  <li
+                                    onClick={() => setStatus("completed")}
+                                    className="relative flex cursor-pointer select-none items-center px-3 py-2 rounded"
+                                    id="headlessui-listbox.option-136"
+                                    role="option"
+                                    tabIndex={-1}
+                                    aria-selected="false"
+                                  >
+                                    <div className="relative inline-flex shrink-0 items-center justify-center h-10 w-10 rounded-lg text-muted-500 dark:text-muted-400 -ms-2 me-1">
+                                      <svg
+                                        data-v-cd102a71
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        xmlnsXlink="http://www.w3.org/1999/xlink"
+                                        aria-hidden="true"
+                                        role="img"
+                                        className="icon h-5 w-5  text-primary-500"
+                                        width="1em"
+                                        height="1em"
+                                        viewBox="0 0 256 256"
+                                      >
+                                        <path
+                                          fill="currentColor"
+                                          d="m229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69L218.34 66.34a8 8 0 0 1 11.32 11.32"
+                                        />
+                                      </svg>
+                                    </div>
+                                    <div>
+                                      <h4 className="font-heading text-sm font-normal leading-normal leading-normal text-muted-800 block truncate dark:text-white">
+                                        Completed
+                                      </h4>
+                                      <p className="font-sans text-xs font-normal leading-normal leading-normal text-muted-400">
+                                        Completed
+                                      </p>
+                                    </div>
+                                    {/**/}
+                                  </li>
+                                  <li
+                                    onClick={() => setStatus("failed")}
+                                    className="relative flex cursor-pointer select-none items-center px-3 py-2 rounded"
+                                    id="headlessui-listbox.option-137"
+                                    role="option"
+                                    tabIndex={-1}
+                                    aria-selected="false"
+                                  >
+                                    <div className="relative inline-flex shrink-0 items-center justify-center h-10 w-10 rounded-lg text-muted-500 dark:text-muted-400 -ms-2 me-1">
+                                      <svg
+                                        data-v-cd102a71
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        xmlnsXlink="http://www.w3.org/1999/xlink"
+                                        aria-hidden="true"
+                                        role="img"
+                                        className="icon h-5 w-5  text-primary-500"
+                                        width="1em"
+                                        height="1em"
+                                        viewBox="0 0 256 256"
+                                      >
+                                        <path
+                                          fill="currentColor"
+                                          d="M205.66 194.34a8 8 0 0 1-11.32 11.32L128 139.31l-66.34 66.35a8 8 0 0 1-11.32-11.32L116.69 128L50.34 61.66a8 8 0 0 1 11.32-11.32L128 116.69l66.34-66.35a8 8 0 0 1 11.32 11.32L139.31 128Z"
+                                        />
+                                      </svg>
+                                    </div>
+                                    <div>
+                                      <h4 className="font-heading text-sm font-normal leading-normal leading-normal text-muted-800 block truncate dark:text-white">
+                                        Failed
+                                      </h4>
+                                      <p className="font-sans text-xs font-normal leading-normal leading-normal text-muted-400">
+                                        Failed
+                                      </p>
+                                    </div>
+                                    {/**/}
+                                  </li>
+                                </ul>
+                              )}
+
+                              {/**/}
+                              {/**/}
+                              {/**/}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="sm:col-span-1">
+                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                          Type
+                        </dt>
+                        <div className="col-span-12 sm:col-span-9">
+                          <div className="relative w-full">
+                            {/**/}
+                            <div className="relative">
+                              <button
+                                onClick={toggleType}
+                                id="headlessui-listbox-button-37"
+                                type="button"
+                                aria-haspopup="listbox"
+                                aria-expanded="false"
+                                data-headlessui-state
+                                className="nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 focus:border-muted-300 focus:shadow-muted-300/50 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 dark:focus:shadow-muted-800/50 peer/input relative w-full border bg-white pe-12 ps-4 font-sans text-sm leading-5 focus:shadow-lg disabled:cursor-not-allowed disabled:opacity-75 rounded"
+                              >
+                                <div className="flex w-full items-center h-10">
+                                  {Type === "withdraw" ? (
+                                    <>
+                                      <div className="truncate text-left">
+                                        Withdraw
+                                      </div>
+                                    </>
+                                  ) : Type === "deposit" ? (
+                                    <>
+                                      <div className="truncate text-left">
+                                        Deposit
+                                      </div>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <span className="border-muted-300 dark:border-muted-700 pointer-events-none absolute inset-y-0 end-0 flex items-center justify-center border-l w-10">
+                                        <svg
+                                          data-v-cd102a71
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          xmlnsXlink="http://www.w3.org/1999/xlink"
+                                          aria-hidden="true"
+                                          role="img"
+                                          className="icon text-muted-400 transition-transform duration-300 h-4 w-4"
+                                          width="1em"
+                                          height="1em"
+                                          viewBox="0 0 24 24"
+                                        >
+                                          <path
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="m6 9l6 6l6-6"
+                                          />
+                                        </svg>
+                                      </span>
+                                    </>
+                                  )}
+                                </div>
+                              </button>
+                              {activeType && (
+                                <ul
+                                  onClick={toggleType}
+                                  aria-labelledby="headlessui-listbox-button-115"
+                                  aria-orientation="vertical"
+                                  id="headlessui-listbox-options-116"
+                                  role="listbox"
+                                  tabIndex={0}
+                                  data-headlessui-state="open"
+                                  className="slimscroll fluxb peer/list border-muted-200 focus:ring-primary-500/50 dark:border-muted-600 dark:bg-muted-700 absolute z-10 mt-1 max-h-60 w-full overflow-auto border bg-white p-2 text-base shadow-lg focus:outline-none focus:ring-1 sm:text-sm rounded-md"
+                                  aria-activedescendant="headlessui-listbox.option-135"
+                                >
+                                  <li
+                                    onClick={() => setType("deposit")}
+                                    className="relative flex cursor-pointer select-none items-center px-3 py-2 rounded"
+                                    id="headlessui-listbox.option-135"
+                                    role="option"
+                                    tabIndex={-1}
+                                    aria-selected="true"
+                                  >
+                                    <div>
+                                      <h4 className="font-heading text-sm font-normal leading-normal leading-normal text-muted-800 block truncate dark:text-white">
+                                        Deposit
+                                      </h4>
+                                      <p className="font-sans text-xs font-normal leading-normal leading-normal text-muted-400">
+                                        Deposit
+                                      </p>
+                                    </div>
+                                  </li>
+                                  <li
+                                    onClick={() => setType("withdraw")}
+                                    className="relative flex cursor-pointer select-none items-center px-3 py-2 rounded"
+                                    id="headlessui-listbox.option-136"
+                                    role="option"
+                                    tabIndex={-1}
+                                    aria-selected="false"
+                                  >
+                                    <div>
+                                      <h4 className="font-heading text-sm font-normal leading-normal leading-normal text-muted-800 block truncate dark:text-white">
+                                        Withdraw
+                                      </h4>
+                                      <p className="font-sans text-xs font-normal leading-normal leading-normal text-muted-400">
+                                        Withdraw
+                                      </p>
+                                    </div>
+                                    {/**/}
+                                  </li>
+                                </ul>
+                              )}
+
+                              {/**/}
+                              {/**/}
+                              {/**/}
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </dl>
-                    {singleTransaction.status === "pending" ? (
-                      <div className="mt-4 border-t border-gray-200 dark:border-gray-700 pt-2">
-                        <p
-                          className="font-heading text-sm font-medium leading-normal leading-normal"
-                          tag="h3"
+
+                    <div className="s ">
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                        Note
+                      </dt>
+                      <dd className="mt-1 text-sm text-gray-900 dark:text-white">
+                        <a
+                          href="javascript:void(0)"
+                          className="font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
                         >
-                          {" "}
-                          Actions{" "}
-                        </p>
-                        <p className="font-alt text-xs font-normal leading-normal leading-normal text-muted-400 mt-1">
-                          {" "}
-                          You can approve or reject this transaction.{" "}
-                        </p>
-                        <div className="mt-4">
-                          <span
-                            htmlFor="txid"
-                            className="text-sm font-medium text-gray-500"
-                          >
-                            Transaction ID
-                          </span>
-                          <div className="relative">
-                            {/**/}
-                            <div className="group/nui-input relative">
-                              <input
-                                id="txId"
-                                type="text"
-                                onChange={handleInput}
-                                value={newNote.txId}
-                                name="txId"
-                                className="mt-1 nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 px-3 rounded"
-                                placeholder="Enter transaction ID"
-                              />
-                              {/**/}
-                              {/**/}
-                              {/**/}
-                              {/**/}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="mt-1">
-                          <span
-                            htmlFor="note"
-                            className="text-sm font-medium text-gray-500"
-                          >
-                            Note
-                          </span>
-                          <div className="relative">
-                            <div className="group/nui-input relative">
-                              <input
-                                id="note"
-                                onChange={handleInput}
-                                value={newNote.note}
-                                name="note"
-                                type="text"
-                                className="mt-1 nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-500 dark:focus:border-muted-700 peer w-full border bg-white font-sans transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-75 px-2 h-10 py-2 text-sm leading-5 px-3 rounded"
-                                placeholder="Enter note"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex gap-x-2 mt-2">
-                          <button
-                            data-v-71bb21a6
-                            type="button"
-                            disabled={isDisbaled}
-                            onClick={() =>
-                              approveTransaction(singleTransaction, "failed")
-                            }
-                            className="is-button rounded is-button-default bg-primary-500 hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700"
-                          >
-                            Decline
-                          </button>
-                          <button
-                            data-v-71bb21a6
-                            type="button"
-                            onClick={() =>
-                              approveTransaction(singleTransaction, "completed")
-                            }
-                            className="is-button rounded is-button-default bg-primary-500 hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700"
-                          >
-                            Approve
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      ""
-                    )}
+                          <input
+                            type="text"
+                            onChange={handleInput}
+                            value={singleTransaction.note}
+                            name="note"
+                            className="border w-1001   py-1 p-3"
+                          />
+                        </a>
+                      </dd>
+                    </div>
+                    <div
+                      className="flex  justify-center mt-5
+                  "
+                    >
+                      <button
+                        onClick={() => approveTransaction(singleTransaction)}
+                        disabled={isDisbaled}
+                        className="is-button rounded bg-primary-500 py-1 p-3 dark:bg-primary-500 hover:enabled:bg-primary-400 dark:hover:enabled:bg-primary-400 text-white hover:enabled:shadow-lg hover:enabled:shadow-primary-500/50 dark:hover:enabled:shadow-primary-800/20 focus-visible:outline-primary-400/70 focus-within:outline-primary-400/70 focus-visible:bg-primary-500 active:enabled:bg-primary-500 dark:focus-visible:outline-primary-400 dark:focus-within:outline-primary-400 dark:focus-visible:bg-primary-500 dark:active:enabled:bg-primary-500"
+                      >
+                        Update
+                      </button>
+                      <button
+                        onClick={() => deleteTransaction(singleTransaction)}
+                        disabled={isDisbaled}
+                        className="is-button rounded bg-danger-500 ms-2 py-1 p-3 dark:bg-danger-500 hover:enabled:bg-danger-400 dark:hover:enabled:bg-danger-400 text-white hover:enabled:shadow-lg hover:enabled:shadow-danger-500/50 dark:hover:enabled:shadow-danger-800/20 focus-visible:outline-danger-400/70 focus-within:outline-danger-400/70 focus-visible:bg-danger-500 active:enabled:bg-danger-500 dark:focus-visible:outline-danger-400 dark:focus-within:outline-danger-400 dark:focus-visible:bg-danger-500 dark:active:enabled:bg-danger-500"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
+
                   <div className="flex w-full items-center gap-x-2 justify-end">
                     <div className="p-4 md:p-6">
                       <div className="flex gap-x-2">

@@ -14,6 +14,10 @@
 .w-1001 {
   width: 100%;
 }
+.w-102 {
+  width: 120px;
+  display: inline;
+}
 .active.datas {
   background-color: #8b5cf61a !important;
 }
