@@ -45,13 +45,13 @@ const Kyc = () => {
       const reader = new FileReader();
       const fileSize = file.size;
 
-      const maxSize = 500 * 1024;
+      const maxSize = 3 * 1024 * 1024;
 
       if (fileSize > maxSize) {
         setNewSlider1("");
         setSlide1(""); // Clear the input field
         toast.error(
-          "File size exceeds 500KB limit. Please choose a smaller file."
+          "File size exceeds 3MB limit. Please choose a smaller file."
         );
         return;
       }
@@ -75,11 +75,10 @@ const Kyc = () => {
       const fileSize = file.size;
 
       // Limit file size to
-      const maxSize = 500 * 1024;
-
+      const maxSize = 3 * 1024 * 1024;
       if (fileSize > maxSize) {
         toast.error(
-          "File size exceeds 500KB limit. Please choose a smaller file."
+          "File size exceeds 3MB limit. Please choose a smaller file."
         );
         setNewSlider2("");
         setSlide2(""); // Clear the input field
@@ -541,7 +540,7 @@ const Kyc = () => {
                                         or driver's license).
                                       </p>
                                       <p className="font-alt text-xs font-bold mt-2 leading-snug text-white">
-                                        *max size should be 500KB
+                                        *max size should be 3MB
                                       </p>
                                     </div>
                                     <div className="child absolute end-2 top-3 opacity-0">
@@ -605,7 +604,7 @@ const Kyc = () => {
                                         or gas bill) in your name.
                                       </p>
                                       <p className=" text-white font-bold text-xs font-normal leading-snug mt-2">
-                                        *max size should be 500KB
+                                        *max size should be 3MB
                                       </p>
                                     </div>
                                     <div className="child absolute end-2 top-3 opacity-0">

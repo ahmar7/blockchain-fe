@@ -33,7 +33,6 @@ const SideBar = (props) => {
       const logout = await logoutApi();
 
       if (logout.success) {
-        console.log("logout: ", logout);
         signOut();
 
         Navigate("/auth/login");
